@@ -5,9 +5,10 @@ module com.inventorymangementsystem {
     requires mysql.connector.j;
     requires  java.sql;
     requires jbcrypt;
+    requires com.google.gson;
 
 
-    opens com.inventorymangementsystem to javafx.fxml;
+    opens com.inventorymangementsystem to javafx.fxml, com.google.gson;
     exports com.inventorymangementsystem;
     exports com.inventorymangementsystem.Controllers;
     exports com.inventorymangementsystem.Models;
