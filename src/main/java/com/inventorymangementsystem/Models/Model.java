@@ -1,6 +1,8 @@
 package com.inventorymangementsystem.Models;
 
 import com.inventorymangementsystem.Views.ViewFactory;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.sql.Connection;
 
@@ -40,5 +42,25 @@ public class Model {
 
     public void setConnection(Connection connection){
         dataBaseDriver.setConnection(connection);
+    }
+
+    public void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText("");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    public Alert getConfirmationDialogAlert(String title, String content) {
+        // Create a confirmation alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText("");
+        alert.setContentText(content);
+
+        // Customize button text (optional)
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        return alert;
     }
 }

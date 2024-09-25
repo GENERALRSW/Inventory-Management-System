@@ -1,0 +1,75 @@
+.main_menu_container {
+    -fx-background-color: #D2B48C;
+}
+
+.title_container {
+    -fx-background-radius: 20 20 0 0;
+    -fx-alignment: top_center;
+    -fx-padding: 10;
+}
+
+.title_container Text {
+    -fx-fill: #000000;
+    -fx-font-size: 1.35em;
+    -fx-font-weight: bold;
+}
+
+.menu_container {
+    -fx-padding: 10 10 10 20;
+    -fx-spacing: 20;
+}
+
+.menu_container Button{
+    -fx-pref-width: 130;
+    -fx-pref-height: 40;
+    -fx-background-color: #B29772;
+    -fx-text-fill: black;
+    -fx-font-size: 0.949em;
+    -fx-font-weight: bold;
+    -fx-alignment: center_left;
+    -fx-effect: dropshadow(three-pass-box, #B29772, 5, 0, 0, 6);
+}
+
+.menu_container Button:hover {
+    -fx-cursor: hand;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.menu_container Button:pressed {
+    -fx-background-color: #8B5A2B; /* Darker background on click */
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(three-pass-box, #8B5A2B, 5, 0, 0, 6);
+}
+
+/*
+.menu_container Button:focused {
+    -fx-background-color: #8B5A2B;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(three-pass-box, #8B5A2B, 5, 0, 0, 6);
+}
+
+ */
+
+.main_menu_container #btnSignOut {
+    -fx-background-color: #B29772;
+    -fx-text-fill: black;
+    -fx-font-size: 0.949em;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, #B29772, 5, 0, 0, 6);
+}
+
+.main_menu_container #btnSignOut:hover {
+    -fx-cursor: hand;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.main_menu_container #btnSignOut:pressed {
+    -fx-background-color: #8B5A2B; /* Darker background on click */
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(three-pass-box, #8B5A2B, 5, 0, 0, 6);
+}

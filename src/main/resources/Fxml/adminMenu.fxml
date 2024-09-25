@@ -2,15 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="180.0" stylesheets="/Styles/adminMenu.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventorymangementsystem.Controllers.AdminMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="180.0" styleClass="main_menu_container" stylesheets="@../Styles/adminMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymangementsystem.Controllers.AdminMenuController">
 <children>
     <AnchorPane prefHeight="730.0" prefWidth="160.0" styleClass="title_container">
         <children>
@@ -19,26 +17,26 @@
                     <ImageView fitHeight="38.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
 
                     </ImageView>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Student Management" wrappingWidth="160.82081604003906" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Inventory Management" wrappingWidth="160.82081604003906" />
                 </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <children>
-                    <Button fx:id="btnHome" mnemonicParsing="false" text="Home">
+                    <Button fx:id="btnDashboard" mnemonicParsing="false" text="Dashboard">
                         <graphic>
                             <ImageView fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
 
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="btnAddStudent" mnemonicParsing="false" text="Add Student">
+                    <Button fx:id="btnViewInventory" mnemonicParsing="false" text="View Inventory">
                         <graphic>
                             <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
 
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="btnAddInstructor" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Add Instructor">
+                    <Button fx:id="btnAlerts" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Alerts">
                         <graphic>
                             <ImageView fitHeight="15.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
 
@@ -48,7 +46,7 @@
                             <Font name="System Bold" size="10.0" />
                         </font>
                     </Button>
-                    <Button fx:id="btnAddCourse" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Add Courses">
+                    <Button fx:id="btnPurchaseOrders" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Purchase Orders">
                         <graphic>
                             <ImageView fitHeight="15.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
 
@@ -58,6 +56,22 @@
                             <Font name="System Bold" size="10.0" />
                         </font>
                     </Button>
+                  <Button fx:id="btnReports" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Reports">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="10.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnHistory" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="History">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="10.0" />
+                     </font>
+                  </Button>
                 </children>
             </VBox>
             <Button fx:id="btnSignOut" layoutX="14.0" layoutY="691.0" mnemonicParsing="false" prefWidth="82.0" text="Sign Out">

@@ -6,6 +6,7 @@ module com.inventorymangementsystem {
     requires  java.sql;
     requires jbcrypt;
     requires com.google.gson;
+    requires java.prefs;
 
 
     opens com.inventorymangementsystem to javafx.fxml, com.google.gson;

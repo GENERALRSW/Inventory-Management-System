@@ -15,6 +15,10 @@ public class ViewFactory {
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
     private AnchorPane dashboardView;
     private AnchorPane viewInventoryView;
+    private AnchorPane alertsView;
+    private AnchorPane purchaseOrdersView;
+    private AnchorPane reportsView;
+    private AnchorPane historyView;
 
     public ViewFactory(){
         this.adminSelectedMenuItem = new SimpleObjectProperty<>();
@@ -46,6 +50,54 @@ public class ViewFactory {
         }
 
         return viewInventoryView;
+    }
+
+    public AnchorPane getAlertsView(){
+        if(alertsView == null){
+            try{
+                alertsView = new FXMLLoader(getClass().getResource("/Fxml/alerts.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return alertsView;
+    }
+
+    public AnchorPane getPurchaseOrdersView(){
+        if(purchaseOrdersView == null){
+            try{
+                purchaseOrdersView = new FXMLLoader(getClass().getResource("/Fxml/purchaseOrders.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return purchaseOrdersView;
+    }
+
+    public AnchorPane getReportsView(){
+        if(reportsView == null){
+            try{
+                reportsView = new FXMLLoader(getClass().getResource("/Fxml/reports.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return reportsView;
+    }
+
+    public AnchorPane getHistoryView(){
+        if(historyView == null){
+            try{
+                historyView = new FXMLLoader(getClass().getResource("/Fxml/history.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return historyView;
     }
 
     public void showLoginWindow(){

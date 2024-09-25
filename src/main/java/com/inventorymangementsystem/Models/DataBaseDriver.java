@@ -19,4 +19,10 @@ public class DataBaseDriver {
     public void setConnection(Connection connection){
         this.connection = connection;
     }
+
+    public void loadInfo() {
+    }
+
+    public void removeInfo() {
+    }
 }

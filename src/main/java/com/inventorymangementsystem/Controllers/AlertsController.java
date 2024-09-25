@@ -1,4 +1,4 @@
 package com.inventorymangementsystem.Controllers;
 
-public class StockAlertsController {
+public class AlertsController {
 }
