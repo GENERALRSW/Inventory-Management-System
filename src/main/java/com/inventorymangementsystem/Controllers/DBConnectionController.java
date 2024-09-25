@@ -10,4 +10,8 @@ public class DBConnectionController {
     public void handleContinue(){
 
     }
+
+    public void shouldShow() {
+
+    }
 }
