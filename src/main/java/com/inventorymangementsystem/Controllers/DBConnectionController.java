@@ -241,7 +241,101 @@ public class DBConnectionController implements Initializable {
     }
 
     private void ensureTablesExist(Connection connection) {
+        // Array of table creation SQL statements
+        String[] createTableStatements = {
+                "CREATE TABLE IF NOT EXISTS Products (" +
+                        "product_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "name VARCHAR(100) NOT NULL, " +
+                        "category VARCHAR(50) NULL, " +
+                        "unit_price DECIMAL(10, 2) NOT NULL)",
 
+                "CREATE TABLE IF NOT EXISTS Suppliers (" +
+                        "supplier_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "name VARCHAR(100) NOT NULL, " +
+                        "contact_email VARCHAR(100) NULL, " +
+                        "phone_number VARCHAR(20) NULL, " +
+                        "address TEXT NULL)",
+
+                "CREATE TABLE IF NOT EXISTS Batches (" +
+                        "batch_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "product_id INT NOT NULL, " +
+                        "current_stock INT NOT NULL, " +
+                        "expiration_date DATE NOT NULL, " +
+                        "supplier_id INT NULL, " +
+                        "FOREIGN KEY (product_id) REFERENCES Products(product_id))",
+
+                "CREATE INDEX product_id_idx ON Batches (product_id)",
+
+                "CREATE TABLE IF NOT EXISTS InventoryAdjustments (" +
+                        "adjustment_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "batch_id INT NOT NULL, " +
+                        "adjustment_date DATE NOT NULL, " +
+                        "adjustment_type ENUM('ADD', 'REMOVE') NOT NULL, " +
+                        "quantity INT NOT NULL, " +
+                        "reason TEXT NULL, " +
+                        "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
+
+                "CREATE INDEX batch_id_idx ON InventoryAdjustments (batch_id)",
+
+                "CREATE TABLE IF NOT EXISTS PurchaseOrders (" +
+                        "order_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "order_date DATE NOT NULL, " +
+                        "quantity INT NOT NULL, " +
+                        "supplier_id INT NULL, " +
+                        "total_amount DECIMAL(10, 2) DEFAULT 0.00 NULL, " +
+                        "FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id))",
+
+                "CREATE INDEX supplier_id_idx ON PurchaseOrders (supplier_id)",
+
+                "CREATE TABLE IF NOT EXISTS Sales (" +
+                        "sale_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "batch_id INT NOT NULL, " +
+                        "sale_date DATE NOT NULL, " +
+                        "quantity_sold INT NOT NULL, " +
+                        "sale_price DECIMAL(10, 2) NULL, " +
+                        "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
+
+                "CREATE INDEX batch_id_idx ON Sales (batch_id)",
+
+                "CREATE TABLE IF NOT EXISTS Users (" +
+                        "user_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "name VARCHAR(50) NOT NULL, " +
+                        "password_hash VARCHAR(255) NOT NULL, " +
+                        "role ENUM('ADMIN', 'STAFF') DEFAULT 'ADMIN' NULL, " +
+                        "email VARCHAR(100) NOT NULL, " +
+                        "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL, " +
+                        "UNIQUE (email))"
+        };
+
+        try (Statement statement = connection.createStatement()) {
+            // Check if 'Users' table exists before running CREATE TABLE
+            boolean usersTableExistsBefore = checkTableExists(connection, "Users");
+
+            // Run all CREATE TABLE statements
+            for (String sql : createTableStatements) {
+                statement.execute(sql);
+            }
+
+            // Check if 'Users' table exists after running the statements
+            boolean usersTableExistsAfter = checkTableExists(connection, "Users");
+
+            // Determine if 'Users' table was just created
+            if (!usersTableExistsBefore && usersTableExistsAfter) {
+                Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "First time using the System",
+                        """
+                                Since this is your first time a password has been created for you.
+                                ID Number: 1
+                                Password: admin
+                                REMEMBER THIS!!! This is your admin account!
+                                You can change the password later if you like (Not yet implemented)""");
+                System.out.println("Table 'Users' was just created.");
+            } else if (usersTableExistsBefore) {
+                System.out.println("Table 'Users' already existed.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to check if a specific table exists in the database

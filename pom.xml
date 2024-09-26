@@ -26,10 +26,16 @@
             <version>22.0.1</version>
         </dependency>
         <dependency>
-            <groupId>de.jensd</groupId>
-            <artifactId>fontawesomefx-fontawesome</artifactId>
-            <version>4.7.0-9.1.2</version>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-fontawesome5-pack</artifactId> <!-- Or any other pack -->
+            <version>12.2.0</version>
+        </dependency>
+
         <!-- MySQL Connector/J Dependency -->
         <dependency>
             <groupId>mysql</groupId>

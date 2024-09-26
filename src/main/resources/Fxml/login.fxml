@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -15,16 +16,18 @@
 <children>
     <VBox prefHeight="400.0" prefWidth="200.0" styleClass="login_logo_container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
-            <ImageView fitHeight="79.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
-            </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Student Management">
+            <ImageView fitHeight="58.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/inventory-management.png" />
+               </image></ImageView>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Inventory Management">
                 <font>
                     <Font size="12.0" />
                 </font>
             </Text>
         </children></VBox>
     <Button fx:id="btnLogin" layoutX="225.0" layoutY="230.0" mnemonicParsing="false" onAction="#login" prefHeight="26.0" prefWidth="361.0" text="Login" />
-    <TextField fx:id="txtEmail" layoutX="225.0" layoutY="70.0" prefHeight="26.0" prefWidth="361.0" promptText="ID Number" />
+    <TextField fx:id="txtEmail" layoutX="225.0" layoutY="70.0" prefHeight="26.0" prefWidth="361.0" promptText="Email" />
     <Label layoutX="225.0" layoutY="40.0" prefHeight="20.0" prefWidth="98.0" text="Email: ">
         <font>
             <Font name="System Bold" size="16.0" />
@@ -43,6 +46,6 @@
         </font>
     </Label>
     <CheckBox fx:id="chkPasswordVisible" layoutX="225.0" layoutY="185.0" mnemonicParsing="false" onAction="#passwordVisible" text="Show" />
-    <Button fx:id="btnDBConnection" layoutX="200.0" layoutY="264.0" mnemonicParsing="false" onAction="#backToDBConnection" text="Return to DataBase Connection" textFill="WHITE" AnchorPane.bottomAnchor="0.0" />
+    <Button fx:id="btnDBConnection" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#backToDBConnection" text="Return to DataBase Connection" textFill="WHITE" AnchorPane.bottomAnchor="1.0" />
 </children>
 </AnchorPane>
