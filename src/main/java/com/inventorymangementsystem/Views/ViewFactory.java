@@ -100,6 +100,11 @@ public class ViewFactory {
         return historyView;
     }
 
+    public void showSignUpWindow(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/signUp.fxml"));
+        createStage(loader);
+    }
+
     public void showLoginWindow(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/login.fxml"));
         createStage(loader);

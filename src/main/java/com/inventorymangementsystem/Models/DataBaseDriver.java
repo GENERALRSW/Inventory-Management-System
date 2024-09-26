@@ -1,15 +1,24 @@
 package com.inventorymangementsystem.Models;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DataBaseDriver {
-    private static DataBaseDriver dataBaseDriver;
     private Connection connection;
 
     public DataBaseDriver(){}
 
     public DataBaseDriver(Connection connection){
         this.connection = connection;
+    }
+
+    public DataBaseDriver(String url, String user, String password){
+        try{
+            this.connection = DriverManager.getConnection(url, user, password);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public Connection getConnection() {
@@ -20,10 +29,11 @@ public class DataBaseDriver {
         this.connection = connection;
     }
 
-    public void loadInfo() {
-    }
-
-    public void removeInfo() {
-        
+    public void setConnection(String url, String user, String password){
+        try{
+            this.connection = DriverManager.getConnection(url, user, password);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 }

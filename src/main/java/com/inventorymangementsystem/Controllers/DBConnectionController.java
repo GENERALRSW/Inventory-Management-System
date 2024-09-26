@@ -1,5 +1,6 @@
 package com.inventorymangementsystem.Controllers;
 
+import com.inventorymangementsystem.Models.DataBaseManager;
 import com.inventorymangementsystem.Models.Model;
 import com.inventorymangementsystem.Models.PreferenceKeys;
 import javafx.fxml.Initializable;
@@ -73,8 +74,8 @@ public class DBConnectionController implements Initializable {
 
         try{
             Connection connection = DriverManager.getConnection(Url, username, pwd);
-            Model.getInstance().setConnection(connection);
-            Model.getInstance().getDataBaseDriver().loadInfo();
+            Model.getInstance().getDataBaseDriver().setConnection(connection);
+            DataBaseManager.loadInfo();
             Model.getInstance().getViewFactory().closeStage(stage);
             Model.getInstance().getViewFactory().showLoginWindow();
         } catch (SQLException _) {
@@ -213,7 +214,7 @@ public class DBConnectionController implements Initializable {
 
             Stage stage = (Stage) txtUser.getScene().getWindow();
             Model.getInstance().getViewFactory().closeStage(stage);
-            Model.getInstance().getDataBaseDriver().loadInfo();
+            DataBaseManager.loadInfo();
             Model.getInstance().getViewFactory().showLoginWindow();
             ensureTablesExist(connection);
         } catch (SQLException e) {

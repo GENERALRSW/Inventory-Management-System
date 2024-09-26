@@ -1,5 +1,6 @@
 package com.inventorymangementsystem.Controllers;
 
+import com.inventorymangementsystem.Models.DataBaseManager;
 import com.inventorymangementsystem.Models.Model;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +45,7 @@ public class LoginController implements Initializable {
     }
 
     public void backToDBConnection(){
-        Model.getInstance().getDataBaseDriver().removeInfo();
+        DataBaseManager.removeInfo();
         Stage stage = (Stage) lblError.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().getViewFactory().showDataBaseConnectionWindow();

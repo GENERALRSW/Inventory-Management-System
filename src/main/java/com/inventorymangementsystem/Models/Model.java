@@ -9,7 +9,7 @@ import java.sql.Connection;
 public class Model {
     private static Model model;
     private ViewFactory viewFactory;
-    private DataBaseDriver dataBaseDriver;
+    private final DataBaseDriver dataBaseDriver;
 
     private Model(){
         this.viewFactory = new ViewFactory();
@@ -34,14 +34,6 @@ public class Model {
 
     public DataBaseDriver getDataBaseDriver() {
         return dataBaseDriver;
-    }
-
-    public Connection getConnection(){
-        return dataBaseDriver.getConnection();
-    }
-
-    public void setConnection(Connection connection){
-        dataBaseDriver.setConnection(connection);
     }
 
     public void showAlert(Alert.AlertType alertType, String title, String content) {
