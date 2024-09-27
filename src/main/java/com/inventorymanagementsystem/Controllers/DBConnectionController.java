@@ -304,8 +304,6 @@ public class DBConnectionController implements Initializable {
                         "supplier_id INT NULL, " +
                         "FOREIGN KEY (product_id) REFERENCES Products(product_id))",
 
-                "CREATE INDEX product_id_idx ON Batches (product_id)",
-
                 "CREATE TABLE IF NOT EXISTS InventoryAdjustments (" +
                         "adjustment_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "batch_id INT NOT NULL, " +
@@ -315,8 +313,6 @@ public class DBConnectionController implements Initializable {
                         "reason TEXT NULL, " +
                         "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
 
-                "CREATE INDEX batch_id_idx ON InventoryAdjustments (batch_id)",
-
                 "CREATE TABLE IF NOT EXISTS PurchaseOrders (" +
                         "order_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "order_date DATE NOT NULL, " +
@@ -325,8 +321,6 @@ public class DBConnectionController implements Initializable {
                         "total_amount DECIMAL(10, 2) DEFAULT 0.00 NULL, " +
                         "FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id))",
 
-                "CREATE INDEX supplier_id_idx ON PurchaseOrders (supplier_id)",
-
                 "CREATE TABLE IF NOT EXISTS Sales (" +
                         "sale_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "batch_id INT NOT NULL, " +
@@ -334,8 +328,6 @@ public class DBConnectionController implements Initializable {
                         "quantity_sold INT NOT NULL, " +
                         "sale_price DECIMAL(10, 2) NULL, " +
                         "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
-
-                "CREATE INDEX batch_id_idx ON Sales (batch_id)",
 
                 "CREATE TABLE IF NOT EXISTS Users (" +
                         "user_id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -347,9 +339,29 @@ public class DBConnectionController implements Initializable {
                         "UNIQUE (email))"
         };
 
+        String[] createIndexStatements = {
+                "CREATE INDEX product_id_idx ON Batches (product_id)",
+                "CREATE INDEX batch_id_idx ON InventoryAdjustments (batch_id)",
+                "CREATE INDEX supplier_id_idx ON PurchaseOrders (supplier_id)",
+                "CREATE INDEX sales_batch_id_idx ON Sales (batch_id)"
+        };
+
         try (Statement statement = connection.createStatement()) {
+            // Create tables
             for (String sql : createTableStatements) {
                 statement.execute(sql);
+            }
+
+            // Create indexes if they do not exist
+            for (String indexSql : createIndexStatements) {
+                try {
+                    statement.execute(indexSql);
+                } catch (SQLException e) {
+                    // Ignore error if index already exists
+                    if (!e.getMessage().contains("Duplicate key name")) {
+                        e.printStackTrace(); // Log other errors
+                    }
+                }
             }
 
         } catch (SQLException e) {
