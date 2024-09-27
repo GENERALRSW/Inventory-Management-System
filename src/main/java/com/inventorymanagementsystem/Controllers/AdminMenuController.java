@@ -4,7 +4,6 @@ import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -14,8 +13,6 @@ import java.util.ResourceBundle;
 
 public class AdminMenuController implements Initializable {
     public Button btnDashboard, btnViewInventory, btnAlerts, btnPurchaseOrders, btnReports, btnHistory, btnSignOut;
-    public ImageView imgViewDashBoard, imgViewInventory, imgViewAlerts, imgViewPurchaseOrders;
-    public ImageView imgViewReports, imgViewHistory, imgViewSignOut;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
