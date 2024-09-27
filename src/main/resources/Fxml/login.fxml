@@ -38,8 +38,8 @@
             <Font name="System Bold" size="16.0" />
         </font>
     </Label>
-    <PasswordField fx:id="pwdPassword" layoutX="225.0" layoutY="150.0" onAction="#login" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
-    <TextField fx:id="txtVisiblePassword" layoutX="225.0" layoutY="150.0" onAction="#login" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
+    <PasswordField fx:id="pwdPassword" layoutX="225.0" layoutY="150.0" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
+    <TextField fx:id="txtVisiblePassword" layoutX="225.0" layoutY="150.0" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
     <Label fx:id="lblError" layoutX="225.0" layoutY="255.0" prefHeight="9.0" prefWidth="361.0" textFill="#e42222">
         <font>
             <Font name="System Bold" size="14.0" />
