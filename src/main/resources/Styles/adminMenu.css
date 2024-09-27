@@ -1,79 +1,11 @@
-/*
-.main_menu_container {
-    -fx-background-color: #D2B48C;
-}
-
-.title_container {
-    -fx-background-radius: 20 20 0 0;
-    -fx-alignment: top_center;
-    -fx-padding: 10;
-}
-
-.title_container Text {
-    -fx-fill: #000000;
-    -fx-font-size: 1.35em;
-    -fx-font-weight: bold;
-}
-
-.menu_container {
-    -fx-padding: 10 10 10 20;
-    -fx-spacing: 20;
-}
-
-.menu_container Button{
-    -fx-pref-width: 130;
-    -fx-pref-height: 40;
-    -fx-background-color: #B29772;
-    -fx-text-fill: black;
-    -fx-font-size: 0.949em;
-    -fx-font-weight: bold;
-    -fx-alignment: center_left;
-    -fx-effect: dropshadow(three-pass-box, #B29772, 5, 0, 0, 6);
-}
-
-.menu_container Button:hover {
-    -fx-cursor: hand;
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.menu_container Button:pressed {
-    -fx-background-color:
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-    -fx-effect: dropshadow(three-pass-box, #8B5A2B, 5, 0, 0, 6);
-}
-
-.main_menu_container #btnSignOut {
-    -fx-background-color: #B29772;
-    -fx-text-fill: black;
-    -fx-font-size: 0.949em;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(three-pass-box, #B29772, 5, 0, 0, 6);
-}
-
-.main_menu_container #btnSignOut:hover {
-    -fx-cursor: hand;
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.main_menu_container #btnSignOut:pressed {
-    -fx-background-color:
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-    -fx-effect: dropshadow(three-pass-box, #8B5A2B, 5, 0, 0, 6);
-}
- */
-
 /* Container styling */
 .main_menu_container {
-    -fx-background-color: #282C34; /* Dark theme background */
+    -fx-background-color: #282C34;
     -fx-padding: 10px;
 }
 
 .title_container {
-    -fx-background-color: #3C4048; /* Slightly lighter background for the title area */
+    -fx-background-color: #3C4048;
     -fx-background-radius: 20 20 0 0;
     -fx-alignment: top_center;
     -fx-padding: 10;
@@ -90,43 +22,32 @@
     -fx-padding: 20px;
 }
 
-/* Base button styling */
 .button {
-    -fx-background-color: #3C4048; /* Dark button background */
-    -fx-text-fill: white;           /* White text */
-    -fx-background-radius: 5px;     /* Rounded corners */
+    -fx-background-color: #3C4048;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
     -fx-font-size: 14px;
     -fx-pref-height: 40px;
     -fx-pref-width: 160px;
-    -fx-alignment: center-left;     /* Align text and icons to the left */
-    -fx-padding: 5 20 5 10;
-    -fx-graphic-text-gap: 11px;
+    -fx-alignment: center-left;   /* Align content (text + icon) to the left */
+    -fx-padding: 5 20 5 10;       /* Adjust padding for content inside the button */
+    -fx-graphic-text-gap: 11px;   /* Space between icon and text */
 }
 
-/* Button hover effect */
 .button:hover {
-    -fx-background-color: #4A4E58;  /* Slightly lighter on hover */
+    -fx-background-color: #4A4E58;
 }
 
-/* Button selected (active) state */
 .button:pressed, .button:focused {
-    -fx-background-color: #61AFEF;  /* Highlight color when selected */
-    -fx-text-fill: black;           /* Change text color when selected */
+    -fx-background-color: #61AFEF;
+    -fx-text-fill: black;
 }
 
-/* Icon inside button */
-.button ImageView {
-    -fx-opacity: 0.8; /* Slightly transparent icon */
-    -fx-margin: 0 20 0 0;
-    -fx-fit-width: 20px;
-    -fx-fit-height: 20px;
-}
 
-/* Sign out button with a different style */
 #btnSignOut {
     -fx-background-color: #E06C75;
     -fx-text-fill: white;
-    -fx-pref-width: 112px;   /* Set preferred width */
+    -fx-pref-width: 112px;
     -fx-pref-height: 30px;
 }
 
@@ -136,4 +57,10 @@
 
 #btnSignOut:pressed {
     -fx-background-color: #B33C4C;
+}
+
+/* Icon styling */
+.icon {
+    -fx-fill: white;
+    -fx-opacity: 0.8;
 }

@@ -384,22 +384,6 @@ public class DBConnectionController implements Initializable {
         return false;
     }
 
-    public boolean doesDatabaseExist(Connection connection, String dbName) {
-        String query = "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, dbName);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next(); // If there's a result, the database exists
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false; // If exception or no result, the database doesn't exist
-    }
-
     public void createDatabase(Connection connection, String dbName) {
         String query = "CREATE DATABASE " + dbName;
 
@@ -410,6 +394,4 @@ public class DBConnectionController implements Initializable {
             e.printStackTrace();
         }
     }
-
-
 }
