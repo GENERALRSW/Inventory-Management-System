@@ -1,4 +1,4 @@
-package com.inventorymangementsystem.Views;
+package com.inventorymanagementsystem.Views;
 
 public enum AdminMenuOptions {
     DASHBOARD("Dashboard"),

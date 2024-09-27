@@ -36,6 +36,15 @@
     -fx-font-size: 12px;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+#btnDBConnection:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+#btnDBConnection:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Input field styles */
@@ -70,4 +79,9 @@ Button:hover {
 /* Focused styles for TextField and PasswordField */
 TextField:focused, PasswordField:focused {
     -fx-border-color: #3a77ff;
+}
+
+.password-field {
+    -fx-font-size: 13px; /* Adjust the font size */
+    -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
 }

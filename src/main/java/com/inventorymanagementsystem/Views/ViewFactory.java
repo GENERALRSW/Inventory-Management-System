@@ -1,6 +1,7 @@
-package com.inventorymangementsystem.Views;
+package com.inventorymanagementsystem.Views;
 
-import com.inventorymangementsystem.Controllers.DBConnectionController;
+import com.inventorymanagementsystem.Controllers.AdminController;
+import com.inventorymanagementsystem.Controllers.DBConnectionController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -100,9 +101,16 @@ public class ViewFactory {
         return historyView;
     }
 
+    public void showAdminWindow(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/admin.fxml"));
+        AdminController adminController = new AdminController();
+        loader.setController(adminController);
+        createStage(loader);
+    }
+
     public void showSignUpWindow(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/signUp.fxml"));
-        createStage(loader);
+        createStage(loader, "Sign Up");
     }
 
     public void showLoginWindow(){
@@ -140,7 +148,21 @@ public class ViewFactory {
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("Student Management");
+            stage.setTitle("Inventory Management");
+            stage.show();
+            stage.setResizable(false);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void createStage(FXMLLoader loader, String title){
+        try{
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle(title);
             stage.show();
             stage.setResizable(false);
 

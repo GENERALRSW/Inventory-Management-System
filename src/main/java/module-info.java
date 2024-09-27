@@ -1,4 +1,4 @@
-module com.inventorymangementsystem {
+module com.inventorymanagementsystem {
     requires javafx.controls;
     requires javafx.fxml;
     requires mysql.connector.j;
@@ -9,9 +9,9 @@ module com.inventorymangementsystem {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
 
-    opens com.inventorymangementsystem to javafx.fxml, com.google.gson;
-    exports com.inventorymangementsystem;
-    exports com.inventorymangementsystem.Controllers;
-    exports com.inventorymangementsystem.Models;
-    exports com.inventorymangementsystem.Views;
+    opens com.inventorymanagementsystem to javafx.fxml, com.google.gson;
+    exports com.inventorymanagementsystem;
+    exports com.inventorymanagementsystem.Controllers;
+    exports com.inventorymanagementsystem.Models;
+    exports com.inventorymanagementsystem.Views;
 }

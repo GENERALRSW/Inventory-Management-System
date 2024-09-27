@@ -1,6 +1,6 @@
-package com.inventorymangementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers;
 
-import com.inventorymangementsystem.Models.Model;
+import com.inventorymanagementsystem.Models.Model;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 

@@ -1,4 +1,4 @@
-package com.inventorymangementsystem.Models;
+package com.inventorymanagementsystem.Models;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,6 +68,15 @@ public class User {
 
     public ObjectProperty<LocalDateTime> createdAtProperty() {
         return createdAt;
+    }
+
+    public static boolean isValidName(String name) {
+        return name.matches("^[A-Za-z]+$");
+    }
+
+    public static boolean isValidEmail(String email) {
+        // Implement email validation logic here
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
     public static void update(User user, String name, String email){

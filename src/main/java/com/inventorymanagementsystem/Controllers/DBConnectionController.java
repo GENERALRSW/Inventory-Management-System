@@ -1,17 +1,20 @@
-package com.inventorymangementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers;
 
-import com.inventorymangementsystem.Models.DataBaseManager;
-import com.inventorymangementsystem.Models.Model;
-import com.inventorymangementsystem.Models.PreferenceKeys;
+import com.inventorymanagementsystem.Models.DataBaseManager;
+import com.inventorymanagementsystem.Models.Model;
+import com.inventorymanagementsystem.Models.PreferenceKeys;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import javafx.scene.control.Alert.AlertType;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URL;
 import java.sql.*;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -74,10 +77,17 @@ public class DBConnectionController implements Initializable {
 
         try{
             Connection connection = DriverManager.getConnection(Url, username, pwd);
-            Model.getInstance().getDataBaseDriver().setConnection(connection);
-            DataBaseManager.loadInfo();
             Model.getInstance().getViewFactory().closeStage(stage);
-            Model.getInstance().getViewFactory().showLoginWindow();
+            Model.getInstance().getDataBaseDriver().setConnection(connection);
+
+            if(doesUserExists(connection)){
+                DataBaseManager.loadInfo();
+                Model.getInstance().getViewFactory().showLoginWindow();
+            }
+            else{
+                ensureTablesExist(connection);
+                showSignUpWindow();
+            }
         } catch (SQLException _) {
             stage.show();
         }
@@ -204,22 +214,51 @@ public class DBConnectionController implements Initializable {
         try{
             Connection connection = DriverManager.getConnection(url, username, pwd);
             Model.getInstance().getDataBaseDriver().setConnection(connection);
+            saveCredentials();
 
-            if(choiceBoxSavePwd.getValue().equals("Forever")) {
-                saveCredentials();
-            }
-            else{
+            if(!choiceBoxSavePwd.getValue().equals("Forever")) {
                 clearPassword();
             }
 
             Stage stage = (Stage) txtUser.getScene().getWindow();
             Model.getInstance().getViewFactory().closeStage(stage);
-            DataBaseManager.loadInfo();
-            Model.getInstance().getViewFactory().showLoginWindow();
             ensureTablesExist(connection);
+            DataBaseManager.loadInfo();
+
+            if(doesUserExists(connection)){
+                Model.getInstance().getViewFactory().showLoginWindow();
+            }
+            else{
+                showSignUpWindow();
+            }
         } catch (SQLException e) {
-            Model.getInstance().showAlert(Alert.AlertType.ERROR, "Connection Unsuccessful", "Connection to the database was unsuccessful\n" + e.getMessage());
-        }
+            url = "jdbc:mysql://" + txtHost.getText() + ':' + txtPort.getText() + "/";
+
+            try{
+                Connection connection = DriverManager.getConnection(url, username, pwd);
+                Alert alert = Model.getInstance().getConfirmationDialogAlert("Connection Successful but database doesn't exist",
+                        "The connection was successful but the database doesn't exist. Do you wish to create it?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+                    createDatabase(connection, comboBoxDB.getValue());
+                    url = "jdbc:mysql://" + txtHost.getText() + ':' + txtPort.getText() + "/" + comboBoxDB.getValue();
+                    connection = DriverManager.getConnection(url, username, pwd);
+                    Model.getInstance().getDataBaseDriver().setConnection(connection);
+                    ensureTablesExist(connection);
+                    Stage stage = (Stage) txtUser.getScene().getWindow();
+                    Model.getInstance().getViewFactory().closeStage(stage);
+                    saveCredentials();
+
+                    if(!choiceBoxSavePwd.getValue().equals("Forever")) {
+                        clearPassword();
+                    }
+
+                    showSignUpWindow();
+                }
+            }catch(SQLException t){
+                Model.getInstance().showAlert(Alert.AlertType.ERROR, "Connection Unsuccessful", "Connection to the database was unsuccessful\n" + e.getMessage());
+            }}
     }
 
     // Encrypts the plain text
@@ -309,54 +348,68 @@ public class DBConnectionController implements Initializable {
         };
 
         try (Statement statement = connection.createStatement()) {
-            // Check if 'Users' table exists before running CREATE TABLE
-            boolean usersTableExistsBefore = checkTableExists(connection, "Users");
-
-            // Run all CREATE TABLE statements
             for (String sql : createTableStatements) {
                 statement.execute(sql);
             }
 
-            // Check if 'Users' table exists after running the statements
-            boolean usersTableExistsAfter = checkTableExists(connection, "Users");
-
-            // Determine if 'Users' table was just created
-            if (!usersTableExistsBefore && usersTableExistsAfter) {
-                Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "First time using the System",
-                        """
-                                Since this is your first time a password has been created for you.
-                                ID Number: 1
-                                Password: admin
-                                REMEMBER THIS!!! This is your admin account!
-                                You can change the password later if you like (Not yet implemented)""");
-                System.out.println("Table 'Users' was just created.");
-            } else if (usersTableExistsBefore) {
-                System.out.println("Table 'Users' already existed.");
-            }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Method to check if a specific table exists in the database
-    public boolean checkTableExists(Connection connection, String tableName) {
-        boolean exists = false;
-        String checkTableQuery = "SELECT COUNT(*) FROM information_schema.tables " +
-                "WHERE table_schema = DATABASE() " +
-                "AND table_name = ?";
+    public void showSignUpWindow(){
+        Model.getInstance().getViewFactory().showSignUpWindow();
+        Model.getInstance().showAlert(AlertType.INFORMATION, "First time creating a User account",
+                """
+                        Since there is no user registered in the system you will create an Account.
+                        Make sure to remember the details, specifically the EMAIL and obviously the PASSWORD.
+                        You will need them to login. THERE IS NO RECOVERY SYSTEM (As of now)
+                        You can change the password later if you like (Not yet implemented)""");
+    }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(checkTableQuery)) {
-            preparedStatement.setString(1, tableName);
+    public boolean doesUserExists(Connection connection) {
+        String query = "SELECT COUNT(*) FROM Users";
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    int userCount = resultSet.getInt(1);
+                    return userCount > 0;
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            if (resultSet.next()) {
-                exists = resultSet.getInt(1) > 0;  // If COUNT > 0, the table exists
+        return false;
+    }
+
+    public boolean doesDatabaseExist(Connection connection, String dbName) {
+        String query = "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, dbName);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next(); // If there's a result, the database exists
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return exists;
+        return false; // If exception or no result, the database doesn't exist
     }
+
+    public void createDatabase(Connection connection, String dbName) {
+        String query = "CREATE DATABASE " + dbName;
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+            Model.getInstance().showAlert(AlertType.INFORMATION, "Database created Successfully", "Database created successfully!!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

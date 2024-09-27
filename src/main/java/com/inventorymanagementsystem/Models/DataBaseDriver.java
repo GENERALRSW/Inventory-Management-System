@@ -1,4 +1,4 @@
-package com.inventorymangementsystem.Models;
+package com.inventorymanagementsystem.Models;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

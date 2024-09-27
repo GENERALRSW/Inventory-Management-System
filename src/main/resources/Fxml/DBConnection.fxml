@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../Styles/dataConnection.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventorymangementsystem.Controllers.DBConnectionController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../Styles/dataConnection.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventorymanagementsystem.Controllers.DBConnectionController">
 <children>
     <TextField fx:id="txtHost" layoutX="112.0" layoutY="75.0" prefHeight="26.0" prefWidth="275.0" />
     <Label alignment="CENTER" layoutY="14.0" prefHeight="17.0" prefWidth="601.0" text="MySQL DATABASE CONNECTION" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

@@ -1,15 +1,16 @@
-package com.inventorymangementsystem.Models;
+package com.inventorymanagementsystem.Models;
 
-import com.inventorymangementsystem.Views.ViewFactory;
+import com.inventorymanagementsystem.Views.ViewFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-import java.sql.Connection;
+import java.time.LocalDateTime;
 
 public class Model {
     private static Model model;
     private ViewFactory viewFactory;
     private final DataBaseDriver dataBaseDriver;
+    private User user;
 
     private Model(){
         this.viewFactory = new ViewFactory();
@@ -22,6 +23,18 @@ public class Model {
         }
 
         return model;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUser(int userId, String name, String role, String email, LocalDateTime createdAt){
+        this.user = new User(userId, name, role, email, createdAt);
     }
 
     public ViewFactory getViewFactory(){

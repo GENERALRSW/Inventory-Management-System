@@ -1,7 +1,7 @@
-package com.inventorymangementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers;
 
-import com.inventorymangementsystem.Models.Model;
-import com.inventorymangementsystem.Views.AdminMenuOptions;
+import com.inventorymanagementsystem.Models.Model;
+import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;

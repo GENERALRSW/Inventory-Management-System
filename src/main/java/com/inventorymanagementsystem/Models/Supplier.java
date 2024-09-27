@@ -1,4 +1,4 @@
-package com.inventorymangementsystem.Models;
+package com.inventorymanagementsystem.Models;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
