@@ -35,7 +35,17 @@
             <artifactId>ikonli-fontawesome5-pack</artifactId> <!-- Or any other pack -->
             <version>12.2.0</version>
         </dependency>
-
+        <!-- Email sender -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>2.0.1</version>
+        </dependency>
         <!-- MySQL Connector/J Dependency -->
         <dependency>
             <groupId>mysql</groupId>

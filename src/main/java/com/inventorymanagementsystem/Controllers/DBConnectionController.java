@@ -12,6 +12,7 @@ import javafx.scene.control.Alert.AlertType;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.sql.*;
 import java.util.Base64;
 import java.util.Optional;
@@ -405,5 +406,17 @@ public class DBConnectionController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String generateSecretKey(int keyLength) {
+        // Create a byte array for the secret key (keyLength bytes)
+        byte[] secretKey = new byte[keyLength];
+
+        // Use SecureRandom for cryptographic strength random numbers
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(secretKey); // Fill the byte array with random bytes
+
+        // Encode the key as a Base64 string for easy storage
+        return Base64.getEncoder().encodeToString(secretKey);
     }
 }

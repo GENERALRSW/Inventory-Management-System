@@ -34,6 +34,7 @@ public class DataBaseDriver {
             this.connection = DriverManager.getConnection(url, user, password);
         }catch(SQLException e){
             e.printStackTrace();
+            System.out.println("Connection to database failed!!!");
         }
     }
 }

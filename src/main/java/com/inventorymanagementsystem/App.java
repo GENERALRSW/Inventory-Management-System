@@ -1,4 +1,5 @@
 package com.inventorymanagementsystem;
+import com.inventorymanagementsystem.Controllers.PurchaseOrdersController;
 import com.inventorymanagementsystem.Models.Model;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -11,6 +12,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        //PurchaseOrdersController.sendEmail("peterstywaine@gmail.com", "Test Email", "JavaFx Test Email!!!");
         Model.getInstance();
         Model.getInstance().getViewFactory().dataBaseConnectionWindow();
     }
