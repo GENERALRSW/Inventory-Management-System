@@ -18,11 +18,8 @@ public class PurchaseOrdersController implements Initializable{
     }
 
 
-    public static void sendEmail(String toEmail, String subject, String body) {
-        // SMTP server configuration (Gmail example)
-        String host = "smtp.gmail.com"; // Replace with your SMTP server
-        final String fromEmail = "peterstywaine@gmail.com"; // Your email
-        final String password = "mpap tyra nubl euln"; // Your email password
+    public static void sendEmail(String fromEmail, String password, String toEmail, String subject, String body) {
+        String host = getSmtpHost(fromEmail);
 
         // Setup properties for the mail session
         Properties properties = new Properties();
@@ -55,5 +52,19 @@ public class PurchaseOrdersController implements Initializable{
             e.printStackTrace();
             System.out.println("Error sending email: " + e.getMessage());
         }
+    }
+
+    // Method to get the SMTP host based on the email service
+    private static String getSmtpHost(String fromEmail) {
+        String domain = fromEmail.substring(fromEmail.indexOf("@") + 1).toLowerCase();
+        System.out.println("Email is being sent from " + domain);
+
+        return switch (domain) {
+            case "gmail.com" -> "smtp.gmail.com";
+            case "proton.me", "protonmail.com", "protonmail.ch", "pm.me" -> "smtp.protonmail.com";
+            case "yahoo.com" -> "smtp.mail.yahoo.com";
+            case "outlook.com", "hotmail.com" -> "smtp.office365.com";
+            default -> "Other";
+        };
     }
 }
