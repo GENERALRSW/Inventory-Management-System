@@ -6,6 +6,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -20,6 +21,7 @@ public class ViewFactory {
     private AnchorPane purchaseOrdersView;
     private AnchorPane reportsView;
     private AnchorPane historyView;
+    private Image image = new Image(getClass().getResourceAsStream("/Images/Inventory-Management-System_Icon.png"));
 
     public ViewFactory(){
         this.adminSelectedMenuItem = new SimpleObjectProperty<>();
@@ -134,6 +136,8 @@ public class ViewFactory {
             stage.setTitle("Database Connection");
             stage.setResizable(false);
 
+            stage.getIcons().add(image);
+
             // Get the controller from the loader
             dbController = loader.getController();
             dbController.shouldShow();
@@ -149,6 +153,9 @@ public class ViewFactory {
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle("Inventory Management");
+
+            stage.getIcons().add(image);
+
             stage.show();
             stage.setResizable(false);
 
@@ -163,6 +170,9 @@ public class ViewFactory {
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle(title);
+
+            stage.getIcons().add(image);
+
             stage.show();
             stage.setResizable(false);
 
