@@ -2,6 +2,7 @@
 .main_menu_container {
     -fx-background-color: #282C34;
     -fx-padding: 10px;
+    -fx-background-radius: 0 0 0 10;
 }
 
 .title_container {
@@ -18,7 +19,7 @@
 
 /* Button container */
 .menu_container {
-    -fx-spacing: 10px;
+    -fx-spacing: 30px;
     -fx-padding: 20px;
 }
 

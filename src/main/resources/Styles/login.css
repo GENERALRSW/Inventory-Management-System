@@ -92,7 +92,19 @@ TextField:focused, PasswordField:focused {
     -fx-border-color: #3a77ff;
 }
 
-.password-field {
+#pwdPassword, #txtVisiblePassword {
     -fx-font-size: 13px; /* Adjust the font size */
     -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
+    -fx-padding: 5 30 5 5;
+}
+
+/* Icon styling */
+.icon {
+    -fx-fill: black;
+    -fx-opacity: 0.7;
+}
+
+#btnVisible {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
 }

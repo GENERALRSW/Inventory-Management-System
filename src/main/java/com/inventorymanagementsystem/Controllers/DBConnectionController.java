@@ -83,13 +83,14 @@ public class DBConnectionController implements Initializable {
 
             if(doesUserExists(connection)){
                 DataBaseManager.loadInfo();
-                Model.getInstance().getViewFactory().showLoginWindow();
+                Model.getInstance().getViewFactory().loginWindow();
             }
             else{
                 ensureTablesExist(connection);
                 showSignUpWindow();
             }
         } catch (SQLException _) {
+            LoginController.removeCredentials();
             stage.show();
         }
     }

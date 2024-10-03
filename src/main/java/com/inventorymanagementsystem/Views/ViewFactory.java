@@ -2,12 +2,15 @@ package com.inventorymanagementsystem.Views;
 
 import com.inventorymanagementsystem.Controllers.AdminController;
 import com.inventorymanagementsystem.Controllers.DBConnectionController;
+import com.inventorymanagementsystem.Controllers.LoginController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -143,6 +146,51 @@ public class ViewFactory {
             dbController.shouldShow();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loginWindow(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/login.fxml"));
+        LoginController loginController = null;
+
+        try {
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Inventory Management");
+            stage.setResizable(false);
+
+            stage.getIcons().add(image);
+
+            // Get the controller from the loader
+            loginController = loader.getController();
+            loginController.shouldShow();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createStageDimension(FXMLLoader loader){
+        try{
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Inventory Management");
+
+            // Set stage size relative to screen (e.g., 60% of width, 80% of height)
+            Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+            stage.setWidth(screenBounds.getWidth() * 0.80);  // 60% of screen width
+            stage.setHeight(screenBounds.getHeight() * 0.80);  // 80% of screen height
+
+            // Set the stage icon
+            stage.getIcons().add(image);
+
+            stage.show();
+            stage.setResizable(false);
+
+        }catch (IOException e){
             e.printStackTrace();
         }
     }

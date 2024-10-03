@@ -76,6 +76,7 @@ public class AdminMenuController implements Initializable {
         Stage stage = (Stage) btnDashboard.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().resetViewFactory();
+        LoginController.removeCredentials();
         Model.getInstance().getViewFactory().showLoginWindow();
     }
 }

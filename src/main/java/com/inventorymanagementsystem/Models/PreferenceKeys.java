@@ -7,8 +7,9 @@ public enum PreferenceKeys {
     DB_USERNAME("inventoryManagementSystem_dbUsername"),
     DB_PASSWORD("inventoryManagementSystem_dbPassword"),
     DB_SAVE_PASSWORD("inventoryManagementSystem_dbSavePassword"),
-    DB_DATABASE("inventoryManagementSystem_dbDataBase");
-
+    DB_DATABASE("inventoryManagementSystem_dbDataBase"),
+    USER_EMAIL("inventoryManagementSystem_UserEmail"),
+    USER_PASSWORD("inventoryManagementSystem_UserPassword");
     private final String key;
 
     PreferenceKeys(String key) {

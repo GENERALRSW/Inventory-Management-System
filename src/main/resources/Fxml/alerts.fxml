@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="762.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.AlertsController">
+<AnchorPane prefHeight="850.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.AlertsController">
    <children>
       <Label alignment="CENTER" layoutX="446.0" layoutY="14.0" prefHeight="17.0" prefWidth="99.0" text="ALERT">
          <font>
