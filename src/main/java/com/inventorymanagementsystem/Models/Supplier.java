@@ -1,5 +1,7 @@
 package com.inventorymanagementsystem.Models;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,6 +12,7 @@ import java.util.Map;
 
 public class Supplier {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty();
     private final StringProperty contactEmail = new SimpleStringProperty();
     private final StringProperty phoneNumber = new SimpleStringProperty();
@@ -19,6 +22,7 @@ public class Supplier {
 
     public Supplier(int supplierId, String name, String contactEmail, String phoneNumber, String address) {
         ID = supplierId;
+        this.id.set(supplierId);
         this.name.set(name);
         this.contactEmail.set(contactEmail);
         this.phoneNumber.set(phoneNumber);
@@ -27,6 +31,10 @@ public class Supplier {
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public String getName() {
         return name.get();
     }
@@ -37,6 +45,14 @@ public class Supplier {
 
     public StringProperty nameProperty() {
         return name;
+    }
+
+    public String getFirstName(){
+        return getName().split(" ")[0];
+    }
+
+    public String getLastName(){
+        return getName().split(" ")[1];
     }
 
     public String getContactEmail() {
@@ -73,6 +89,20 @@ public class Supplier {
 
     public StringProperty addressProperty() {
         return address;
+    }
+
+    public static boolean isValidName(String name) {
+        return name.matches("^[A-Za-z]+$");
+    }
+
+    public static boolean isValidEmail(String email) {
+        // Implement email validation logic here
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        // Check if the phone number consists only of numbers and its length is between 7 and 11 digits
+        return phoneNumber.matches("\\d{7,11}");
     }
 
     public static void add(Supplier supplier) {

@@ -17,6 +17,7 @@ public class AdminController implements Initializable {
                     switch(newVal){
                         case VIEW_INVENTORY -> adminParent.setCenter(Model.getInstance().getViewFactory().getViewInventoryView());
                         case ALERTS -> adminParent.setCenter(Model.getInstance().getViewFactory().getAlertsView());
+                        case SUPPLIERS -> adminParent.setCenter(Model.getInstance().getViewFactory().getSuppliersView());
                         case PURCHASE_ORDERS -> adminParent.setCenter(Model.getInstance().getViewFactory().getPurchaseOrdersView());
                         case REPORTS -> adminParent.setCenter(Model.getInstance().getViewFactory().getReportsView());
                         case HISTORY -> adminParent.setCenter(Model.getInstance().getViewFactory().getHistoryView());

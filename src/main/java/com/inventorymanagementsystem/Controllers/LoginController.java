@@ -30,7 +30,7 @@ public class LoginController implements Initializable {
 
     private final FontIcon visibleIcon = createFontIcon(FontAwesomeSolid.EYE);
     private final FontIcon invisibleIcon = createFontIcon(FontAwesomeSolid.EYE_SLASH);
-    private static Preferences preferences = Preferences.userNodeForPackage(LoginController.class);
+    private static final Preferences preferences = Preferences.userNodeForPackage(LoginController.class);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
         if(email.isEmpty() || password.isEmpty()){
             lblError.setText("Text field/s cannot be empty");
         }
-        else if(DataBaseManager.emailExists(email)){
+        else if(DataBaseManager.userEmailExists(email)){
             if(DataBaseManager.validUser(email, password)){
                 Model.getInstance().setUser(DataBaseManager.getUser(email));
                 String role = Model.getInstance().getUser().getRole();
@@ -112,7 +112,7 @@ public class LoginController implements Initializable {
         String password = preferences.get(PreferenceKeys.USER_PASSWORD.getKey(), "");
         Stage stage = (Stage) lblError.getScene().getWindow();
 
-        if(DataBaseManager.emailExists(email) && DataBaseManager.validUser(email, password)){
+        if(DataBaseManager.userEmailExists(email) && DataBaseManager.validUser(email, password)){
             Model.getInstance().setUser(DataBaseManager.getUser(email));
             String role = Model.getInstance().getUser().getRole();
             System.out.println("User was found in the database: " + role);

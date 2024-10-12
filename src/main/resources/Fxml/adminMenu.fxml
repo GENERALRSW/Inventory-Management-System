@@ -25,6 +25,7 @@
                             <Font name="System Bold" size="10.0" />
                         </font>
                     </Button>
+                  <Button fx:id="btnSuppliers" mnemonicParsing="false" text="Suppliers" />
                     <Button fx:id="btnPurchaseOrders" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Purchase Orders">
                         <font>
                             <Font name="System Bold" size="10.0" />

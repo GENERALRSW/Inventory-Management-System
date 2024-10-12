@@ -21,6 +21,7 @@ public class ViewFactory {
     private AnchorPane dashboardView;
     private AnchorPane viewInventoryView;
     private AnchorPane alertsView;
+    private AnchorPane suppliersView;
     private AnchorPane purchaseOrdersView;
     private AnchorPane reportsView;
     private AnchorPane historyView;
@@ -80,6 +81,18 @@ public class ViewFactory {
         }
 
         return purchaseOrdersView;
+    }
+
+    public AnchorPane getSuppliersView(){
+        if(suppliersView == null){
+            try{
+                suppliersView = new FXMLLoader(getClass().getResource("/Fxml/suppliers.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return suppliersView;
     }
 
     public AnchorPane getReportsView(){

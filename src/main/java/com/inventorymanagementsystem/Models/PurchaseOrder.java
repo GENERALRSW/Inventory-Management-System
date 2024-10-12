@@ -1,9 +1,6 @@
 package com.inventorymanagementsystem.Models;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,17 +12,23 @@ import java.util.Map;
 public class PurchaseOrder {
     public final int ID;
     private final ObjectProperty<LocalDate> orderDate = new SimpleObjectProperty<>();
-    private final IntegerProperty quantity = new SimpleIntegerProperty();
     private final IntegerProperty supplierId = new SimpleIntegerProperty();
+    private final StringProperty supplierName = new SimpleStringProperty();
+    private final StringProperty productName = new SimpleStringProperty();
+    private final IntegerProperty quantity = new SimpleIntegerProperty();
     private final ObjectProperty<BigDecimal> totalAmount = new SimpleObjectProperty<>();
+
     private static final Map<Integer, PurchaseOrder> purchaseOrders = new HashMap<>();
     private static final ObservableList<PurchaseOrder> purchaseOrderList = FXCollections.observableArrayList();
 
-    public PurchaseOrder(int orderId, LocalDate orderDate, int quantity, int supplierId, BigDecimal totalAmount) {
+    public PurchaseOrder(int orderId, LocalDate orderDate, int supplierId,
+                         String supplierName, String productName, int quantity, BigDecimal totalAmount) {
         ID = orderId;
         this.orderDate.set(orderDate);
-        this.quantity.set(quantity);
         this.supplierId.set(supplierId);
+        this.supplierName.set(supplierName);
+        this.productName.set(productName);
+        this.quantity.set(quantity);
         this.totalAmount.set(totalAmount);
         add(this);
     }
@@ -43,18 +46,6 @@ public class PurchaseOrder {
         return orderDate;
     }
 
-    public int getQuantity() {
-        return quantity.get();
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity.set(quantity);
-    }
-
-    public IntegerProperty quantityProperty() {
-        return quantity;
-    }
-
     public int getSupplierId() {
         return supplierId.get();
     }
@@ -65,6 +56,42 @@ public class PurchaseOrder {
 
     public IntegerProperty supplierIdProperty() {
         return supplierId;
+    }
+
+    public String getSupplierName(){
+        return supplierName.get();
+    }
+
+    public void setSupplierName(String supplierName){
+        this.supplierName.set(supplierName);
+    }
+
+    public StringProperty supplierNameProperty(){
+        return supplierName;
+    }
+
+    public String getProductName(){
+        return productName.get();
+    }
+
+    public void setProductName(String productName){
+        this.productName.set(productName);
+    }
+
+    public StringProperty productNameProperty(){
+        return productName;
+    }
+
+    public int getQuantity() {
+        return quantity.get();
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity.set(quantity);
+    }
+
+    public IntegerProperty quantityProperty() {
+        return quantity;
     }
 
     public BigDecimal getTotalAmount() {
@@ -92,11 +119,14 @@ public class PurchaseOrder {
         }
     }
 
-    public static void update(PurchaseOrder purchaseOrder, LocalDate orderDate, int quantity, int supplierId, BigDecimal totalAmount){
+    public static void update(PurchaseOrder purchaseOrder, LocalDate orderDate, int supplierId,
+                              String supplierName, String productName, int quantity, BigDecimal totalAmount){
         if(purchaseOrder != null){
             purchaseOrder.setOrderDate(orderDate);
-            purchaseOrder.setQuantity(quantity);
             purchaseOrder.setSupplierId(supplierId);
+            purchaseOrder.setSupplierName(supplierName);
+            purchaseOrder.setProductName(productName);
+            purchaseOrder.setQuantity(quantity);
             purchaseOrder.setTotalAmount(totalAmount);
         }
         else{

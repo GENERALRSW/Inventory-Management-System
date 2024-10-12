@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class DataBaseManager {
 
-    public static boolean emailExists(String email){
+    public static boolean userEmailExists(String email){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT COUNT(*) FROM Users WHERE email = ?";
 
@@ -75,6 +75,42 @@ public class DataBaseManager {
         }
 
         return null;
+    }
+
+    public static boolean isSupplierEmailTaken(String email) {
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT COUNT(*) FROM Suppliers WHERE contact_email = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking Email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean isSupplierPhoneNumTaken(String phoneNumber) {
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT COUNT(*) FROM Suppliers WHERE phone_number = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, phoneNumber);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking PhoneNumber: " + e.getMessage());
+        }
+        return false;
     }
 
     private static void loadBatches(){
@@ -163,11 +199,13 @@ public class DataBaseManager {
             while(resultSet.next()){
                 int orderId = resultSet.getInt("order_id");
                 LocalDate orderDate = resultSet.getDate("order_date").toLocalDate();
-                int quantity = resultSet.getInt("quantity");
                 int supplierId = resultSet.getInt("supplier_id");
+                String supplierName = resultSet.getString("supplier_name");
+                String productName = resultSet.getString("product_name");
+                int quantity = resultSet.getInt("quantity");
                 BigDecimal totalAmount = resultSet.getBigDecimal("total_amount");
 
-                new PurchaseOrder(orderId, orderDate, quantity, supplierId, totalAmount);
+                new PurchaseOrder(orderId, orderDate, supplierId, supplierName, productName, quantity, totalAmount);
             }
 
         }catch(SQLException e){
@@ -304,22 +342,26 @@ public class DataBaseManager {
         }
     }
 
-    public static void addPurchaseOrder(LocalDate orderDate, int quantity, int supplierId, BigDecimal totalAmount){
+    public static void addPurchaseOrder(LocalDate orderDate, int supplierId, String supplierName,
+                                        String productName, int quantity, BigDecimal totalAmount){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO PurchaseOrders (order_date, quantity, supplier_id, total_amount) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO PurchaseOrders (order_date, supplier_id, supplier_name," +
+                " product_name, quantity, total_amount) VALUES (?, ?, ?, ?, ?, ?)";
 
         try{
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setDate(1, Date.valueOf(orderDate));
-            statement.setInt(2, quantity);
-            statement.setInt(3, supplierId);
-            statement.setBigDecimal(4, totalAmount);
+            statement.setInt(2, supplierId);
+            statement.setString(3, supplierName);
+            statement.setString(4, productName);
+            statement.setInt(5, quantity);
+            statement.setBigDecimal(6, totalAmount);
             int rowsAdded = statement.executeUpdate();
             int orderID = -1;
 
             if(rowsAdded > 0){
                 orderID = getLastPurchaseOrderID();
-                new PurchaseOrder(orderID, orderDate, quantity, supplierId, totalAmount);
+                new PurchaseOrder(orderID, orderDate, supplierId, supplierName, productName, quantity, totalAmount);
             }
 
             addMessage("Purchase Order", orderID, rowsAdded);
@@ -506,21 +548,25 @@ public class DataBaseManager {
         }
     }
 
-    public static void updatePurchaseOrder(PurchaseOrder purchaseOrder, LocalDate orderDate, int quantity, int supplierId, BigDecimal totalAmount){
+    public static void updatePurchaseOrder(PurchaseOrder purchaseOrder, LocalDate orderDate, int supplierId,
+                                           String supplierName, String productName, int quantity, BigDecimal totalAmount){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE PurchaseOrders SET order_date = ?, quantity = ?, supplier_id = ?, total_amount = ? WHERE order_id = ?";
+        String query = "UPDATE PurchaseOrders SET order_date = ?, supplier_id = ?, supplier_name = ?," +
+                " product_name = ?, quantity = ?, total_amount = ? WHERE order_id = ?";
 
         try{
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setDate(1, Date.valueOf(orderDate));
-            statement.setInt(2, quantity);
-            statement.setInt(3, supplierId);
-            statement.setBigDecimal(4, totalAmount);
-            statement.setInt(5, purchaseOrder.ID);
+            statement.setInt(2, supplierId);
+            statement.setString(3, supplierName);
+            statement.setString(4, productName);
+            statement.setInt(5, quantity);
+            statement.setBigDecimal(6, totalAmount);
+            statement.setInt(7, purchaseOrder.ID);
             int rowsUpdated = statement.executeUpdate();
 
             if(rowsUpdated > 0){
-                PurchaseOrder.update(purchaseOrder, orderDate, quantity, supplierId, totalAmount);
+                PurchaseOrder.update(purchaseOrder, orderDate, supplierId, supplierName, productName, quantity, totalAmount);
             }
 
             updateMessage("Purchase Order", purchaseOrder.ID, rowsUpdated);
@@ -822,7 +868,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastSupplierID() {
+    public static int getLastSupplierID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT supplier_id FROM Suppliers ORDER BY supplier_id DESC LIMIT 1";
 

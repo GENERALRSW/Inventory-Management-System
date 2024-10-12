@@ -318,10 +318,11 @@ public class DBConnectionController implements Initializable {
                 "CREATE TABLE IF NOT EXISTS PurchaseOrders (" +
                         "order_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "order_date DATE NOT NULL, " +
-                        "quantity INT NOT NULL, " +
                         "supplier_id INT NULL, " +
-                        "total_amount DECIMAL(10, 2) DEFAULT 0.00 NULL, " +
-                        "FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id))",
+                        "supplier_name VARCHAR(100) NOT NULL, " +
+                        "product_name VARCHAR(100) NOT NULL, " +
+                        "quantity INT NOT NULL, " +
+                        "total_amount DECIMAL(10, 2) DEFAULT 0.00 NULL)",
 
                 "CREATE TABLE IF NOT EXISTS Sales (" +
                         "sale_id INT AUTO_INCREMENT PRIMARY KEY, " +

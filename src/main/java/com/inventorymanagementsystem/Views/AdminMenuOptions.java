@@ -4,6 +4,7 @@ public enum AdminMenuOptions {
     DASHBOARD("Dashboard"),
     VIEW_INVENTORY("View Inventory"),
     ALERTS("Alerts"),
+    SUPPLIERS("Suppliers"),
     PURCHASE_ORDERS("Purchase Orders"),
     REPORTS("Reports"),
     HISTORY("History");

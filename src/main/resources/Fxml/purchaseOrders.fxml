@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="850.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.PurchaseOrdersController">
+<AnchorPane prefHeight="850.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.PurchaseOrdersController">
     <children>
-        <Label alignment="CENTER" layoutX="382.0" layoutY="14.0" prefHeight="29.0" prefWidth="236.0" text="PURCHASE ORDERS">
+        <Label alignment="CENTER" layoutX="432.0" layoutY="14.0" prefHeight="29.0" prefWidth="236.0" text="PURCHASE ORDERS" AnchorPane.bottomAnchor="807.0" AnchorPane.leftAnchor="432.0" AnchorPane.rightAnchor="432.0" AnchorPane.topAnchor="14.0">
             <font>
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
+      <TableView fx:id="tableViewPurchaseOrders" layoutX="511.0" layoutY="149.0" prefHeight="691.0" prefWidth="475.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <columns>
+          <TableColumn fx:id="columnOrderID" prefWidth="75.0" text="Order ID" />
+          <TableColumn fx:id="columnDate" prefWidth="95.0" text="Order Date" />
+            <TableColumn fx:id="columnQuantity" prefWidth="91.0" text="Quantity" />
+            <TableColumn fx:id="columnSupplierID" prefWidth="84.0" text="Supplier ID" />
+            <TableColumn fx:id="columnTotalAmount" prefWidth="129.0" text="Total Amount " />
+        </columns>
+      </TableView>
+      <TextField layoutX="14.0" layoutY="120.0" prefHeight="26.0" prefWidth="214.0" />
+      <Label layoutX="24.0" layoutY="103.0" text="Label" />
+      <TextField layoutX="14.0" layoutY="258.0" prefHeight="26.0" prefWidth="214.0" />
     </children>
 </AnchorPane>

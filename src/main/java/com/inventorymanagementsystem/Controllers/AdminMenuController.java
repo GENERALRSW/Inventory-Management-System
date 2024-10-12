@@ -12,7 +12,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AdminMenuController implements Initializable {
-    public Button btnDashboard, btnViewInventory, btnAlerts, btnPurchaseOrders, btnReports, btnHistory, btnSignOut;
+    public Button btnDashboard, btnViewInventory, btnAlerts, btnSuppliers,
+            btnPurchaseOrders, btnReports, btnHistory, btnSignOut;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -25,6 +26,7 @@ public class AdminMenuController implements Initializable {
         btnDashboard.setGraphic(createFontIcon(FontAwesomeSolid.TACHOMETER_ALT, 24));
         btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 24));
         btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 24));
+        btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 24));
         btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 24));
         btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 24));
         btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 24));
@@ -42,6 +44,7 @@ public class AdminMenuController implements Initializable {
         btnDashboard.setOnAction(event -> onDashboard());
         btnViewInventory.setOnAction(event -> onViewInventory());
         btnAlerts.setOnAction(event -> onAlerts());
+        btnSuppliers.setOnAction(event -> onSuppliers());
         btnPurchaseOrders.setOnAction(event -> onPurchaseOrders());
         btnReports.setOnAction(event -> onReports());
         btnHistory.setOnAction(event -> onHistory());
@@ -58,6 +61,10 @@ public class AdminMenuController implements Initializable {
 
     private void onAlerts(){
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ALERTS);
+    }
+
+    private void onSuppliers(){
+        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.SUPPLIERS);
     }
 
     private void onPurchaseOrders(){

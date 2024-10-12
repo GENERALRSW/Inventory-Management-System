@@ -1,16 +1,21 @@
 package com.inventorymanagementsystem.Controllers;
 
+import com.inventorymanagementsystem.Models.PurchaseOrder;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class PurchaseOrdersController implements Initializable{
-
+    public TableView<PurchaseOrder> tableViewPurchaseOrders;
+    public TableColumn<PurchaseOrder, String> columnOrderID, columnDate, columnQuantity;
+    public TableColumn<PurchaseOrder, String> columnSupplierID, columnTotalAmount;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
