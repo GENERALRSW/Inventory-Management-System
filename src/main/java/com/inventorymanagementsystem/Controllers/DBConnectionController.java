@@ -345,7 +345,6 @@ public class DBConnectionController implements Initializable {
         String[] createIndexStatements = {
                 "CREATE INDEX product_id_idx ON Batches (product_id)",
                 "CREATE INDEX batch_id_idx ON InventoryAdjustments (batch_id)",
-                "CREATE INDEX supplier_id_idx ON PurchaseOrders (supplier_id)",
                 "CREATE INDEX sales_batch_id_idx ON Sales (batch_id)"
         };
 
