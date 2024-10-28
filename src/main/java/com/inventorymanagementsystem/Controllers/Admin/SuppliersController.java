@@ -1,4 +1,4 @@
-package com.inventorymanagementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers.Admin;
 
 import com.inventorymanagementsystem.Models.DataBaseManager;
 import com.inventorymanagementsystem.Models.Model;
@@ -32,6 +32,7 @@ public class SuppliersController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lblSupplierID.setVisible(false);
         btnClearSelection.setDisable(true);
+        btnSupplierCommand.setDisable(true);
 
         ObservableList<String> supplierCommandOptions = FXCollections.observableArrayList("Add", "Update", "Delete");
         comboBoxSupplierCommand.setItems(supplierCommandOptions);
@@ -77,29 +78,11 @@ public class SuppliersController implements Initializable {
             }
 
             return String.valueOf(supplier.ID).contains(searchText)
-                    || supplier.getName().contains(searchText)
+                    || supplier.getName().toLowerCase().contains(searchText)
                     || supplier.getContactEmail().toLowerCase().contains(searchText)
                     || supplier.getPhoneNumber().contains(searchText)
-                    || supplier.getAddress().contains(searchText);
+                    || supplier.getAddress().toLowerCase().contains(searchText);
         });
-    }
-
-    private boolean searchSimilar(String stringToSearch, String string) {
-        // If the length of the string to search is greater than the length of the compared string, they are not similar
-        if (stringToSearch.length() > string.length()) {
-            return false;
-        }
-
-        // If the lengths are equal, compare the content to determine similarity
-        if (stringToSearch.length() == string.length()) {
-            // If the strings are not equal, they are considered not similar
-            return stringToSearch.equalsIgnoreCase(string);
-        }
-
-        // If the length of the string to search is less than the length of the compared string,
-        // compare the prefix of the compared string with the string to search
-        string = string.substring(0, stringToSearch.length());
-        return stringToSearch.equalsIgnoreCase(string);
     }
 
     private void updateSupplierCommand(String command) {
@@ -256,17 +239,17 @@ public class SuppliersController implements Initializable {
     }
 
     private void nameHandle(TextField txtName, Label lblNameError) {
-        String lastName = txtName.getText();
+        String name = txtName.getText();
 
-        if(Supplier.isValidName(lastName)){
-            if(lastName.length() > 50){
+        if(Supplier.isValidName(name)){
+            if(name.length() > 50){
                 lblNameError.setText("Name Should not be longer that 50 characters");
             }
             else{
                 lblNameError.setText("");
             }
         }
-        else if(lastName.isEmpty()){
+        else if(name.isEmpty()){
             lblNameError.setText("Text Field cannot be empty");
         }
         else{

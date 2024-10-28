@@ -14,6 +14,8 @@ module com.inventorymanagementsystem {
     opens com.inventorymanagementsystem to javafx.fxml, com.google.gson;
     exports com.inventorymanagementsystem;
     exports com.inventorymanagementsystem.Controllers;
+    exports com.inventorymanagementsystem.Controllers.Admin;
+    exports com.inventorymanagementsystem.Controllers.Staff;
     exports com.inventorymanagementsystem.Models;
     exports com.inventorymanagementsystem.Views;
 }

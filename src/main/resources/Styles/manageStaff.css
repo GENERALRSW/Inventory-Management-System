@@ -44,7 +44,17 @@
     -fx-font-size: 14px;
 }
 
-#txtSupplierSearch, #txtPurchaseOrderSearch {
+
+.combo-box{
+    -fx-background-color: white;
+    -fx-background-radius: 2;
+    -fx-border-color: #3a77ff;
+    -fx-border-radius: 2;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: gray;
+}
+
+#txtStaffSearch {
     -fx-background-color: white;
     -fx-background-radius: 15;
     -fx-padding: 10 10 10 30; /* Make space for the icon */
@@ -55,13 +65,18 @@
     -fx-prompt-text-fill: gray;
 }
 
-#txtQuantity, #txtUnitPrice, #txtTotalAmount, #txtProductName {
+#txtName, #txtEmail, #txtPassword, #pwdPassword {
     -fx-background-color: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
     -fx-border-color: #3a77ff;
     -fx-font-size: 14px;
     -fx-prompt-text-fill: gray;
+}
+
+.password-field{
+    -fx-font-size: 14px; /* Adjust the font size */
+    -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
 }
 
 .button {

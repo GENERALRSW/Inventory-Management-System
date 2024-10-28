@@ -37,4 +37,12 @@ public class DataBaseDriver {
             System.out.println("Connection to database failed!!!");
         }
     }
+
+    public void closeConnection(){
+        try{
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 }

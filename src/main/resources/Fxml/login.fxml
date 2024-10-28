@@ -27,8 +27,8 @@
             </Text>
         </children></VBox>
     <Button fx:id="btnLogin" layoutX="225.0" layoutY="230.0" mnemonicParsing="false" onAction="#login" prefHeight="26.0" prefWidth="361.0" text="Login" />
-    <TextField fx:id="txtEmail" layoutX="225.0" layoutY="70.0" prefHeight="26.0" prefWidth="361.0" promptText="Email" />
-    <Label layoutX="225.0" layoutY="40.0" prefHeight="20.0" prefWidth="127.0" text="Email:">
+    <TextField fx:id="txtIdentity" layoutX="225.0" layoutY="70.0" prefHeight="26.0" prefWidth="361.0" promptText="Email or ID Number" />
+    <Label layoutX="225.0" layoutY="40.0" prefHeight="20.0" prefWidth="176.0" text="Email or ID Number:">
         <font>
             <Font name="System Bold" size="16.0" />
         </font>
@@ -38,15 +38,15 @@
             <Font name="System Bold" size="16.0" />
         </font>
     </Label>
-    <PasswordField fx:id="pwdPassword" layoutX="225.0" layoutY="150.0" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
-    <TextField fx:id="txtVisiblePassword" layoutX="225.0" layoutY="150.0" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
+    <PasswordField fx:id="pwdPassword" layoutX="225.0" layoutY="150.0" onAction="#login" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
+    <TextField fx:id="txtVisiblePassword" layoutX="225.0" layoutY="150.0" onAction="#login" prefHeight="26.0" prefWidth="361.0" promptText="Password" />
     <Label fx:id="lblError" layoutX="225.0" layoutY="255.0" prefHeight="9.0" prefWidth="361.0" textFill="#e42222">
         <font>
             <Font name="System Bold" size="14.0" />
         </font>
     </Label>
     <Button fx:id="btnDBConnection" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#backToDBConnection" text="Return to DataBase Connection" textFill="WHITE" AnchorPane.bottomAnchor="1.0" />
-      <CheckBox fx:id="chkSaveCredentials" layoutX="229.0" layoutY="195.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="127.0" text="Save Credentials" />
+      <CheckBox fx:id="chkSaveCredentials" layoutX="229.0" layoutY="195.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="127.0" text="Remember me" />
       <Button fx:id="btnVisible" layoutX="554.0" layoutY="150.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="26.0" />
 </children>
 </AnchorPane>

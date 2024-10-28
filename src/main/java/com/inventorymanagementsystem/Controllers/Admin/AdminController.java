@@ -1,4 +1,4 @@
-package com.inventorymanagementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers.Admin;
 
 import com.inventorymanagementsystem.Models.Model;
 import javafx.fxml.Initializable;
@@ -15,13 +15,14 @@ public class AdminController implements Initializable {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().addListener(
                 (observableValue, oldVal, newVal) -> {
                     switch(newVal){
-                        case VIEW_INVENTORY -> adminParent.setCenter(Model.getInstance().getViewFactory().getViewInventoryView());
                         case ALERTS -> adminParent.setCenter(Model.getInstance().getViewFactory().getAlertsView());
+                        case MANAGE_STAFF -> adminParent.setCenter(Model.getInstance().getViewFactory().getManageStaffView());
                         case SUPPLIERS -> adminParent.setCenter(Model.getInstance().getViewFactory().getSuppliersView());
                         case PURCHASE_ORDERS -> adminParent.setCenter(Model.getInstance().getViewFactory().getPurchaseOrdersView());
                         case REPORTS -> adminParent.setCenter(Model.getInstance().getViewFactory().getReportsView());
                         case HISTORY -> adminParent.setCenter(Model.getInstance().getViewFactory().getHistoryView());
-                        default -> adminParent.setCenter(Model.getInstance().getViewFactory().getDashboardView());
+                        case ACCOUNT -> adminParent.setCenter(Model.getInstance().getViewFactory().getAccountView());
+                        default -> adminParent.setCenter(Model.getInstance().getViewFactory().getViewInventoryView());
                     }
                 }
         );

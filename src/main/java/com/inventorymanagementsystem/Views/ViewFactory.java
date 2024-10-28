@@ -1,8 +1,9 @@
 package com.inventorymanagementsystem.Views;
 
-import com.inventorymanagementsystem.Controllers.AdminController;
+import com.inventorymanagementsystem.Controllers.Admin.AdminController;
 import com.inventorymanagementsystem.Controllers.DBConnectionController;
 import com.inventorymanagementsystem.Controllers.LoginController;
+import com.inventorymanagementsystem.Models.Model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -18,33 +19,33 @@ import java.io.IOException;
 public class ViewFactory {
     //Admin Views
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
-    private AnchorPane dashboardView;
-    private AnchorPane viewInventoryView;
-    private AnchorPane alertsView;
+    private AnchorPane manageStaffView;
     private AnchorPane suppliersView;
     private AnchorPane purchaseOrdersView;
     private AnchorPane reportsView;
+    private AnchorPane accountView;
+
+    //Staff View
+    private final ObjectProperty<StaffMenuOptions> staffSelectedMenuItem;
+
+    //shared Views
+    private AnchorPane viewInventoryView;
+    private AnchorPane alertsView;
     private AnchorPane historyView;
-    private Image image = new Image(getClass().getResourceAsStream("/Images/Inventory-Management-System_Icon.png"));
+
+    private final Image image = new Image(getClass().getResourceAsStream("/Images/Inventory-Management-System_Icon.png"));
 
     public ViewFactory(){
         this.adminSelectedMenuItem = new SimpleObjectProperty<>();
+        this.staffSelectedMenuItem = new SimpleObjectProperty<>();
     }
 
     public ObjectProperty<AdminMenuOptions> getAdminSelectedMenuItem() {
         return adminSelectedMenuItem;
     }
 
-    public AnchorPane getDashboardView(){
-        if(dashboardView == null){
-            try{
-                dashboardView = new FXMLLoader(getClass().getResource("/Fxml/dashBoard.fxml")).load();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-
-        return dashboardView;
+    public ObjectProperty<StaffMenuOptions> getStaffSelectedMenuItem(){
+        return staffSelectedMenuItem;
     }
 
     public AnchorPane getViewInventoryView(){
@@ -71,22 +72,22 @@ public class ViewFactory {
         return alertsView;
     }
 
-    public AnchorPane getPurchaseOrdersView(){
-        if(purchaseOrdersView == null){
+    public AnchorPane getManageStaffView(){
+        if(manageStaffView == null){
             try{
-                purchaseOrdersView = new FXMLLoader(getClass().getResource("/Fxml/purchaseOrders.fxml")).load();
+                manageStaffView = new FXMLLoader(getClass().getResource("/Fxml/Admin/manageStaff.fxml")).load();
             }catch(IOException e){
                 e.printStackTrace();
             }
         }
 
-        return purchaseOrdersView;
+        return manageStaffView;
     }
 
     public AnchorPane getSuppliersView(){
         if(suppliersView == null){
             try{
-                suppliersView = new FXMLLoader(getClass().getResource("/Fxml/suppliers.fxml")).load();
+                suppliersView = new FXMLLoader(getClass().getResource("/Fxml/Admin/suppliers.fxml")).load();
             }catch(IOException e){
                 e.printStackTrace();
             }
@@ -95,10 +96,22 @@ public class ViewFactory {
         return suppliersView;
     }
 
+    public AnchorPane getPurchaseOrdersView(){
+        if(purchaseOrdersView == null){
+            try{
+                purchaseOrdersView = new FXMLLoader(getClass().getResource("/Fxml/Admin/purchaseOrders.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return purchaseOrdersView;
+    }
+
     public AnchorPane getReportsView(){
         if(reportsView == null){
             try{
-                reportsView = new FXMLLoader(getClass().getResource("/Fxml/reports.fxml")).load();
+                reportsView = new FXMLLoader(getClass().getResource("/Fxml/Admin/reports.fxml")).load();
             }catch(IOException e){
                 e.printStackTrace();
             }
@@ -119,8 +132,27 @@ public class ViewFactory {
         return historyView;
     }
 
+    public AnchorPane getAccountView(){
+        if(accountView == null){
+            try{
+                accountView = new FXMLLoader(getClass().getResource("/Fxml/Admin/account.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return accountView;
+    }
+
     public void showAdminWindow(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/admin.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Admin/admin.fxml"));
+        AdminController adminController = new AdminController();
+        loader.setController(adminController);
+        createStage(loader);
+    }
+
+    public void showStaffWindow(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Staff/staff.fxml"));
         AdminController adminController = new AdminController();
         loader.setController(adminController);
         createStage(loader);
@@ -234,11 +266,25 @@ public class ViewFactory {
 
             stage.getIcons().add(image);
 
+            /*
+            stage.setOnCloseRequest(event -> {
+                onExit();
+            });
+             */
+
             stage.show();
             stage.setResizable(false);
 
         }catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    private void onExit() {
+        System.out.println("Application is closing...");
+
+        if (Model.getInstance().getDataBaseDriver().getConnection() != null) {
+            Model.getInstance().getDataBaseDriver().closeConnection();
         }
     }
 

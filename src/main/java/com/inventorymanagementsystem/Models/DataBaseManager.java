@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class DataBaseManager {
 
@@ -28,17 +29,109 @@ public class DataBaseManager {
         return false;
     }
 
+    public static boolean userIdentityExist(String identity){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query;
+
+        if(isInteger(identity)){
+            query = "SELECT COUNT(*) FROM Users WHERE user_id = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, Integer.parseInt(identity));
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+                System.err.println("SQL Error: Could not check user existence.");
+            }
+        }
+        else{
+            query = "SELECT COUNT(*) FROM Users WHERE email = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, identity);
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.err.println("SQL Error: Could not check user existence.");
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean validUserIdentity(String identity, String password){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query;
+
+        if(isInteger(identity)){
+            query = "SELECT password_hash FROM Users WHERE user_id = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, Integer.parseInt(identity));
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    String passwordHashFromDb = resultSet.getString("password_hash");
+
+                    // Compare the hashed password with the one stored in the database
+                    return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+                System.err.println("SQL Error: Could not verify password.");
+            }
+        }
+        else{
+            query = "SELECT password_hash FROM Users WHERE email = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, identity);
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    String passwordHashFromDb = resultSet.getString("password_hash");
+
+                    // Compare the hashed password with the one stored in the database
+                    return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.err.println("SQL Error: Could not verify password.");
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isInteger(String identity){
+        try{
+            int identity2 = Integer.parseInt(identity);
+            return true;
+        }catch(NumberFormatException _){
+            return false;
+        }
+    }
+
     public static boolean validUser(String email, String password){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT password_hash FROM Users WHERE email = ?";
-        String passwordHashFromDb;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                passwordHashFromDb = resultSet.getString("password_hash");
+                String passwordHashFromDb = resultSet.getString("password_hash");
 
                 // Compare the hashed password with the one stored in the database
                 return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
@@ -51,6 +144,38 @@ public class DataBaseManager {
         }
 
         return false;
+    }
+
+    public static Admin getAdmin(User user){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT * FROM Admins WHERE user_id = ?";
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, user.ID);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                int admin_id = resultSet.getInt("admin_id");
+                int userId = resultSet.getInt("user_id");
+                String name = Arrays.toString(resultSet.getBytes("email_password_encrypted"));
+
+                return new Admin(admin_id, userId);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static User getUserFromIdentity(String identity){
+        if(isInteger(identity)){
+            return getUser(Integer.parseInt(identity));
+        }
+        else{
+            return getUser(identity);
+        }
     }
 
     public static User getUser(String email){
@@ -75,6 +200,54 @@ public class DataBaseManager {
         }
 
         return null;
+    }
+
+    public static User getUser(int userId){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT * FROM Users WHERE user_id = ?";
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                String name = resultSet.getString("name");
+                String role = resultSet.getString("role");
+                String email = resultSet.getString("email");
+                LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+
+                return new User(userId, name, role, email, createdAt);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getAdminEmailPassword(User user) {
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT email_password_encrypted FROM Admins WHERE user_id = ?";
+        String decryptedPassword = null;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, user.ID);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String encryptedPassword = resultSet.getString("email_password_encrypted");
+                decryptedPassword = EncryptionUtils.decrypt(encryptedPassword);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("SQL Error: Could not retrieve admin email password.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error: Decryption failed.");
+        }
+
+        return decryptedPassword;
     }
 
     public static boolean isSupplierEmailTaken(String email) {
@@ -111,6 +284,30 @@ public class DataBaseManager {
             System.err.println("Error checking PhoneNumber: " + e.getMessage());
         }
         return false;
+    }
+
+    private static void loadStaff(){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "SELECT * FROM Users WHERE role = 'STAFF'";
+
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while(resultSet.next()){
+                int userId = resultSet.getInt("user_id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+
+                new User(userId, name, "STAFF", email, createdAt);
+            }
+
+        }catch(SQLException e){
+            Model.getInstance().showAlert(AlertType.ERROR, "Error loading Staff",
+                    e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private static void loadBatches(){
@@ -267,6 +464,25 @@ public class DataBaseManager {
 
 
     // For adding to database
+    public static void addAdmin(int userId, String emailPassword) {
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "INSERT INTO Admins (user_id, email_password_encrypted) VALUES (?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            statement.setString(2, EncryptionUtils.encrypt(emailPassword));
+
+            int rowsAdded = statement.executeUpdate();
+            addMessage("Admin", rowsAdded);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("SQL Error: Could not add admin.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error: Encryption failed.");
+        }
+    }
+
     public static void addBatch(int productId, int currentStock, LocalDate expirationDate, int supplierId){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Batches (product_id, current_stock, expiration_date, supplier_id) VALUES (?, ?, ?, ?)";
@@ -424,12 +640,11 @@ public class DataBaseManager {
     public static void addUser(String name, String role, String password, String email){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Users (name, password_hash, role, email) VALUES (?, ?, ?, ?)";
-        String salt = MyBCrypt.generateSalt();
 
         try{
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, name);
-            statement.setString(2, MyBCrypt.hashPassword(password, salt));
+            statement.setString(2, MyBCrypt.hashPassword(password));
             statement.setString(3, role);
             statement.setString(4, email);
             int rowsAdded = statement.executeUpdate();
@@ -450,12 +665,11 @@ public class DataBaseManager {
     public static void addUser(String name, String password, String email){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Users (name, password_hash, email) VALUES (?, ?, ?)";
-        String salt = MyBCrypt.generateSalt();
 
         try{
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, name);
-            statement.setString(2, MyBCrypt.hashPassword(password, salt));
+            statement.setString(2, MyBCrypt.hashPassword(password));
             statement.setString(3, email);
             int rowsAdded = statement.executeUpdate();
             int userId = -1;
@@ -474,6 +688,24 @@ public class DataBaseManager {
 
 
     // For update info to the database
+    public static void updateAdmin(User user, String emailPassword){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "UPDATE Admins SET email_password_encrypted = ? WHERE user_id = ?";
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, EncryptionUtils.encrypt(emailPassword));
+            statement.setInt(2, user.ID);
+            int rowsUpdated = statement.executeUpdate();
+
+            updateMessage("Batch", user.ID, rowsUpdated);
+        }catch(SQLException e){
+            Model.getInstance().showAlert(AlertType.ERROR, "Error updating Admin",
+                    e.getMessage());
+        }
+    }
+
+
     public static void updateBatch(Batch batch, int productId, int currentStock, LocalDate expirationDate, int supplierId){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Batches SET product_id = ?, current_stock = ?, expiration_date = ?, supplier_id = ? WHERE batch_id = ?";
@@ -646,6 +878,29 @@ public class DataBaseManager {
         }
     }
 
+    public static void updateUser(User user, String name, String password, String email){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "UPDATE Users SET name = ?, password_hash = ?, email = ? WHERE user_id = ?";
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, MyBCrypt.hashPassword(password));
+            statement.setString(3, email);
+            statement.setInt(4, user.ID);
+            int rowsUpdated = statement.executeUpdate();
+
+            if(rowsUpdated > 0){
+                User.update(user, name, email);
+            }
+
+            updateMessage("User", user.ID, rowsUpdated);
+        }catch(SQLException e){
+            Model.getInstance().showAlert(AlertType.ERROR, "Error updating User",
+                    e.getMessage());
+        }
+    }
+
 
     // For deleting info from the database
     public static void deleteBatch(Batch batch){
@@ -762,6 +1017,26 @@ public class DataBaseManager {
             }
 
             deleteMessage("Supplier", supplier.ID, rowsDeleted);
+        }catch(SQLException e){
+            Model.getInstance().showAlert(AlertType.ERROR, "Error deleting Supplier",
+                    e.getMessage());
+        }
+    }
+
+    public static void deleteStaff(User staff){
+        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
+        String query = "DELETE FROM Users WHERE user_id = ?";
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, staff.ID);
+            int rowsDeleted = statement.executeUpdate();
+
+            if(rowsDeleted > 0){
+                User.removeStaff(staff);
+            }
+
+            deleteMessage("User with role: Staff", staff.ID, rowsDeleted);
         }catch(SQLException e){
             Model.getInstance().showAlert(AlertType.ERROR, "Error deleting Supplier",
                     e.getMessage());
@@ -888,7 +1163,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastUserID() {
+    public static int getLastUserID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT user_id FROM Users ORDER BY user_id DESC LIMIT 1";
 
@@ -974,6 +1249,7 @@ public class DataBaseManager {
         loadPurchaseOrders();
         loadSales();
         loadSuppliers();
+        loadStaff();
     }
 
     public static void removeInfo() {
@@ -983,5 +1259,7 @@ public class DataBaseManager {
         PurchaseOrder.empty();
         Sale.empty();
         Supplier.empty();
+        User.emptyStaff();
     }
+    
 }

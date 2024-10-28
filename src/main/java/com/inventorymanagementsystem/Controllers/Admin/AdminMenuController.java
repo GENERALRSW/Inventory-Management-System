@@ -1,5 +1,6 @@
-package com.inventorymanagementsystem.Controllers;
+package com.inventorymanagementsystem.Controllers.Admin;
 
+import com.inventorymanagementsystem.Controllers.LoginController;
 import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import javafx.fxml.Initializable;
@@ -12,8 +13,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AdminMenuController implements Initializable {
-    public Button btnDashboard, btnViewInventory, btnAlerts, btnSuppliers,
-            btnPurchaseOrders, btnReports, btnHistory, btnSignOut;
+    public Button btnViewInventory, btnAlerts, btnManageStaff, btnSuppliers,
+            btnPurchaseOrders, btnReports, btnHistory, btnAccount, btnSignOut;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -23,13 +24,14 @@ public class AdminMenuController implements Initializable {
 
     private void setIcons() {
         // Directly set Ikonli icons on buttons using FontAwesomeSolid icons
-        btnDashboard.setGraphic(createFontIcon(FontAwesomeSolid.TACHOMETER_ALT, 24));
         btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 24));
         btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 24));
+        btnManageStaff.setGraphic(createFontIcon(FontAwesomeSolid.USER_COG, 24));  // Icon for Manage Staff
         btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 24));
         btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 24));
         btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 24));
         btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 24));
+        btnAccount.setGraphic(createFontIcon(FontAwesomeSolid.USER_CIRCLE, 24));  // Icon for Account
         btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 20));
     }
 
@@ -41,18 +43,15 @@ public class AdminMenuController implements Initializable {
     }
 
     private void addListeners(){
-        btnDashboard.setOnAction(event -> onDashboard());
         btnViewInventory.setOnAction(event -> onViewInventory());
         btnAlerts.setOnAction(event -> onAlerts());
+        btnManageStaff.setOnAction(event -> onManageStaff());
         btnSuppliers.setOnAction(event -> onSuppliers());
         btnPurchaseOrders.setOnAction(event -> onPurchaseOrders());
         btnReports.setOnAction(event -> onReports());
         btnHistory.setOnAction(event -> onHistory());
+        btnAccount.setOnAction(event -> onAccount());
         btnSignOut.setOnAction(event -> onSignOut());
-    }
-
-    private void onDashboard(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.DASHBOARD);
     }
 
     private void onViewInventory(){
@@ -61,6 +60,10 @@ public class AdminMenuController implements Initializable {
 
     private void onAlerts(){
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ALERTS);
+    }
+
+    private void onManageStaff(){
+        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.MANAGE_STAFF);
     }
 
     private void onSuppliers(){
@@ -79,8 +82,12 @@ public class AdminMenuController implements Initializable {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.HISTORY);
     }
 
+    private void onAccount(){
+        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ACCOUNT);
+    }
+
     private void onSignOut(){
-        Stage stage = (Stage) btnDashboard.getScene().getWindow();
+        Stage stage = (Stage) btnViewInventory.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().resetViewFactory();
         LoginController.removeCredentials();

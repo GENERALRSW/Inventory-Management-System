@@ -96,13 +96,17 @@ public class Supplier {
     }
 
     public static boolean isValidEmail(String email) {
-        // Implement email validation logic here
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return User.isValidEmail(email);
+    }
+
+    public static boolean isValidPhoneNumber1(String phoneNumber) {
+        // Check if the phone number consists only of numbers and its length is between 7 and 11 digits
+        return phoneNumber.matches("\\d{7,11}");
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
-        // Check if the phone number consists only of numbers and its length is between 7 and 11 digits
-        return phoneNumber.matches("\\d{7,11}");
+        // Check if the phone number is in the format ###-####
+        return phoneNumber != null && phoneNumber.matches("\\d{3}-\\d{4}");
     }
 
     public static void add(Supplier supplier) {

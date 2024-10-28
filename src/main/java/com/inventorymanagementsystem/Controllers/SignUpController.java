@@ -104,6 +104,7 @@ public class SignUpController implements Initializable {
         }
 
         DataBaseManager.addUser(name, password, email);
+        DataBaseManager.addAdmin(DataBaseManager.getLastUserID(), "");
         Stage stage = (Stage) lblError.getScene().getWindow();
         Model.getInstance().showAlert(AlertType.INFORMATION, "Successfully created User", "User was created successfully");
         Model.getInstance().getViewFactory().closeStage(stage);

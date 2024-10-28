@@ -18,7 +18,7 @@ import java.util.prefs.Preferences;
 
 public class LoginController implements Initializable {
     @FXML
-    public TextField txtEmail, txtVisiblePassword;
+    public TextField txtIdentity, txtVisiblePassword;
     @FXML
     public PasswordField pwdPassword;
     @FXML
@@ -52,27 +52,27 @@ public class LoginController implements Initializable {
     }
 
     public void login(){
-        String email = txtEmail.getText();
+        String identity = txtIdentity.getText();
         String password = (pwdPassword.isVisible()) ? pwdPassword.getText() : txtVisiblePassword.getText();
 
-        if(email.isEmpty() || password.isEmpty()){
+        if(identity.isEmpty() || password.isEmpty()){
             lblError.setText("Text field/s cannot be empty");
         }
-        else if(DataBaseManager.userEmailExists(email)){
-            if(DataBaseManager.validUser(email, password)){
-                Model.getInstance().setUser(DataBaseManager.getUser(email));
+        else if(DataBaseManager.userIdentityExist(identity)){
+            if(DataBaseManager.validUserIdentity(identity, password)){
+                Model.getInstance().setUser(DataBaseManager.getUserFromIdentity(identity));
                 String role = Model.getInstance().getUser().getRole();
-                System.out.println("User was found in the database: " + role);
                 lblError.setText("");
+                System.out.println("User was found in the database: " + role);
                 Stage stage = (Stage) lblError.getScene().getWindow();
-                showAdminWindow(email, password, stage, role);
+                showCorrectWindow(identity, password, stage, role);
             }
             else{
                 lblError.setText("Password is incorrect");
             }
         }
         else{
-            lblError.setText("Email does not exist");
+            lblError.setText("Email or Id Number does not exist");
         }
     }
 
@@ -103,44 +103,53 @@ public class LoginController implements Initializable {
     }
 
     public static void removeCredentials(){
-        preferences.put(PreferenceKeys.USER_EMAIL.getKey(), "");
+        preferences.put(PreferenceKeys.USER_IDENTITY.getKey(), "");
         preferences.put(PreferenceKeys.USER_PASSWORD.getKey(), "");
     }
 
     public void shouldShow() {
-        String email = preferences.get(PreferenceKeys.USER_EMAIL.getKey(), "");
+        String identity = preferences.get(PreferenceKeys.USER_IDENTITY.getKey(), "");
         String password = preferences.get(PreferenceKeys.USER_PASSWORD.getKey(), "");
         Stage stage = (Stage) lblError.getScene().getWindow();
 
-        if(DataBaseManager.userEmailExists(email) && DataBaseManager.validUser(email, password)){
-            Model.getInstance().setUser(DataBaseManager.getUser(email));
+        if(DataBaseManager.userIdentityExist(identity) && DataBaseManager.validUserIdentity(identity, password)){
+            Model.getInstance().setUser(DataBaseManager.getUserFromIdentity(identity));
             String role = Model.getInstance().getUser().getRole();
             System.out.println("User was found in the database: " + role);
             lblError.setText("");
-            showAdminWindow(email, password, stage, role);
+            showCorrectWindow(identity, password, stage, role);
         }
         else{
             removeCredentials();
             stage.show();
         }
-
-
     }
 
-    private void showAdminWindow(String email, String password, Stage stage, String role) {
+    private void showCorrectWindow(String email, String password, Stage stage, String role) {
         Model.getInstance().getViewFactory().closeStage(stage);
 
         if(role.equals("ADMIN")){
             if(chkSaveCredentials.isSelected()){
-                preferences.put(PreferenceKeys.USER_EMAIL.getKey(), email);
+                preferences.put(PreferenceKeys.USER_IDENTITY.getKey(), email);
                 preferences.put(PreferenceKeys.USER_PASSWORD.getKey(), password);
             }
 
             Model.getInstance().getViewFactory().showAdminWindow();
         }
         else{
-            Model.getInstance().showAlert(AlertType.ERROR, "There is no User other than Admin", "How did this happen?????");
-            System.exit(1);
+            if(role.equals("STAFF")){
+                if(chkSaveCredentials.isSelected()){
+                    preferences.put(PreferenceKeys.USER_IDENTITY.getKey(), email);
+                    preferences.put(PreferenceKeys.USER_PASSWORD.getKey(), password);
+                }
+
+                Model.getInstance().getViewFactory().showStaffWindow();
+            }
+            else{
+                Model.getInstance().showAlert(AlertType.ERROR, "There is no User other than Admin and Staff", "How did this happen?????");
+                System.exit(1);
+            }
         }
     }
+
 }

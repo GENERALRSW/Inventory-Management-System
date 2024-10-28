@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="850.0" prefWidth="1100.0" stylesheets="@../Styles/suppliers.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.SuppliersController">
+<AnchorPane prefHeight="850.0" prefWidth="1100.0" stylesheets="@../../Styles/suppliers.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.Controllers.Admin.SuppliersController">
     <TableView fx:id="tableViewSuppliers" layoutY="115.0" prefHeight="439.0" prefWidth="1100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columns>
             <TableColumn fx:id="columnSupplierID" prefWidth="92.0" text="Supplier ID" />
@@ -25,7 +25,7 @@
     <TextField fx:id="txtSupplierSearch" layoutX="13.0" layoutY="65.0" prefHeight="41.0" prefWidth="383.0" promptText="Search" />
     <ImageView fitHeight="16.0" fitWidth="27.0" layoutX="22.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../Images/searchgrey.png" />
+         <Image url="@../../Images/searchgrey.png" />
       </image></ImageView>
     <Label alignment="CENTER" layoutY="15.0" prefHeight="29.0" prefWidth="1000.0" text="Supplier Details" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <font>
@@ -33,7 +33,7 @@
         </font>
     </Label>
     <TextField fx:id="txtPhoneNumber" layoutX="365.0" layoutY="600.0" prefHeight="26.0" prefWidth="270.0" promptText="Phone Number" />
-    <Label layoutX="365.0" layoutY="570.0" prefHeight="17.0" prefWidth="270.0" text="Phone Number:">
+    <Label layoutX="365.0" layoutY="570.0" prefHeight="23.0" prefWidth="122.0" text="Phone Number:">
         <font>
             <Font size="18.0" />
         </font>
@@ -89,6 +89,11 @@
    <Label layoutX="366.0" layoutY="640.0" prefHeight="17.0" prefWidth="270.0" text="Address: ">
       <font>
          <Font size="18.0" />
+      </font>
+   </Label>
+   <Label layoutX="487.0" layoutY="575.0" text="*###-####">
+      <font>
+         <Font size="10.0" />
       </font>
    </Label>
 </AnchorPane>

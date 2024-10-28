@@ -1,6 +1,7 @@
 package com.inventorymanagementsystem.Controllers;
 
 import com.inventorymanagementsystem.Models.DataBaseManager;
+import com.inventorymanagementsystem.Models.EncryptionUtils;
 import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Models.PreferenceKeys;
 import javafx.fxml.Initializable;
@@ -9,8 +10,6 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Alert.AlertType;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.sql.*;
@@ -27,8 +26,6 @@ public class DBConnectionController implements Initializable {
     public Button btnTestConnection, btnContinue;
     public Label lblUser, lblPassword, lblSave, lblDataBase;
     private Preferences preferences = Preferences.userNodeForPackage(DBConnectionController.class);
-    private static final String ALGORITHM = "AES";
-    private static final String SECRET_KEY = "1234567890123456";  // Use a secure way to store or generate this key.
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -105,7 +102,7 @@ public class DBConnectionController implements Initializable {
 
             try {
                 // Encrypt the password before storing it
-                String encryptedPassword = encrypt(password.getText());
+                String encryptedPassword = EncryptionUtils.encrypt(password.getText());
                 preferences.put(PreferenceKeys.DB_PASSWORD.getKey(), encryptedPassword);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -153,7 +150,7 @@ public class DBConnectionController implements Initializable {
         if (!encryptedPwd.isEmpty()) {
             try {
                 // Decrypt the password before using it
-                String decryptedPassword = decrypt(encryptedPwd);
+                String decryptedPassword = EncryptionUtils.decrypt(encryptedPwd);
                 password.setText(decryptedPassword);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -263,24 +260,7 @@ public class DBConnectionController implements Initializable {
             }}
     }
 
-    // Encrypts the plain text
-    public static String encrypt(String plainText) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
-        return Base64.getEncoder().encodeToString(encryptedBytes);
-    }
 
-    // Decrypts the encrypted text
-    public static String decrypt(String encryptedText) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        byte[] decodedBytes = Base64.getDecoder().decode(encryptedText);
-        byte[] decryptedBytes = cipher.doFinal(decodedBytes);
-        return new String(decryptedBytes);
-    }
 
     private void ensureTablesExist(Connection connection) {
         // Array of table creation SQL statements
@@ -339,7 +319,13 @@ public class DBConnectionController implements Initializable {
                         "role ENUM('ADMIN', 'STAFF') DEFAULT 'ADMIN' NULL, " +
                         "email VARCHAR(100) NOT NULL, " +
                         "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL, " +
-                        "UNIQUE (email))"
+                        "UNIQUE (email))",
+
+                "CREATE TABLE IF NOT EXISTS Admins (" +
+                        "admin_id INT PRIMARY KEY AUTO_INCREMENT, " +
+                        "user_id INT NOT NULL UNIQUE, " +
+                        "email_password_encrypted VARCHAR(255), " +
+                        "FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE)"
         };
 
         String[] createIndexStatements = {

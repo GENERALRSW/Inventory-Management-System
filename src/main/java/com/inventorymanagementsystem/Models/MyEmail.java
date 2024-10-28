@@ -1,27 +1,12 @@
-package com.inventorymanagementsystem.Controllers;
+package com.inventorymanagementsystem.Models;
 
-import com.inventorymanagementsystem.Models.PurchaseOrder;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 
-import java.net.URL;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
-public class PurchaseOrdersController implements Initializable{
-    public TableView<PurchaseOrder> tableViewPurchaseOrders;
-    public TableColumn<PurchaseOrder, String> columnOrderID, columnDate, columnQuantity;
-    public TableColumn<PurchaseOrder, String> columnSupplierID, columnTotalAmount;
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
-
+public class MyEmail {
 
     public static void sendEmail(String fromEmail, String password, String toEmail, String subject, String body) {
         String host = getSmtpHost(fromEmail);
@@ -53,9 +38,12 @@ public class PurchaseOrdersController implements Initializable{
 
             System.out.println("Email sent successfully!");
 
-        } catch (MessagingException e) {
+        } catch (SendFailedException e) {
+            System.err.println("Error: Invalid email address.");
             e.printStackTrace();
-            System.out.println("Error sending email: " + e.getMessage());
+        } catch (MessagingException e) {
+            System.err.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -72,4 +60,38 @@ public class PurchaseOrdersController implements Initializable{
             default -> "Other";
         };
     }
+
+    public static boolean isEmailPassword(String fromEmail, String password) {
+        String host = getSmtpHost(fromEmail);
+
+        // Setup properties for the mail session
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true"); // TLS support
+
+        // Create a session with an authenticator
+        Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        try {
+            // Attempt to connect to the SMTP server
+            Transport transport = session.getTransport("smtp");
+            transport.connect(host, fromEmail, password);
+            transport.close();
+
+            System.out.println("Authentication successful!");
+            return true;
+
+        }
+        catch (MessagingException e) {
+            System.err.println("Authentication failed: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

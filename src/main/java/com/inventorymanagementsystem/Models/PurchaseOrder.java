@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class PurchaseOrder {
     public final int ID;
+    public final IntegerProperty id = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> orderDate = new SimpleObjectProperty<>();
     private final IntegerProperty supplierId = new SimpleIntegerProperty();
     private final StringProperty supplierName = new SimpleStringProperty();
@@ -24,6 +25,7 @@ public class PurchaseOrder {
     public PurchaseOrder(int orderId, LocalDate orderDate, int supplierId,
                          String supplierName, String productName, int quantity, BigDecimal totalAmount) {
         ID = orderId;
+        this.id.set(orderId);
         this.orderDate.set(orderDate);
         this.supplierId.set(supplierId);
         this.supplierName.set(supplierName);
@@ -31,6 +33,10 @@ public class PurchaseOrder {
         this.quantity.set(quantity);
         this.totalAmount.set(totalAmount);
         add(this);
+    }
+
+    public IntegerProperty idProperty(){
+        return id;
     }
 
     // Getters and setters
