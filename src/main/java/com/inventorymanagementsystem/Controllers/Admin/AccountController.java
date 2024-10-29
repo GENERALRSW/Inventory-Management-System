@@ -30,7 +30,7 @@ public class AccountController implements Initializable {
         btnUpdate.setDisable(true);
         btnSubmit.setDisable(true);
         lblUserId.setText(lblUserId.getText() + user.ID);
-        lblCreatedAt.setText(lblCreatedAt.getText() + user.getCreatedAt());
+        lblCreatedAt.setText(lblCreatedAt.getText() + user.getCreatedAtFormatted());
 
         txtName.setText(user.getName());
         txtEmail.setText(user.getEmail());

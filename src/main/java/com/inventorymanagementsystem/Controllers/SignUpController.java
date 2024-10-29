@@ -15,13 +15,14 @@ import java.util.ResourceBundle;
 
 public class SignUpController implements Initializable {
     public Button btnSignUp, btnDBConnection;
-    public TextField txtName, txtEmail, txtPassword, txtConfirmPassword;
-    public Label lblNameError, lblEmailError, lblError;
-    public CheckBox chkPasswordVisible;
-    public PasswordField pwdPassword, pwdConfirmPassword;
+    public TextField txtName, txtEmail, txtEmailPassword, txtPassword, txtConfirmPassword;
+    public Label lblNameError, lblEmailError;
+    public CheckBox chkEmailPasswordVisible, chkPasswordVisible;
+    public PasswordField pwdEmailPassword, pwdPassword, pwdConfirmPassword;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtEmailPassword.setVisible(false);
         txtConfirmPassword.setVisible(false);
         txtPassword.setVisible(false);
         btnSignUp.setDisable(true);
@@ -90,6 +91,7 @@ public class SignUpController implements Initializable {
     public void signUp(){
         String name = txtName.getText().trim();
         String email = txtEmail.getText().trim();
+        String emailPassword = (txtEmailPassword.isVisible()) ? txtEmailPassword.getText() : pwdEmailPassword.getText();
         String password = (txtPassword.isVisible()) ? txtPassword.getText() : pwdPassword.getText();
         String confirmPassword = (txtConfirmPassword.isVisible()) ? txtConfirmPassword.getText() : pwdConfirmPassword.getText();
 
@@ -104,16 +106,19 @@ public class SignUpController implements Initializable {
         }
 
         DataBaseManager.addUser(name, password, email);
-        DataBaseManager.addAdmin(DataBaseManager.getLastUserID(), "");
-        Stage stage = (Stage) lblError.getScene().getWindow();
+        int id = DataBaseManager.getLastUserID();
+        DataBaseManager.addAdmin(id, (emailPassword.isEmpty()) ? "" : emailPassword);
+        Stage stage = (Stage) lblNameError.getScene().getWindow();
         Model.getInstance().showAlert(AlertType.INFORMATION, "Successfully created User", "User was created successfully");
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().getViewFactory().showLoginWindow();
+        Model.getInstance().showAlert(AlertType.INFORMATION, "Login Information", "Your Login information is:\n" +
+                "ID Number: " + id + "\nEmail: " + email + "Password: <password you entered>");
     }
 
     public void backToDBConnection(ActionEvent actionEvent) {
         DataBaseManager.removeInfo();
-        Stage stage = (Stage) lblError.getScene().getWindow();
+        Stage stage = (Stage) lblNameError.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().getViewFactory().showDataBaseConnectionWindow();
     }
@@ -134,6 +139,19 @@ public class SignUpController implements Initializable {
             pwdConfirmPassword.setVisible(true);
             txtPassword.setVisible(false);
             txtConfirmPassword.setVisible(false);
+        }
+    }
+
+    public void emailPasswordVisible(ActionEvent actionEvent) {
+        if(chkEmailPasswordVisible.isSelected()){
+            txtEmailPassword.setText(pwdEmailPassword.getText());
+            pwdEmailPassword.setVisible(false);
+            txtEmailPassword.setVisible(true);
+        }
+        else{
+            pwdEmailPassword.setText(txtEmailPassword.getText());
+            pwdEmailPassword.setVisible(true);
+            txtEmailPassword.setVisible(false);
         }
     }
 }

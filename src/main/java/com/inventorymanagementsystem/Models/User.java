@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class User {
     private final StringProperty role = new SimpleStringProperty();
     private final StringProperty email = new SimpleStringProperty();
     private final ObjectProperty<LocalDateTime> createdAt = new SimpleObjectProperty<>();
+    private final StringProperty createdAtFormatted = new SimpleStringProperty();
     private static final Map<Integer, User> staffs = new HashMap<>();
     private static final ObservableList<User> staffList = FXCollections.observableArrayList();
 
@@ -25,6 +27,8 @@ public class User {
         this.role.set(role);
         this.email.set(email);
         this.createdAt.set(createdAt);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        this.createdAtFormatted.set(createdAt.format(formatter));
 
         addStaff(this);
     }
@@ -74,12 +78,16 @@ public class User {
         return createdAt.get();
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt.set(createdAt);
-    }
-
     public ObjectProperty<LocalDateTime> createdAtProperty() {
         return createdAt;
+    }
+
+    public String getCreatedAtFormatted() {
+        return createdAtFormatted.get();
+    }
+
+    public StringProperty createdAtFormattedProperty(){
+        return createdAtFormatted;
     }
 
     public static boolean isValidName(String name) {

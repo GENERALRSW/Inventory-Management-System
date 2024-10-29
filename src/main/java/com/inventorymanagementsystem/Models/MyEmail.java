@@ -3,6 +3,7 @@ package com.inventorymanagementsystem.Models;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import javafx.scene.control.Alert.AlertType;
 
 import java.util.Properties;
 
@@ -37,12 +38,13 @@ public class MyEmail {
             Transport.send(message);
 
             System.out.println("Email sent successfully!");
+            Model.getInstance().showAlert(AlertType.INFORMATION, "Successfully Sent Email",
+                    "Email from " + fromEmail + " to " + toEmail + " was sent successfully!");
 
-        } catch (SendFailedException e) {
-            System.err.println("Error: Invalid email address.");
-            e.printStackTrace();
         } catch (MessagingException e) {
-            System.err.println("Error sending email: " + e.getMessage());
+            Model.getInstance().showAlert(AlertType.ERROR, "Error sending Email",
+                    "Email from " + fromEmail + " to " + toEmail + " was not sent!" +
+                            "\nError: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -93,5 +95,4 @@ public class MyEmail {
             return false;
         }
     }
-
 }

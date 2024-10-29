@@ -150,8 +150,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Admins WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, user.ID);
             ResultSet resultSet = statement.executeQuery();
 
@@ -182,8 +181,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Users WHERE email = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)){
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
 
@@ -206,8 +204,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Users WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -290,8 +287,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Users WHERE role = 'STAFF'";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -314,8 +310,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Batches";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -339,8 +334,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM InventoryAdjustments";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -365,8 +359,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Products";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -389,8 +382,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM PurchaseOrders";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -416,8 +408,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Sales";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -441,8 +432,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Suppliers";
 
-        try{
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(query);
 
             while(resultSet.next()){
@@ -487,8 +477,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Batches (product_id, current_stock, expiration_date, supplier_id) VALUES (?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             statement.setInt(2, currentStock);
             statement.setDate(3, Date.valueOf(expirationDate));
@@ -512,8 +501,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO InventoryAdjustments (batch_id, adjustment_date, adjustment_type, quantity, reason) VALUES (?, ?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, batchId);
             statement.setDate(2, Date.valueOf(adjustmentDate));
             statement.setString(3, adjustmentType);
@@ -538,8 +526,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Products (name, category, unit_price) VALUES (?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, category);
             statement.setBigDecimal(3, unitPrice);
@@ -564,8 +551,7 @@ public class DataBaseManager {
         String query = "INSERT INTO PurchaseOrders (order_date, supplier_id, supplier_name," +
                 " product_name, quantity, total_amount) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setDate(1, Date.valueOf(orderDate));
             statement.setInt(2, supplierId);
             statement.setString(3, supplierName);
@@ -591,8 +577,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Sales (batch_id, sale_date, quantity_sold, sale_price) VALUES (?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, batchId);
             statement.setDate(2, Date.valueOf(saleDate));
             statement.setInt(3, quantitySold);
@@ -616,8 +601,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Suppliers (name, contact_email, phone_number, address) VALUES (?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, contactEmail);
             statement.setString(3, phoneNumber);
@@ -641,8 +625,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Users (name, password_hash, role, email) VALUES (?, ?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, MyBCrypt.hashPassword(password));
             statement.setString(3, role);
@@ -666,8 +649,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "INSERT INTO Users (name, password_hash, email) VALUES (?, ?, ?)";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, MyBCrypt.hashPassword(password));
             statement.setString(3, email);
@@ -692,8 +674,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Admins SET email_password_encrypted = ? WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, EncryptionUtils.encrypt(emailPassword));
             statement.setInt(2, user.ID);
             int rowsUpdated = statement.executeUpdate();
@@ -710,8 +691,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Batches SET product_id = ?, current_stock = ?, expiration_date = ?, supplier_id = ? WHERE batch_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             statement.setInt(2, currentStock);
             statement.setDate(3, Date.valueOf(expirationDate));
@@ -736,8 +716,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE InventoryAdjustments SET batch_id = ?, adjustment_date = ?, adjustment_type = ?, quantity = ?, reason = ? WHERE adjustment_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, batchId);
             statement.setDate(2, Date.valueOf(adjustmentDate));
             statement.setString(3, adjustmentType);
@@ -761,8 +740,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Products SET name = ?, category = ?, unit_price = ? WHERE product_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, category);
             statement.setBigDecimal(3, unitPrice);
@@ -786,8 +764,7 @@ public class DataBaseManager {
         String query = "UPDATE PurchaseOrders SET order_date = ?, supplier_id = ?, supplier_name = ?," +
                 " product_name = ?, quantity = ?, total_amount = ? WHERE order_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setDate(1, Date.valueOf(orderDate));
             statement.setInt(2, supplierId);
             statement.setString(3, supplierName);
@@ -812,8 +789,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Sales SET batch_id = ?, sale_date = ?, quantity_sold = ?, sale_price = ? WHERE sale_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, batchId);
             statement.setDate(2, Date.valueOf(saleDate));
             statement.setInt(3, quantitySold);
@@ -836,8 +812,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Suppliers SET name = ?, contact_email = ?, phone_number = ?, address = ? WHERE supplier_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, contactEmail);
             statement.setString(3, phoneNumber);
@@ -860,8 +835,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Users SET name = ?,  email = ? WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, email);
             statement.setInt(3, user.ID);
@@ -882,8 +856,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "UPDATE Users SET name = ?, password_hash = ?, email = ? WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, MyBCrypt.hashPassword(password));
             statement.setString(3, email);
@@ -907,8 +880,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM Batches WHERE batch_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, batch.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -927,8 +899,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM InventoryAdjustments WHERE adjustment_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, inventoryAdjustment.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -947,8 +918,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM Products WHERE product_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, product.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -967,8 +937,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM PurchaseOrders WHERE order_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, purchaseOrder.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -987,8 +956,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM Sales WHERE sale_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, sale.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -1007,8 +975,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM Suppliers WHERE supplier_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, supplier.ID);
             int rowsDeleted = statement.executeUpdate();
 
@@ -1027,8 +994,7 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "DELETE FROM Users WHERE user_id = ?";
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, staff.ID);
             int rowsDeleted = statement.executeUpdate();
 

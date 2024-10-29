@@ -88,7 +88,7 @@ TextField:focused, PasswordField:focused {
     -fx-border-color: #3a77ff;
 }
 
-.password-field {
+.password-field, #txtEmailPassword, #txtPassword, #txtConfirmPassword {
     -fx-font-size: 13px; /* Adjust the font size */
     -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
 }

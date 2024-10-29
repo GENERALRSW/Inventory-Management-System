@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -17,7 +16,7 @@ public class ManageStaffController implements Initializable {
     public TableView<User> tableViewStaff;
     public TableColumn<User, Integer> columnStaffID;
     public TableColumn<User, String> columnName, columnEmail;
-    public TableColumn<User, LocalDateTime> columnCreatedAt;
+    public TableColumn<User, String> columnCreatedAt;
     public TextField txtName, txtEmail, txtPassword;
     public PasswordField pwdPassword;
     public TextField txtStaffSearch;
@@ -54,7 +53,7 @@ public class ManageStaffController implements Initializable {
         columnStaffID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         columnEmail.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
-        columnCreatedAt.setCellValueFactory(cellData -> cellData.getValue().createdAtProperty());
+        columnCreatedAt.setCellValueFactory(cellData -> cellData.getValue().createdAtFormattedProperty());
 
         filteredStaffList = new FilteredList<>(staffList, p -> true);
 
@@ -81,7 +80,7 @@ public class ManageStaffController implements Initializable {
             return String.valueOf(staff.ID).contains(searchText)
                     || staff.getName().contains(searchText)
                     || staff.getEmail().toLowerCase().contains(searchText)
-                    || String.valueOf(staff.getCreatedAt()).contains(searchText);
+                    || String.valueOf(staff.getCreatedAtFormatted()).contains(searchText);
         });
     }
 
@@ -379,20 +378,6 @@ public class ManageStaffController implements Initializable {
         lblEmailError.setText("");
     }
 
-    private void errorEmailMessage(){
-        Model.getInstance().showAlert(Alert.AlertType.ERROR, "Error Sending Details to Staff email",
-                """
-                        There are 3 cases:
-                        1. Your email password is either not set up yet (You can do this in your account) or it is incorrect
-                        2. You are not connected to the internet!
-                        3. or either your email or the sender email is incorrect""");
-    }
-
-    private void successEmailMessage(){
-        Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Successfully sent Email to Staff",
-                "Staff Login details was sent to their email successfully!!");
-    }
-
     public void addStaff() {
         String name = txtName.getText().trim();
         String email = txtEmail.getText().trim();
@@ -418,21 +403,13 @@ public class ManageStaffController implements Initializable {
 
         User admin = Model.getInstance().getUser();
         String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
-
-        if(MyEmail.isEmailPassword(admin.getEmail(), adminEmailPassword)){
-            MyEmail.sendEmail(
-                    admin.getEmail(),
-                    adminEmailPassword,
-                    email,
-                    "Inventory Management System: Added Staff Member",
-                    "You have been added to the Inventory Management System\n" +
-                            "Id Number: " + DataBaseManager.getLastUserID() + "\nPassword: " + password);
-
-            successEmailMessage();
-        }
-        else{
-            errorEmailMessage();
-        }
+        MyEmail.sendEmail(
+                admin.getEmail(),
+                adminEmailPassword,
+                email,
+                "Inventory Management System: Added Staff Member",
+                "You have been added to the Inventory Management System\n" +
+                        "Id Number: " + DataBaseManager.getLastUserID() + "\nPassword: " + password);
     }
 
     public void updateStaff() {
@@ -455,21 +432,14 @@ public class ManageStaffController implements Initializable {
 
                     User admin = Model.getInstance().getUser();
                     String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
+                    MyEmail.sendEmail(
+                            admin.getEmail(),
+                            adminEmailPassword,
+                            selectedStaff.getEmail().trim(),
+                            "Inventory Management System: Updated Staff Login Credentials",
+                            "Your information have been updated in the Inventory Management System\n" +
+                                    "Id Number: " + selectedStaff.ID + "\nPassword: " + password);
 
-                    if(MyEmail.isEmailPassword(admin.getEmail(), adminEmailPassword)){
-                        MyEmail.sendEmail(
-                                admin.getEmail(),
-                                adminEmailPassword,
-                                selectedStaff.getEmail().trim(),
-                                "Inventory Management System: Updated Staff Login Credentials",
-                                "Your information have been updated in the Inventory Management System\n" +
-                                        "Id Number: " + selectedStaff.ID + "\nPassword: " + password);
-
-                        successEmailMessage();
-                    }
-                    else{
-                        errorEmailMessage();
-                    }
                 }
                 else{
                     return;
@@ -510,19 +480,14 @@ public class ManageStaffController implements Initializable {
 
                 User admin = Model.getInstance().getUser();
                 String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
+                MyEmail.sendEmail(
+                        admin.getEmail(),
+                        adminEmailPassword,
+                        selectedStaff.getEmail().trim(),
+                        "Inventory Management System: Updated Staff Login Credentials",
+                        "ID Number: " + selectedStaff.ID + "\nYour information have been deleted from the Inventory Management System\n" +
+                                "You can no longer login");
 
-                if(MyEmail.isEmailPassword(admin.getEmail(), adminEmailPassword)){
-                    MyEmail.sendEmail(
-                            admin.getEmail(),
-                            adminEmailPassword,
-                            selectedStaff.getEmail().trim(),
-                            "Inventory Management System: Updated Staff Login Credentials",
-                            "ID Number: " + selectedStaff.ID + "\nYour information have been deleted from the Inventory Management System\n" +
-                                    "You can no longer login");
-                }
-                else{
-                    errorEmailMessage();
-                }
             }
         }
     }
