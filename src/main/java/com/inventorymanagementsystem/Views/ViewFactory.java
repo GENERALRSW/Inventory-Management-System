@@ -186,6 +186,10 @@ public class ViewFactory {
 
             stage.getIcons().add(image);
 
+            stage.setOnCloseRequest(event -> {
+                onExit();
+            });
+
             // Get the controller from the loader
             dbController = loader.getController();
             dbController.shouldShow();
