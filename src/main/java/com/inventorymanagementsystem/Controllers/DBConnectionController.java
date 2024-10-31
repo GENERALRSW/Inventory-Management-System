@@ -38,10 +38,8 @@ public class DBConnectionController implements Initializable {
         loadCredentials();
         loadDatabaseNames();
 
-        // Add listener to choiceBoxAuth to adjust UI when "No Authentication" is selected
         choiceBoxAuth.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if ("No Authentication".equals(newValue)) {
-                // Move comboBoxDB down (adjust the Y axis)
                 comboBoxDB.setLayoutY(175);
 
                 txtUser.setVisible(false);
@@ -51,8 +49,8 @@ public class DBConnectionController implements Initializable {
                 lblPassword.setVisible(false);
                 lblSave.setVisible(false);
                 lblDataBase.setVisible(false);
-            } else {
-                // Move comboBoxDB back to its original position
+            }
+            else {
                 comboBoxDB.setLayoutY(275);
 
                 txtUser.setVisible(true);

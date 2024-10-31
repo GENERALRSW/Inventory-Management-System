@@ -7,15 +7,12 @@ import com.inventorymanagementsystem.Models.Model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 public class ViewFactory {
     //Admin Views
@@ -271,11 +268,11 @@ public class ViewFactory {
     private void onExit() {
         System.out.println("Application is closing...");
 
-        if (!Model.getInstance().getDataBaseDriver().connectionIsNull() && !Model.getInstance().getDataBaseDriver().connectionIsClosed()) {
+        if (Model.getInstance().getDataBaseDriver().connectionIsNotNull() && !Model.getInstance().getDataBaseDriver().connectionIsClosed()) {
             Model.getInstance().getDataBaseDriver().closeConnection();
             System.out.println("Connection was not null and successfully closed!!");
         }
-        else if(!Model.getInstance().getDataBaseDriver().connectionIsNull() && Model.getInstance().getDataBaseDriver().connectionIsClosed()){
+        else if(Model.getInstance().getDataBaseDriver().connectionIsNotNull() && Model.getInstance().getDataBaseDriver().connectionIsClosed()){
             System.out.println("Connection was not null and was already closed!!");
         }
         else{

@@ -1033,7 +1033,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastBatchID() {
+    public static int getLastBatchID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT batch_id FROM Batches ORDER BY batch_id DESC LIMIT 1";
 
@@ -1053,7 +1053,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastInventoryAdjustmentID() {
+    public static int getLastInventoryAdjustmentID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT adjustment_id FROM InventoryAdjustments ORDER BY adjustment_id DESC LIMIT 1";
 
@@ -1073,7 +1073,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastProductID() {
+    public static int getLastProductID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT product_id FROM Products ORDER BY product_id DESC LIMIT 1";
 
@@ -1093,7 +1093,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastPurchaseOrderID() {
+    public static int getLastPurchaseOrderID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT order_id FROM PurchaseOrders ORDER BY order_id DESC LIMIT 1";
 
@@ -1113,7 +1113,7 @@ public class DataBaseManager {
         }
     }
 
-    private static int getLastSaleID() {
+    public static int getLastSaleID() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT sale_id FROM Sales ORDER BY sale_id DESC LIMIT 1";
 

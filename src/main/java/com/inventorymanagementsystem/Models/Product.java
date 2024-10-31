@@ -18,6 +18,7 @@ public class Product {
     private final ObjectProperty<BigDecimal> unitPrice = new SimpleObjectProperty<>();
     private static final Map<Integer, Product> products = new HashMap<>();
     private static final ObservableList<Product> productList = FXCollections.observableArrayList();
+    private static final ObservableList<String> productNameList = FXCollections.observableArrayList();
 
     public Product(int productId, String name, String category, BigDecimal unitPrice) {
         ID = productId;
@@ -68,6 +69,7 @@ public class Product {
         if(product != null && !contains(product.ID)){
             products.put(product.ID, product);
             productList.add(product);
+            productNameList.add(product.getName());
         }
         else if(product == null){
             System.out.println("Product is null. Was not added to Map and List");
@@ -82,6 +84,12 @@ public class Product {
             product.setName(name);
             product.setCategory(category);
             product.setUnitPrice(unitPrice);
+
+            productNameList.clear();
+
+            for(Product p: productList){
+                productNameList.add(p.getName());
+            }
         }
         else{
             System.out.println("Product value is null");
@@ -92,6 +100,7 @@ public class Product {
         if(valid(product)){
             productList.remove(product);
             products.remove(product.ID);
+            productNameList.remove(product.getName());
         }
         else{
             System.out.println("Product ID not found");
@@ -124,9 +133,14 @@ public class Product {
         return productList;
     }
 
+    public static ObservableList<String> getNameList(){
+        return productNameList;
+    }
+
     public static void empty() {
         products.clear();
         productList.clear();
+        productNameList.clear();
     }
 }
 

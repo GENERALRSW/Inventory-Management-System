@@ -50,6 +50,10 @@ public class DataBaseDriver {
         return connection == null;
     }
 
+    public boolean connectionIsNotNull(){
+        return connection != null;
+    }
+
     public boolean connectionIsClosed(){
         try{
             return connection.isClosed();
