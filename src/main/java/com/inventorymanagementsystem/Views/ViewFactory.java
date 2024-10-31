@@ -208,34 +208,15 @@ public class ViewFactory {
 
             stage.getIcons().add(image);
 
+            stage.setOnCloseRequest(event -> {
+                onExit();
+            });
+
             // Get the controller from the loader
             loginController = loader.getController();
             loginController.shouldShow();
 
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createStageDimension(FXMLLoader loader){
-        try{
-            Scene scene = new Scene(loader.load());
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Inventory Management");
-
-            // Set stage size relative to screen (e.g., 60% of width, 80% of height)
-            Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-            stage.setWidth(screenBounds.getWidth() * 0.80);  // 60% of screen width
-            stage.setHeight(screenBounds.getHeight() * 0.80);  // 80% of screen height
-
-            // Set the stage icon
-            stage.getIcons().add(image);
-
-            stage.show();
-            stage.setResizable(false);
-
-        }catch (IOException e){
             e.printStackTrace();
         }
     }
@@ -248,6 +229,10 @@ public class ViewFactory {
             stage.setTitle("Inventory Management");
 
             stage.getIcons().add(image);
+
+            stage.setOnCloseRequest(event -> {
+                onExit();
+            });
 
             stage.show();
             stage.setResizable(false);
@@ -266,11 +251,9 @@ public class ViewFactory {
 
             stage.getIcons().add(image);
 
-            /*
             stage.setOnCloseRequest(event -> {
                 onExit();
             });
-             */
 
             stage.show();
             stage.setResizable(false);
@@ -285,6 +268,10 @@ public class ViewFactory {
 
         if (Model.getInstance().getDataBaseDriver().getConnection() != null) {
             Model.getInstance().getDataBaseDriver().closeConnection();
+            System.out.println("Connection was not null and successfully closed!!");
+        }
+        else{
+            System.out.println("Connection was equal to null...");
         }
     }
 

@@ -95,7 +95,6 @@ public class User {
     }
 
     public static boolean isValidEmail(String email) {
-        // Implement email validation logic here
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
@@ -172,6 +171,5 @@ public class User {
         staffs.clear();
         staffList.clear();
     }
-
 }
 

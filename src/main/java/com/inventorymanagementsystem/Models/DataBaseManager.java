@@ -20,8 +20,11 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 int count = resultSet.getInt(1);
+                resultSet.close();
                 return count > 0;
             }
+
+            resultSet.close();
         } catch (SQLException e) {
             System.err.println("Error checking Email: " + e.getMessage());
         }
@@ -42,8 +45,11 @@ public class DataBaseManager {
 
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
+                    resultSet.close();
                     return count > 0;
                 }
+
+                resultSet.close();
             } catch (SQLException e){
                 e.printStackTrace();
                 System.err.println("SQL Error: Could not check user existence.");
@@ -58,8 +64,11 @@ public class DataBaseManager {
 
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
+                    resultSet.close();
                     return count > 0;
                 }
+
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.err.println("SQL Error: Could not check user existence.");
@@ -82,10 +91,11 @@ public class DataBaseManager {
 
                 if (resultSet.next()) {
                     String passwordHashFromDb = resultSet.getString("password_hash");
-
-                    // Compare the hashed password with the one stored in the database
+                    resultSet.close();
                     return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
                 }
+
+                resultSet.close();
             } catch (SQLException e){
                 e.printStackTrace();
                 System.err.println("SQL Error: Could not verify password.");
@@ -100,10 +110,11 @@ public class DataBaseManager {
 
                 if (resultSet.next()) {
                     String passwordHashFromDb = resultSet.getString("password_hash");
-
-                    // Compare the hashed password with the one stored in the database
+                    resultSet.close();
                     return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
                 }
+
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.err.println("SQL Error: Could not verify password.");
@@ -132,11 +143,11 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 String passwordHashFromDb = resultSet.getString("password_hash");
-
-                // Compare the hashed password with the one stored in the database
+                resultSet.close();
                 return MyBCrypt.isPasswordEqual(password, passwordHashFromDb);
             }
             else {
+                resultSet.close();
                 return false;
             }
         } catch (SQLException e) {
@@ -158,9 +169,11 @@ public class DataBaseManager {
                 int admin_id = resultSet.getInt("admin_id");
                 int userId = resultSet.getInt("user_id");
                 String name = Arrays.toString(resultSet.getBytes("email_password_encrypted"));
-
+                resultSet.close();
                 return new Admin(admin_id, userId);
             }
+
+            resultSet.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -190,9 +203,11 @@ public class DataBaseManager {
                 String name = resultSet.getString("name");
                 String role = resultSet.getString("role");
                 LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-
+                resultSet.close();
                 return new User(userId, name, role, email, createdAt);
             }
+
+            resultSet.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -213,9 +228,11 @@ public class DataBaseManager {
                 String role = resultSet.getString("role");
                 String email = resultSet.getString("email");
                 LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-
+                resultSet.close();
                 return new User(userId, name, role, email, createdAt);
             }
+
+            resultSet.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -236,12 +253,14 @@ public class DataBaseManager {
                 String encryptedPassword = resultSet.getString("email_password_encrypted");
                 decryptedPassword = EncryptionUtils.decrypt(encryptedPassword);
             }
+
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.err.println("SQL Error: Could not retrieve admin email password.");
+            System.err.println("SQL Error: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: Decryption failed.");
+            System.err.println("Error: " + e.getMessage());
         }
 
         return decryptedPassword;
@@ -257,8 +276,11 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 int count = resultSet.getInt(1);
+                resultSet.close();
                 return count > 0;
             }
+
+            resultSet.close();
         } catch (SQLException e) {
             System.err.println("Error checking Email: " + e.getMessage());
         }
@@ -275,8 +297,11 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 int count = resultSet.getInt(1);
+                resultSet.close();
                 return count > 0;
             }
+
+            resultSet.close();
         } catch (SQLException e) {
             System.err.println("Error checking PhoneNumber: " + e.getMessage());
         }
@@ -287,8 +312,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Users WHERE role = 'STAFF'";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int userId = resultSet.getInt("user_id");
@@ -310,8 +335,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Batches";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int batchId = resultSet.getInt("batch_id");
@@ -334,8 +359,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM InventoryAdjustments";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int adjustmentId = resultSet.getInt("adjustment_id");
@@ -359,8 +384,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Products";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int productId = resultSet.getInt("product_id");
@@ -382,8 +407,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM PurchaseOrders";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int orderId = resultSet.getInt("order_id");
@@ -408,8 +433,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Sales";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int saleId = resultSet.getInt("sale_id");
@@ -432,8 +457,8 @@ public class DataBaseManager {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM Suppliers";
 
-        try(Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while(resultSet.next()){
                 int saleId = resultSet.getInt("supplier_id");
@@ -444,7 +469,6 @@ public class DataBaseManager {
 
                 new Supplier(saleId, name, contactEmail, phoneNumber, address);
             }
-
         }catch(SQLException e){
             Model.getInstance().showAlert(AlertType.ERROR, "Error loading Suppliers",
                     e.getMessage());
@@ -1159,11 +1183,15 @@ public class DataBaseManager {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getTimestamp("created_at").toLocalDateTime();
+                LocalDateTime createAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                resultSet.close();
+                return createAt;
             }
             else {
                 System.out.println("No Users found in the database.");
             }
+
+            resultSet.close();
         } catch (SQLException e) {
             Model.getInstance().showAlert(AlertType.ERROR, "Error with User Created_at", e.getMessage());
             e.printStackTrace();

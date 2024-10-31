@@ -73,8 +73,7 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try{
-            Connection connection = DriverManager.getConnection(Url, username, pwd);
+        try(Connection connection = DriverManager.getConnection(Url, username, pwd)){
             Model.getInstance().getViewFactory().closeStage(stage);
             Model.getInstance().getDataBaseDriver().setConnection(connection);
 
@@ -174,8 +173,9 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try (Connection connection = DriverManager.getConnection(url, username, pwd)) {
-            ResultSet resultSet = connection.getMetaData().getCatalogs();
+        try (Connection connection = DriverManager.getConnection(url, username, pwd);
+             ResultSet resultSet = connection.getMetaData().getCatalogs()) {
+
             while (resultSet.next()) {
                 String dbName = resultSet.getString(1);
 
@@ -196,8 +196,7 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try{
-            Connection connection = DriverManager.getConnection(url, username, pwd);
+        try(Connection connection = DriverManager.getConnection(url, username, pwd)){
             loadDatabaseNames();
             Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Connection Successful", "Connection to the database was successful");
         } catch (SQLException e) {
@@ -210,8 +209,7 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try{
-            Connection connection = DriverManager.getConnection(url, username, pwd);
+        try(Connection connection = DriverManager.getConnection(url, username, pwd)){
             Model.getInstance().getDataBaseDriver().setConnection(connection);
             saveCredentials();
 
@@ -253,7 +251,11 @@ public class DBConnectionController implements Initializable {
                         clearPassword();
                     }
 
+                    connection.close();
                     showSignUpWindow();
+                }
+                else{
+                    connection.close();
                 }
             }catch(SQLException t){
                 Model.getInstance().showAlert(Alert.AlertType.ERROR, "Connection Unsuccessful", "Connection to the database was unsuccessful\n" + e.getMessage());
@@ -370,9 +372,9 @@ public class DBConnectionController implements Initializable {
     public boolean doesUserExists(Connection connection) {
         String query = "SELECT COUNT(*) FROM Users";
 
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery()){
+
                 if (resultSet.next()) {
                     int userCount = resultSet.getInt(1);
                     return userCount > 0;
