@@ -45,4 +45,18 @@ public class DataBaseDriver {
             e.printStackTrace();
         }
     }
+
+    public boolean connectionIsNull(){
+        return connection == null;
+    }
+
+    public boolean connectionIsClosed(){
+        try{
+            return connection.isClosed();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

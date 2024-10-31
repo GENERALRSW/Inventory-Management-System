@@ -15,6 +15,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 public class ViewFactory {
     //Admin Views
@@ -270,9 +271,12 @@ public class ViewFactory {
     private void onExit() {
         System.out.println("Application is closing...");
 
-        if (Model.getInstance().getDataBaseDriver().getConnection() != null) {
+        if (!Model.getInstance().getDataBaseDriver().connectionIsNull() && !Model.getInstance().getDataBaseDriver().connectionIsClosed()) {
             Model.getInstance().getDataBaseDriver().closeConnection();
             System.out.println("Connection was not null and successfully closed!!");
+        }
+        else if(!Model.getInstance().getDataBaseDriver().connectionIsNull() && Model.getInstance().getDataBaseDriver().connectionIsClosed()){
+            System.out.println("Connection was not null and was already closed!!");
         }
         else{
             System.out.println("Connection was equal to null...");

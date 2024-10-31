@@ -73,7 +73,8 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try(Connection connection = DriverManager.getConnection(Url, username, pwd)){
+        try{
+            Connection connection = DriverManager.getConnection(Url, username, pwd);
             Model.getInstance().getViewFactory().closeStage(stage);
             Model.getInstance().getDataBaseDriver().setConnection(connection);
 
@@ -209,7 +210,8 @@ public class DBConnectionController implements Initializable {
         String username = (txtUser.isVisible()) ? txtUser.getText() : "";
         String pwd = (password.isVisible()) ? password.getText() : "";
 
-        try(Connection connection = DriverManager.getConnection(url, username, pwd)){
+        try{
+            Connection connection = DriverManager.getConnection(url, username, pwd);
             Model.getInstance().getDataBaseDriver().setConnection(connection);
             saveCredentials();
 
@@ -251,11 +253,7 @@ public class DBConnectionController implements Initializable {
                         clearPassword();
                     }
 
-                    connection.close();
                     showSignUpWindow();
-                }
-                else{
-                    connection.close();
                 }
             }catch(SQLException t){
                 Model.getInstance().showAlert(Alert.AlertType.ERROR, "Connection Unsuccessful", "Connection to the database was unsuccessful\n" + e.getMessage());
