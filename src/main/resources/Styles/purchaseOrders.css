@@ -55,13 +55,18 @@
     -fx-prompt-text-fill: gray;
 }
 
-#txtQuantity, #txtUnitPrice, #txtTotalAmount, #txtProductName {
+#txtQuantity, #txtUnitPrice, #txtTotalAmount, #comboBoxProductName {
     -fx-background-color: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
     -fx-border-color: #3a77ff;
     -fx-font-size: 14px;
     -fx-prompt-text-fill: gray;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent; /* Make the dropdown button transparent */
+    -fx-border-color: transparent;     /* Remove the border for the button */
 }
 
 .button {

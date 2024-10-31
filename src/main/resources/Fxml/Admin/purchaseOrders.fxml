@@ -44,9 +44,9 @@
         </columns>
       </TableView>
       <TextField fx:id="txtSupplierSearch" layoutX="13.0" layoutY="540.0" prefHeight="26.0" prefWidth="312.0" promptText="Search (ID, Name, Contact Email)" />
-      <TextField fx:id="txtSupplierName" disable="true" layoutX="344.0" layoutY="670.0" promptText="Supplier Name" />
+      <TextField fx:id="txtSupplierName" layoutX="344.0" layoutY="670.0" promptText="Supplier Name" />
       <Label layoutX="346.0" layoutY="640.0" text="Supplier Name: " />
-      <TextField fx:id="txtSupplierEmail" disable="true" layoutX="344.0" layoutY="740.0" promptText="Supplier Contact Email" />
+      <TextField fx:id="txtSupplierEmail" layoutX="344.0" layoutY="740.0" promptText="Supplier Contact Email" />
       <Label layoutX="344.0" layoutY="710.0" text="Supplier Contact Email: " />
       <TextField fx:id="txtQuantity" layoutX="617.0" layoutY="669.0" prefHeight="29.0" prefWidth="73.0" promptText="Quantity" />
       <TextField fx:id="txtUnitPrice" layoutX="730.0" layoutY="670.0" prefHeight="26.0" prefWidth="108.0" promptText="Unit Price" />
