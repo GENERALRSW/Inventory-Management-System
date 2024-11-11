@@ -30,9 +30,9 @@
     -fx-font-size: 14px;
     -fx-pref-height: 40px;
     -fx-pref-width: 160px;
-    -fx-alignment: center-left;   /* Align content (text + icon) to the left */
-    -fx-padding: 5 20 5 10;       /* Adjust padding for content inside the button */
-    -fx-graphic-text-gap: 11px;   /* Space between icon and text */
+    -fx-alignment: center-left;
+    -fx-padding: 5 20 5 10;
+    -fx-graphic-text-gap: 11px;
 }
 
 .button:hover {
@@ -43,7 +43,6 @@
     -fx-background-color: #61AFEF;
     -fx-text-fill: black;
 }
-
 
 #btnSignOut {
     -fx-background-color: #E06C75;
