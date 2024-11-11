@@ -1,0 +1,99 @@
+.table-view {
+    -fx-background-color: #f5f5f5; /* Light grey background */
+    -fx-table-cell-border-color: transparent;
+    -fx-border-color: #c1c1c1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #3a77ff;
+}
+
+.table-view .column-header, .column-header-background .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #2756b3;
+    -fx-border-width: 0 1px 0 0; /* Right border only */
+}
+
+.table-view .column-header-background {
+    -fx-border-color: transparent; /* Hide default borders */
+}
+
+/* Style for table rows */
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #dcdcdc; /* Light grey border */
+    -fx-border-width: 0 0 1px 0; /* Bottom border */
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f9f9f9; /* Light grey background for odd rows */
+}
+
+.table-view .table-row-cell:selected, .table-view .table-cell:selected {
+    -fx-background-color: #2756b3;
+    -fx-text-fill: black; /* Black text for selected rows */
+}
+
+/* Style for table cells */
+.table-view .table-cell {
+    -fx-padding: 10px;
+    -fx-border-width: 0;
+    -fx-font-size: 14px;
+}
+
+#txtProductSearch, #txtBatchesSearch {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 10 10 10 30; /* Make space for the icon */
+    -fx-border-color: #3a77ff;
+    -fx-border-radius: 15;
+    -fx-border-width: 2;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: gray;
+}
+
+#txtStockAmount, #txtLowStockAmount, #datePickerExpirationDate{
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #3a77ff;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: gray;
+}
+
+#comboBoxBatchCommands {
+    -fx-background-color: white;
+    -fx-background-radius: 2;
+    -fx-border-color: #3a77ff;
+    -fx-border-radius: 2;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: gray;
+}
+
+.combo-box .arrow-button, #datePickerExpirationDate .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.button {
+    -fx-background-color: #3a77ff;
+    -fx-background-radius: 15;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-transition: all 0.3s ease;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #2756b3; /* Slightly darker tan */
+}
+
+.button:pressed {
+    -fx-background-color: #2756b3; /* Darker background on click */
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 4, 0.0, 0, 1); /* Inner shadow */
+}

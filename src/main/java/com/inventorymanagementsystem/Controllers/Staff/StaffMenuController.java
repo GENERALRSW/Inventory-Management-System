@@ -3,6 +3,7 @@ package com.inventorymanagementsystem.Controllers.Staff;
 import com.inventorymanagementsystem.Controllers.LoginController;
 import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Views.AdminMenuOptions;
+import com.inventorymanagementsystem.Views.StaffMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -13,7 +14,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StaffMenuController implements Initializable {
-    public Button btnViewInventory, btnAlerts, btnHistory, btnSignOut;
+    public Button btnViewInventory, btnInventoryBatch, btnAlerts, btnHistory, btnSignOut;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -23,36 +24,42 @@ public class StaffMenuController implements Initializable {
 
     private void setIcons() {
         // Directly set Ikonli icons on buttons using FontAwesomeSolid icons
-        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 24));
-        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 24));
-        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 24));
-        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 20));
+        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 20));
+        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 20));
+        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 20));
+        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 20));
+        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 16));
     }
 
     private FontIcon createFontIcon(FontAwesomeSolid iconType, int size) {
         FontIcon icon = new FontIcon(iconType);
-        icon.setIconSize(size);  // Set size of the icon
-        icon.getStyleClass().add("icon");  // Add the CSS class to the icon
+        icon.setIconSize(size);
+        icon.getStyleClass().add("icon");
         return icon;
     }
 
     private void addListeners(){
         btnViewInventory.setOnAction(event -> onViewInventory());
+        btnInventoryBatch.setOnAction(event -> onInventoryBatch());
         btnAlerts.setOnAction(event -> onAlerts());
         btnHistory.setOnAction(event -> onHistory());
         btnSignOut.setOnAction(event -> onSignOut());
     }
 
     private void onViewInventory(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.VIEW_INVENTORY);
+        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.VIEW_INVENTORY);
+    }
+
+    private void onInventoryBatch(){
+        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.INVENTORY_BATCHES);
     }
 
     private void onAlerts(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ALERTS);
+        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.ALERTS);
     }
 
     private void onHistory(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.HISTORY);
+        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.HISTORY);
     }
 
     private void onSignOut(){

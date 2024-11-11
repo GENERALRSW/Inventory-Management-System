@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class Batch {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final IntegerProperty productId = new SimpleIntegerProperty();
     private final IntegerProperty currentStock = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> expirationDate = new SimpleObjectProperty<>();
@@ -21,6 +22,7 @@ public class Batch {
 
     public Batch(int batchId, int productId, int currentStock, LocalDate expirationDate) {
         ID = batchId;
+        this.id.set(batchId);
         this.productId.set(productId);
         this.currentStock.set(currentStock);
         this.expirationDate.set(expirationDate);
@@ -28,6 +30,10 @@ public class Batch {
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public int getProductId() {
         return productId.get();
     }

@@ -15,6 +15,7 @@ public class AdminController implements Initializable {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().addListener(
                 (observableValue, oldVal, newVal) -> {
                     switch(newVal){
+                        case INVENTORY_BATCHES -> adminParent.setCenter(Model.getInstance().getViewFactory().getInventoryBatchesView());
                         case ALERTS -> adminParent.setCenter(Model.getInstance().getViewFactory().getAlertsView());
                         case MANAGE_STAFF -> adminParent.setCenter(Model.getInstance().getViewFactory().getManageStaffView());
                         case SUPPLIERS -> adminParent.setCenter(Model.getInstance().getViewFactory().getSuppliersView());

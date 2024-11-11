@@ -28,7 +28,7 @@ public class ViewInventoryController implements Initializable {
     public Label lblProductID, lblNameError, lblCategoryError, lblUnitPriceError, lblProductCommandError;
 
     private final ObservableList<Product> productList = Product.getList();
-    private FilteredList<Product> filteredStaffList;
+    private FilteredList<Product> filteredProductList;
 
 
     @Override
@@ -57,10 +57,10 @@ public class ViewInventoryController implements Initializable {
         columnUnitPrice.setCellValueFactory(cellData -> cellData.getValue().unitPriceProperty());
         columnStockCount.setCellValueFactory(cellData -> cellData.getValue().stockCountProperty().asObject());
 
-        filteredStaffList = new FilteredList<>(productList, p -> true);
+        filteredProductList = new FilteredList<>(productList, p -> true);
 
         // Set the filtered list as the data source for the table
-        tableViewInventory.setItems(filteredStaffList);
+        tableViewInventory.setItems(filteredProductList);
 
         // Add listeners for filtering
         txtInventorySearch.textProperty().addListener((observable, oldValue, newValue) -> filterInventoryList());
@@ -74,7 +74,7 @@ public class ViewInventoryController implements Initializable {
     public void filterInventoryList(){
         String searchText = txtInventorySearch.getText().toLowerCase().trim();
 
-        filteredStaffList.setPredicate(product -> {
+        filteredProductList.setPredicate(product -> {
             if (searchText.isEmpty()) {
                 return true;
             }

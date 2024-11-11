@@ -28,6 +28,7 @@ public class ViewFactory {
 
     //shared Views
     private AnchorPane viewInventoryView;
+    private AnchorPane inventoryBatchesView;
     private AnchorPane alertsView;
     private AnchorPane historyView;
 
@@ -56,6 +57,18 @@ public class ViewFactory {
         }
 
         return viewInventoryView;
+    }
+
+    public AnchorPane getInventoryBatchesView(){
+        if(inventoryBatchesView == null){
+            try{
+                inventoryBatchesView = new FXMLLoader(getClass().getResource("/Fxml/inventoryBatches.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return inventoryBatchesView;
     }
 
     public AnchorPane getAlertsView(){

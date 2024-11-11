@@ -19,12 +19,13 @@
                 <VBox alignment="CENTER" layoutX="30.0" layoutY="130.0" prefHeight="460.0" prefWidth="180.0" styleClass="menu_container" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                     <children>
                         <Button fx:id="btnViewInventory" mnemonicParsing="false" text="View Inventory" />
-                        <Button fx:id="btnAlerts" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Alerts">
+                  <Button fx:id="btnInventoryBatch" mnemonicParsing="false" text="Inventory Batch" />
+                        <Button fx:id="btnHistory" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="History">
                             <font>
                                 <Font name="System Bold" size="10.0" />
                             </font>
                         </Button>
-                        <Button fx:id="btnHistory" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="History">
+                        <Button fx:id="btnAlerts" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Alerts">
                             <font>
                                 <Font name="System Bold" size="10.0" />
                             </font>
