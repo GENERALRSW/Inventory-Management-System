@@ -343,9 +343,8 @@ public class DataBaseManager {
                 int productId = resultSet.getInt("product_id");
                 int currentStock = resultSet.getInt("current_stock");
                 LocalDate expirationDate = resultSet.getDate("expiration_date").toLocalDate();
-                int supplierId = resultSet.getInt("supplier_id");
 
-                new Batch(batchId, productId, currentStock, expirationDate, supplierId);
+                new Batch(batchId, productId, currentStock, expirationDate);
             }
 
         }catch(SQLException e){
@@ -355,25 +354,41 @@ public class DataBaseManager {
         }
     }
 
-    private static void loadInventoryAdjustments(){
+    private static void loadInventoryAdjustments() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
         String query = "SELECT * FROM InventoryAdjustments";
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 int adjustmentId = resultSet.getInt("adjustment_id");
+                int productId = resultSet.getInt("product_id");
+                String productName = resultSet.getString("product_name");
+
                 int batchId = resultSet.getInt("batch_id");
+                if (resultSet.wasNull()) {
+                    batchId = -1;
+                }
+
                 LocalDate adjustmentDate = resultSet.getDate("adjustment_date").toLocalDate();
                 String adjustmentType = resultSet.getString("adjustment_type");
-                int quantity = resultSet.getInt("adjustment_date");
-                String reason = resultSet.getString("reason");
 
-                new InventoryAdjustment(adjustmentId, batchId, adjustmentDate, adjustmentType, quantity, reason);
+                int previousStock = resultSet.getInt("previous_stock");
+                if (resultSet.wasNull()) {
+                    previousStock = -1;
+                }
+
+                int adjustedStock = resultSet.getInt("adjusted_stock");
+                if (resultSet.wasNull()) {
+                    adjustedStock = -1;
+                }
+
+                new InventoryAdjustment(adjustmentId, productId, productName, batchId, adjustmentDate,
+                        adjustmentType, previousStock, adjustedStock);
             }
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             Model.getInstance().showAlert(AlertType.ERROR, "Error loading Inventory Adjustments",
                     e.getMessage());
             e.printStackTrace();
@@ -497,21 +512,20 @@ public class DataBaseManager {
         }
     }
 
-    public static void addBatch(int productId, int currentStock, LocalDate expirationDate, int supplierId){
+    public static void addBatch(int productId, int currentStock, LocalDate expirationDate){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO Batches (product_id, current_stock, expiration_date, supplier_id) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Batches (product_id, current_stock, expiration_date) VALUES (?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             statement.setInt(2, currentStock);
             statement.setDate(3, Date.valueOf(expirationDate));
-            statement.setInt(4, supplierId);
             int rowsAdded = statement.executeUpdate();
             int batchId = -1;
 
             if(rowsAdded > 0){
                 batchId = getLastBatchID();
-                new Batch(batchId, productId, currentStock, expirationDate, supplierId);
+                new Batch(batchId, productId, currentStock, expirationDate);
             }
 
             addMessage("Batch", batchId, rowsAdded);
@@ -521,22 +535,46 @@ public class DataBaseManager {
         }
     }
 
-    public static void addInventoryAdjustment(int batchId, LocalDate adjustmentDate, String adjustmentType, int quantity, String reason){
+    public static void addInventoryAdjustment(int productId, String productName, int batchId, LocalDate adjustmentDate, String adjustmentType,
+                                              int previous_stock, int adjusted_stock){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO InventoryAdjustments (batch_id, adjustment_date, adjustment_type, quantity, reason) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO InventoryAdjustments (product_id, product_name, batch_id, adjustment_date, adjustment_type, previous_stock, adjusted_stock) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, batchId);
-            statement.setDate(2, Date.valueOf(adjustmentDate));
-            statement.setString(3, adjustmentType);
-            statement.setInt(3, quantity);
-            statement.setString(4, reason);
+            statement.setInt(1, productId);
+            statement.setString(2, productName);
+
+            if(batchId == -1){
+                statement.setNull(3, Types.INTEGER);
+            }
+            else{
+                statement.setInt(3, batchId);
+            }
+
+            statement.setDate(4, Date.valueOf(adjustmentDate));
+            statement.setString(5, adjustmentType);
+
+            if(previous_stock == -1){
+                statement.setNull(6, Types.INTEGER);
+            }
+            else{
+                statement.setInt(6, previous_stock);
+            }
+
+            if(adjusted_stock == -1){
+                statement.setNull(7, Types.INTEGER);
+            }
+            else{
+                statement.setInt(7, adjusted_stock);
+            }
+
             int rowsAdded = statement.executeUpdate();
             int adjustment_id = -1;
 
             if(rowsAdded > 0){
                 adjustment_id = getLastInventoryAdjustmentID();
-                new InventoryAdjustment(adjustment_id, batchId, adjustmentDate, adjustmentType, quantity, reason);
+                new InventoryAdjustment(adjustment_id, productId, productName, batchId, adjustmentDate,
+                        adjustmentType, previous_stock, adjusted_stock);
             }
 
             addMessage("Inventory Adjustment", adjustment_id, rowsAdded);
@@ -711,51 +749,24 @@ public class DataBaseManager {
     }
 
 
-    public static void updateBatch(Batch batch, int productId, int currentStock, LocalDate expirationDate, int supplierId){
+    public static void updateBatch(Batch batch, int productId, int currentStock, LocalDate expirationDate){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE Batches SET product_id = ?, current_stock = ?, expiration_date = ?, supplier_id = ? WHERE batch_id = ?";
+        String query = "UPDATE Batches SET product_id = ?, current_stock = ?, expiration_date = ? WHERE batch_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             statement.setInt(2, currentStock);
             statement.setDate(3, Date.valueOf(expirationDate));
-            statement.setInt(4, supplierId);
-            statement.setInt(5, batch.ID);
+            statement.setInt(4, batch.ID);
             int rowsUpdated = statement.executeUpdate();
 
             if(rowsUpdated > 0){
-                Batch.update(batch, productId, currentStock, expirationDate, supplierId);
+                Batch.update(batch, productId, currentStock, expirationDate);
             }
 
             updateMessage("Batch", batch.ID, rowsUpdated);
         }catch(SQLException e){
             Model.getInstance().showAlert(AlertType.ERROR, "Error updating Batch",
-                    e.getMessage());
-        }
-    }
-
-    public static void updateInventoryAdjustment(InventoryAdjustment inventoryAdjustment, int batchId,
-                                                 LocalDate adjustmentDate, String adjustmentType, int quantity, String reason){
-
-        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE InventoryAdjustments SET batch_id = ?, adjustment_date = ?, adjustment_type = ?, quantity = ?, reason = ? WHERE adjustment_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, batchId);
-            statement.setDate(2, Date.valueOf(adjustmentDate));
-            statement.setString(3, adjustmentType);
-            statement.setInt(4, quantity);
-            statement.setString(5, reason);
-            statement.setInt(6, inventoryAdjustment.ID);
-            int rowsUpdated = statement.executeUpdate();
-
-            if(rowsUpdated > 0){
-                InventoryAdjustment.update(inventoryAdjustment, batchId, adjustmentDate, adjustmentType, quantity, reason);
-            }
-
-            updateMessage("Inventory Adjustment", inventoryAdjustment.ID, rowsUpdated);
-        }catch(SQLException e){
-            Model.getInstance().showAlert(AlertType.ERROR, "Error updating Inventory Adjustment",
                     e.getMessage());
         }
     }

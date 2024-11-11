@@ -88,15 +88,6 @@ public class PurchaseOrdersController implements Initializable{
         });
     }
 
-    private boolean isValidFloat(String number){
-        try{
-            float num = Float.parseFloat(number);
-            return num >= 0;
-        } catch(NumberFormatException _){
-            return false;
-        }
-    }
-
     private void filterSupplierList() {
         String searchText = txtSupplierSearch.getText().toLowerCase().trim();
 
@@ -178,7 +169,7 @@ public class PurchaseOrdersController implements Initializable{
     private void handleUnitPriceKeyReleased(KeyEvent keyEvent) {
         String unitPrice = txtUnitPrice.getText();
 
-        if(isValidFloat(unitPrice)){
+        if(PurchaseOrder.isValidUnitPrice(unitPrice)){
             lblUnitPriceError.setText("");
         }
         else{
@@ -206,7 +197,7 @@ public class PurchaseOrdersController implements Initializable{
     }
 
     private void validateFields() {
-        if (!txtQuantity.getText().isEmpty() && isValidFloat(txtUnitPrice.getText())) {
+        if (!txtQuantity.getText().isEmpty() && PurchaseOrder.isValidUnitPrice(txtUnitPrice.getText())) {
             float quantity = Float.parseFloat(txtQuantity.getText());
             float unitPrice = Float.parseFloat(txtUnitPrice.getText());
             float totalAmount = quantity * unitPrice;

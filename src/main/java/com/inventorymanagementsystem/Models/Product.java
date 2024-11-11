@@ -1,9 +1,6 @@
 package com.inventorymanagementsystem.Models;
 
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,22 +10,31 @@ import java.util.Map;
 
 public class Product {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty();
     private final StringProperty category = new SimpleStringProperty();
     private final ObjectProperty<BigDecimal> unitPrice = new SimpleObjectProperty<>();
+    private final IntegerProperty stockCount = new SimpleIntegerProperty();
     private static final Map<Integer, Product> products = new HashMap<>();
     private static final ObservableList<Product> productList = FXCollections.observableArrayList();
     private static final ObservableList<String> productNameList = FXCollections.observableArrayList();
+    private static final ObservableList<String> categoryList = FXCollections.observableArrayList();
 
     public Product(int productId, String name, String category, BigDecimal unitPrice) {
         ID = productId;
+        this.id.set(productId);
         this.name.set(name);
         this.category.set(category);
         this.unitPrice.set(unitPrice);
         add(this);
+        stockCount.set(calculateStockCount());
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public String getName() {
         return name.get();
     }
@@ -65,11 +71,46 @@ public class Product {
         return unitPrice;
     }
 
+    public int getStockCount(){
+        return stockCount.get();
+    }
+
+    public IntegerProperty stockCountProperty(){
+        return stockCount;
+    }
+
+    public void setStockCount(int stockCount){
+        this.stockCount.set(stockCount);
+    }
+
+    public int calculateStockCount(){
+        int count = 0;
+
+        for(Batch batch: Batch.getList()){
+            if(ID == batch.getProductId()){
+                count += batch.getCurrentStock();
+            }
+        }
+
+        setStockCount(count);
+        return count;
+    }
+
+    public static boolean isValidUnitPrice(String number){
+        try{
+            float num = Float.parseFloat(number);
+            return num >= 0;
+        } catch(NumberFormatException _){
+            return false;
+        }
+    }
+
     public static void add(Product product) {
         if(product != null && !contains(product.ID)){
             products.put(product.ID, product);
             productList.add(product);
             productNameList.add(product.getName());
+            categoryList.add(product.getCategory());
         }
         else if(product == null){
             System.out.println("Product is null. Was not added to Map and List");
@@ -101,6 +142,7 @@ public class Product {
             productList.remove(product);
             products.remove(product.ID);
             productNameList.remove(product.getName());
+
         }
         else{
             System.out.println("Product ID not found");
@@ -117,6 +159,16 @@ public class Product {
         }
     }
 
+    public static int getLastAddedProductID() {
+        if (!productList.isEmpty()) {
+            return productList.getLast().ID;
+        }
+        else {
+            System.out.println("Product list is empty.");
+            return -1;
+        }
+    }
+
     public static boolean valid(Product product){
         return product != null && contains(product.ID);
     }
@@ -129,6 +181,10 @@ public class Product {
         return products.containsKey(productID);
     }
 
+    public static boolean containsName(String productName){
+        return productNameList.contains(productName);
+    }
+
     public static ObservableList<Product> getList(){
         return productList;
     }
@@ -137,10 +193,15 @@ public class Product {
         return productNameList;
     }
 
+    public static ObservableList<String> getCategoryList(){
+        return categoryList;
+    }
+
     public static void empty() {
         products.clear();
         productList.clear();
         productNameList.clear();
+        categoryList.clear();
     }
 }
 

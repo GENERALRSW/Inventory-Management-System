@@ -90,6 +90,14 @@ public class User {
         return createdAtFormatted;
     }
 
+    public boolean isStaff(){
+        return getRole().equals("STAFF");
+    }
+
+    public boolean isAdmin(){
+        return getRole().equals("ADMIN");
+    }
+
     public static boolean isValidName(String name) {
         return name.matches("^[A-Za-z]+$");
     }
