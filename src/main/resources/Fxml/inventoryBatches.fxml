@@ -46,20 +46,14 @@
          </image>
       </ImageView>
       <Button fx:id="btnBatchCommand" layoutX="440.0" layoutY="788.0" mnemonicParsing="false" onAction="#addBatch" prefHeight="26.0" prefWidth="220.0" text="Add Batch" />
-      <TextField fx:id="txtStockAmount" layoutX="565.0" layoutY="577.0" prefHeight="29.0" prefWidth="107.0" promptText="Stock Amount" />
+      <TextField fx:id="txtStockAmount" layoutX="565.0" layoutY="577.0" prefHeight="29.0" prefWidth="160.0" promptText="Stock Amount" />
       <Label layoutX="565.0" layoutY="546.0" prefHeight="17.0" prefWidth="90.0" text="Stock Amount: ">
          <font>
             <Font name="System Bold Italic" size="13.0" />
          </font>
       </Label>
       <DatePicker fx:id="datePickerExpirationDate" layoutX="565.0" layoutY="651.0" prefHeight="29.0" prefWidth="161.0" promptText="Expiration Date" />
-      <TextField fx:id="txtLowStockAmount" layoutX="786.0" layoutY="577.0" prefHeight="29.0" prefWidth="161.0" promptText="Low Stock Alert Amount" />
       <Label layoutX="565.0" layoutY="621.0" prefHeight="17.0" prefWidth="90.0" text="Expiration Date: ">
-         <font>
-            <Font name="System Bold Italic" size="13.0" />
-         </font>
-      </Label>
-      <Label layoutX="786.0" layoutY="546.0" prefHeight="17.0" prefWidth="150.0" text="Low Stock Alert Amount: ">
          <font>
             <Font name="System Bold Italic" size="13.0" />
          </font>
@@ -67,19 +61,28 @@
       <Button fx:id="btnClearSelection" layoutX="989.0" layoutY="788.0" mnemonicParsing="false" onAction="#clearSelection" text="Clear Selection" />
       <ComboBox fx:id="comboBoxBatchCommands" layoutX="697.0" layoutY="789.0" prefHeight="29.0" prefWidth="99.0" />
       <TextField fx:id="txtProductName" editable="false" layoutX="14.0" layoutY="579.0" promptText="Product Name" />
-      <TextField fx:id="txtUnitPrice" editable="false" layoutX="14.0" layoutY="640.0" promptText="Unit Price" />
-      <Label fx:id="lblProductId" layoutX="278.0" layoutY="580.0" prefHeight="23.0" prefWidth="129.0" text="Product ID: ">
+      <TextField fx:id="txtUnitPrice" editable="false" layoutX="14.0" layoutY="653.0" promptText="Unit Price" />
+      <Label fx:id="lblProductId" layoutX="14.0" layoutY="697.0" prefHeight="23.0" prefWidth="129.0" text="Product ID: ">
          <font>
-            <Font size="18.0" />
+            <Font size="24.0" />
          </font>
       </Label>
-      <Label fx:id="lblBatchId" layoutX="786.0" layoutY="655.0" prefHeight="23.0" prefWidth="129.0" text="Batch ID: ">
+      <Label fx:id="lblBatchId" layoutX="755.0" layoutY="577.0" prefHeight="23.0" prefWidth="129.0" text="Batch ID: ">
          <font>
-            <Font size="18.0" />
+            <Font size="24.0" />
          </font>
       </Label>
       <Label fx:id="lblExpirationDateError" layoutX="565.0" layoutY="680.0" prefHeight="17.0" prefWidth="160.0" textFill="RED" />
       <Label fx:id="lblStockAmountError" layoutX="565.0" layoutY="605.0" prefHeight="17.0" prefWidth="160.0" textFill="RED" />
-      <Label fx:id="lblLowStockAlertError" layoutX="787.0" layoutY="605.0" prefHeight="17.0" prefWidth="160.0" textFill="RED" />
+      <Label layoutX="14.0" layoutY="546.0" prefHeight="17.0" prefWidth="90.0" text="Product Name: ">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="621.0" prefHeight="17.0" prefWidth="90.0" text="Unit Price: ">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

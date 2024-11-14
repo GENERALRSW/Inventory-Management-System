@@ -25,12 +25,11 @@ public class InventoryBatchesController implements Initializable {
     public TableColumn<Batch, Integer> columnCurrentStock;
     public TableColumn<Batch, LocalDate> columnExpirationDate;
 
-    public TextField txtProductSearch, txtBatchesSearch, txtProductName, txtUnitPrice, txtStockAmount,
-            txtLowStockAmount;
+    public TextField txtProductSearch, txtBatchesSearch, txtProductName, txtUnitPrice, txtStockAmount;
     public Button btnBatchCommand, btnClearSelection;
     public DatePicker datePickerExpirationDate;
     public ComboBox<String> comboBoxBatchCommands;
-    public Label lblProductId, lblBatchId, lblExpirationDateError, lblStockAmountError, lblLowStockAlertError;
+    public Label lblProductId, lblBatchId, lblExpirationDateError, lblStockAmountError;
 
     private final ObservableList<Product> productList = Product.getList();
     private FilteredList<Product> filteredProductList;
@@ -51,11 +50,9 @@ public class InventoryBatchesController implements Initializable {
 
         txtStockAmount.setOnKeyReleased(this::handleStockAmountKeyReleased);
         datePickerExpirationDate.getEditor().setOnKeyReleased(this::handleExpirationDateKeyReleased);
-        txtLowStockAmount.setOnKeyReleased(this::handleLowStockAmountKeyReleased);
 
         txtStockAmount.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         datePickerExpirationDate.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        txtLowStockAmount.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
 
         columnProductId.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnProductName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -89,7 +86,8 @@ public class InventoryBatchesController implements Initializable {
             return String.valueOf(product.ID).contains(searchText)
                     || product.getName().toLowerCase().contains(searchText)
                     || product.getCategory().toLowerCase().contains(searchText)
-                    || String.valueOf(product.getUnitPrice()).contains(searchText);
+                    || String.valueOf(product.getUnitPrice()).contains(searchText)
+                    || String.valueOf(product.getLowStockAmount()).contains(searchText);
         });
     }
 
@@ -112,10 +110,6 @@ public class InventoryBatchesController implements Initializable {
     }
 
     private void handleExpirationDateKeyReleased(KeyEvent keyEvent) {
-
-    }
-
-    private void handleLowStockAmountKeyReleased(KeyEvent keyEvent) {
 
     }
 
@@ -180,13 +174,11 @@ public class InventoryBatchesController implements Initializable {
         if (batch != null) {
             txtStockAmount.setText(String.valueOf(batch.getCurrentStock()));
             datePickerExpirationDate.setValue(batch.getExpirationDate());
-            //txtLowStockAmount.setText(String.valueOf(batch.getLow()));
             lblBatchId.setText("Product ID: " + batch.ID);
         }
         else{
             txtStockAmount.setText("");
             datePickerExpirationDate.setValue(null);
-            txtLowStockAmount.setText("");
             lblBatchId.setText("Product ID: ");
         }
     }

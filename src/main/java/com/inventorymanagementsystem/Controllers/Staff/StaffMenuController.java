@@ -2,7 +2,6 @@ package com.inventorymanagementsystem.Controllers.Staff;
 
 import com.inventorymanagementsystem.Controllers.LoginController;
 import com.inventorymanagementsystem.Models.Model;
-import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import com.inventorymanagementsystem.Views.StaffMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,7 +22,6 @@ public class StaffMenuController implements Initializable {
     }
 
     private void setIcons() {
-        // Directly set Ikonli icons on buttons using FontAwesomeSolid icons
         btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 20));
         btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 20));
         btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 20));

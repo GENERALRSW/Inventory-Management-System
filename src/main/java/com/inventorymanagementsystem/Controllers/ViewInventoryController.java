@@ -22,10 +22,11 @@ public class ViewInventoryController implements Initializable {
     public TableColumn<Product, String> columnCategory;
     public TableColumn<Product, BigDecimal> columnUnitPrice;
     public TableColumn<Product, Integer> columnStockCount;
-    public TextField txtInventorySearch, txtProductName, txtUnitPrice;
+    public TableColumn<Product, Integer> columnLowStockAmount;
+    public TextField txtInventorySearch, txtProductName, txtUnitPrice, txtLowStockAmount;
     public Button btnInventoryCommand, btnClearFields, btnClearSelection;
     public ComboBox<String> comboBoxInventoryCommand, comboBoxCategory;
-    public Label lblProductID, lblNameError, lblCategoryError, lblUnitPriceError, lblProductCommandError;
+    public Label lblProductID, lblNameError, lblCategoryError, lblUnitPriceError, lblProductCommandError, lblLowStockError;
 
     private final ObservableList<Product> productList = Product.getList();
     private FilteredList<Product> filteredProductList;
@@ -45,27 +46,22 @@ public class ViewInventoryController implements Initializable {
         txtProductName.setOnKeyReleased(this::handleProductNameKeyReleased);
         comboBoxCategory.getEditor().setOnKeyReleased(this::handleCategoryKeyReleased);
         txtUnitPrice.setOnKeyReleased(this::handleUnitPriceKeyReleased);
+        txtLowStockAmount.setOnKeyReleased(this::handleLowStockKeyReleased);
 
         txtProductName.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         comboBoxCategory.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtUnitPrice.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
 
-        // Initialize columns
         columnProductID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         columnCategory.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
         columnUnitPrice.setCellValueFactory(cellData -> cellData.getValue().unitPriceProperty());
         columnStockCount.setCellValueFactory(cellData -> cellData.getValue().stockCountProperty().asObject());
+        columnLowStockAmount.setCellValueFactory(cellData -> cellData.getValue().lowStockAmountProperty().asObject());
 
         filteredProductList = new FilteredList<>(productList, p -> true);
-
-        // Set the filtered list as the data source for the table
         tableViewInventory.setItems(filteredProductList);
-
-        // Add listeners for filtering
         txtInventorySearch.textProperty().addListener((observable, oldValue, newValue) -> filterInventoryList());
-
-        // Add listener to table selection
         tableViewInventory.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> populateFields(newValue));
 
         comboBoxInventoryCommand.valueProperty().addListener((observable, oldValue, newValue) -> updateInventoryCommand(newValue));
@@ -83,7 +79,8 @@ public class ViewInventoryController implements Initializable {
                     || product.getName().toLowerCase().contains(searchText)
                     || product.getCategory().toLowerCase().contains(searchText)
                     || String.valueOf(product.getUnitPrice()).contains(searchText)
-                    || String.valueOf(product.getStockCount()).contains(searchText);
+                    || String.valueOf(product.getStockCount()).contains(searchText)
+                    || String.valueOf(product.getLowStockAmount()).contains(searchText);
         });
     }
 
@@ -133,6 +130,17 @@ public class ViewInventoryController implements Initializable {
         }
 
         validateFields();
+    }
+
+    private void handleLowStockKeyReleased(KeyEvent keyEvent){
+        String lowStockAmount = txtLowStockAmount.getText();
+
+        try{
+            int i = Integer.parseInt(lowStockAmount);
+            lblLowStockError.setText("");
+        }catch(NumberFormatException _){
+            lblLowStockError.setText("Not a valid number");
+        }
     }
 
     private boolean isInventorySelected() {
@@ -212,7 +220,8 @@ public class ViewInventoryController implements Initializable {
                 && !comboBoxCategory.getEditor().getText().isEmpty()
                 && !txtUnitPrice.getText().isEmpty()
                 && lblNameError.getText().isEmpty()
-                && lblUnitPriceError.getText().isEmpty();
+                && lblUnitPriceError.getText().isEmpty()
+                && lblLowStockError.getText().isEmpty();
     }
 
     private boolean allFieldsValidForUpdate() {
@@ -225,16 +234,17 @@ public class ViewInventoryController implements Initializable {
         String productName = product.getName();
         String category = product.getCategory();
         String unitPrice = String.valueOf(product.getUnitPrice());
+        String lowStockAmount = String.valueOf(product.getLowStockAmount());
 
         if (txtProductName.getText().equals(productName) && comboBoxCategory.getEditor().getText().equals(category)
-                && txtUnitPrice.getText().equals(unitPrice)) {
+                && txtUnitPrice.getText().equals(unitPrice) && txtLowStockAmount.getText().equals(lowStockAmount)) {
             System.out.println("No fields have been changed.");
             return false;
         }
 
         return !(Product.containsName(txtProductName.getText()) && !productName.equals(txtProductName.getText()))
-                && lblNameError.getText().isEmpty()
-                && lblUnitPriceError.getText().isEmpty();
+                && lblNameError.getText().isEmpty() && lblUnitPriceError.getText().isEmpty()
+                && lblLowStockError.getText().isEmpty();
     }
 
     private boolean allFieldsValidForDelete() {
@@ -257,7 +267,8 @@ public class ViewInventoryController implements Initializable {
         String name = txtProductName.getText();
         String category = comboBoxCategory.getValue();
         BigDecimal unitPrice = BigDecimal.valueOf(Float.parseFloat(txtUnitPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-        DataBaseManager.addProduct(name, category, unitPrice);
+        int lowStockAmount = Integer.parseInt(txtLowStockAmount.getText());
+        DataBaseManager.addProduct(name, category, unitPrice, lowStockAmount);
         int id = Product.getLastAddedProductID();
         DataBaseManager.addInventoryAdjustment(
                 id,
@@ -286,9 +297,9 @@ public class ViewInventoryController implements Initializable {
         String category = comboBoxCategory.getValue();
         BigDecimal unitPrice = BigDecimal.valueOf(Float.parseFloat(txtUnitPrice.getText()))
                 .setScale(2, RoundingMode.HALF_UP);
-        int stockCount = product.getStockCount();
+        int lowStockAmount = Integer.parseInt(txtLowStockAmount.getText());
 
-        DataBaseManager.updateProduct(product, name, category, unitPrice);
+        DataBaseManager.updateProduct(product, name, category, unitPrice, lowStockAmount);
         DataBaseManager.addInventoryAdjustment(
                 product.ID,
                 name,
@@ -307,6 +318,12 @@ public class ViewInventoryController implements Initializable {
 
     public void deleteProduct(){
         Product product = tableViewInventory.getSelectionModel().getSelectedItem();
+
+        if(product.getStockCount() != 0){
+            Model.getInstance().showAlert(Alert.AlertType.ERROR, "Cannot Delete Product",
+                    "Product with ID: " + product.ID + " cannot be deleted since the stock amount is not 0.");
+            return;
+        }
         Alert alert = Model.getInstance().getConfirmationDialogAlert("Delete Product?",
                 "Are you sure you want to delete this Product?\nProduct ID: " + product.ID);
 
@@ -335,6 +352,7 @@ public class ViewInventoryController implements Initializable {
         txtProductName.setText("");
         comboBoxCategory.setValue("");
         txtUnitPrice.setText("");
+        txtLowStockAmount.setText("");
     }
 
     public void clearSelection() {
@@ -342,6 +360,7 @@ public class ViewInventoryController implements Initializable {
         txtProductName.setText("");
         comboBoxCategory.setValue("");
         txtUnitPrice.setText("");
+        txtLowStockAmount.setText("");
         btnClearSelection.setDisable(true);
 
         lblProductID.setText("Product ID: ");
@@ -352,12 +371,14 @@ public class ViewInventoryController implements Initializable {
             txtProductName.setText(product.getName());
             comboBoxCategory.setValue(product.getCategory());
             txtUnitPrice.setText(String.valueOf(product.getUnitPrice()));
+            txtLowStockAmount.setText(String.valueOf(product.getLowStockAmount()));
             lblProductID.setText("Product ID: " + product.ID);
         }
         else{
             txtProductName.setText("");
             comboBoxCategory.setValue("");
             txtUnitPrice.setText("");
+            txtLowStockAmount.setText("");
             lblProductID.setText("Product ID: ");
         }
     }

@@ -407,8 +407,9 @@ public class DataBaseManager {
                 String name = resultSet.getString("name");
                 String category = resultSet.getString("category");
                 BigDecimal unitPrice = resultSet.getBigDecimal("unit_price");
+                int lowStockAmount = resultSet.getInt("low_stock_amount");
 
-                new Product(productId, name, category, unitPrice);
+                new Product(productId, name, category, unitPrice, lowStockAmount);
             }
 
         }catch(SQLException e){
@@ -584,20 +585,21 @@ public class DataBaseManager {
         }
     }
 
-    public static void addProduct(String name, String category, BigDecimal unitPrice){
+    public static void addProduct(String name, String category, BigDecimal unitPrice, int lowStockAmount){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO Products (name, category, unit_price) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Products (name, category, unit_price, low_stock_amount) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, category);
             statement.setBigDecimal(3, unitPrice);
+            statement.setInt(4, lowStockAmount);
             int rowsAdded = statement.executeUpdate();
             int productId = -1;
 
             if(rowsAdded > 0){
                 productId = getLastProductID();
-                new Product(productId, name, category, unitPrice);
+                new Product(productId, name, category, unitPrice, lowStockAmount);
             }
 
             addMessage("Product", productId, rowsAdded);
@@ -771,19 +773,20 @@ public class DataBaseManager {
         }
     }
 
-    public static void updateProduct(Product product, String name, String category, BigDecimal unitPrice){
+    public static void updateProduct(Product product, String name, String category, BigDecimal unitPrice, int lowStockAmount){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE Products SET name = ?, category = ?, unit_price = ? WHERE product_id = ?";
+        String query = "UPDATE Products SET name = ?, category = ?, unit_price = ?, low_stock_amount = ? WHERE product_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, category);
             statement.setBigDecimal(3, unitPrice);
-            statement.setInt(4, product.ID);
+            statement.setInt(4, lowStockAmount);
+            statement.setInt(5, product.ID);
             int rowsUpdated = statement.executeUpdate();
 
             if(rowsUpdated > 0){
-                Product.update(product, name, category, unitPrice);
+                Product.update(product, name, category, unitPrice, lowStockAmount);
             }
 
             updateMessage("Product", product.ID, rowsUpdated);

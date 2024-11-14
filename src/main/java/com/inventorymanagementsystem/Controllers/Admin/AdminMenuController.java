@@ -23,7 +23,6 @@ public class AdminMenuController implements Initializable {
     }
 
     private void setIcons() {
-        // Directly set Ikonli icons on buttons using FontAwesomeSolid icons
         btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 20));
         btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 20));
         btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 20));

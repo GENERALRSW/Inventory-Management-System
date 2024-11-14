@@ -15,17 +15,19 @@ public class Product {
     private final StringProperty category = new SimpleStringProperty();
     private final ObjectProperty<BigDecimal> unitPrice = new SimpleObjectProperty<>();
     private final IntegerProperty stockCount = new SimpleIntegerProperty();
+    private final IntegerProperty lowStockAmount = new SimpleIntegerProperty();
     private static final Map<Integer, Product> products = new HashMap<>();
     private static final ObservableList<Product> productList = FXCollections.observableArrayList();
     private static final ObservableList<String> productNameList = FXCollections.observableArrayList();
     private static final ObservableList<String> categoryList = FXCollections.observableArrayList();
 
-    public Product(int productId, String name, String category, BigDecimal unitPrice) {
+    public Product(int productId, String name, String category, BigDecimal unitPrice, int lowStockAmount) {
         ID = productId;
         this.id.set(productId);
         this.name.set(name);
         this.category.set(category);
         this.unitPrice.set(unitPrice);
+        this.lowStockAmount.set(lowStockAmount);
         add(this);
         stockCount.set(calculateStockCount());
     }
@@ -69,6 +71,18 @@ public class Product {
 
     public ObjectProperty<BigDecimal> unitPriceProperty() {
         return unitPrice;
+    }
+
+    public int getLowStockAmount(){
+        return lowStockAmount.get();
+    }
+
+    public void setLowStockAmount(int lowStockAmount){
+        this.lowStockAmount.set(lowStockAmount);
+    }
+
+    public IntegerProperty lowStockAmountProperty(){
+        return lowStockAmount;
     }
 
     public int getStockCount(){
@@ -120,11 +134,12 @@ public class Product {
         }
     }
 
-    public static void update(Product product, String name, String category, BigDecimal unitPrice){
+    public static void update(Product product, String name, String category, BigDecimal unitPrice, int lowStockAmount){
         if(product != null){
             product.setName(name);
             product.setCategory(category);
             product.setUnitPrice(unitPrice);
+            product.setLowStockAmount(lowStockAmount);
 
             productNameList.clear();
 
