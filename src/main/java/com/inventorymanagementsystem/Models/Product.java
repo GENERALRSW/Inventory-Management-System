@@ -110,6 +110,18 @@ public class Product {
         return count;
     }
 
+    public ObservableList<Batch> getBatchList(){
+        ObservableList<Batch> batchList = FXCollections.observableArrayList();
+
+        for(Batch batch: Batch.getList()){
+            if(ID == batch.getProductId()){
+                batchList.add(batch);
+            }
+        }
+
+        return batchList;
+    }
+
     public static boolean isValidUnitPrice(String number){
         try{
             float num = Float.parseFloat(number);

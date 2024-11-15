@@ -253,7 +253,6 @@ public class ViewInventoryController implements Initializable {
         }
 
         Product product = tableViewInventory.getSelectionModel().getSelectedItem();
-
         String name = product.getName();
         String category = product.getCategory();
         String unitPrice = String.valueOf(product.getUnitPrice());

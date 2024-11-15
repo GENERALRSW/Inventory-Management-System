@@ -454,12 +454,13 @@ public class DataBaseManager {
 
             while(resultSet.next()){
                 int saleId = resultSet.getInt("sale_id");
-                int batchId = resultSet.getInt("batch_id");
+                int productId = resultSet.getInt("product_id");
+                String productName = resultSet.getString("product_name");
                 LocalDate saleDate = resultSet.getDate("sale_date").toLocalDate();
                 int quantitySold = resultSet.getInt("quantity_sold");
                 BigDecimal salePrice = resultSet.getBigDecimal("sale_price");
 
-                new Sale(saleId, batchId, saleDate, quantitySold, salePrice);
+                new Sale(saleId, productId, productName, saleDate, quantitySold, salePrice);
             }
 
         }catch(SQLException e){
@@ -637,21 +638,22 @@ public class DataBaseManager {
         }
     }
 
-    public static void addSale(int batchId, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
+    public static void addSale(int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO Sales (batch_id, sale_date, quantity_sold, sale_price) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Sales (product_id, product_name, sale_date, quantity_sold, sale_price) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, batchId);
-            statement.setDate(2, Date.valueOf(saleDate));
-            statement.setInt(3, quantitySold);
-            statement.setBigDecimal(4, salePrice);
+            statement.setInt(1, productId);
+            statement.setString(2, productName);
+            statement.setDate(3, Date.valueOf(saleDate));
+            statement.setInt(4, quantitySold);
+            statement.setBigDecimal(5, salePrice);
             int rowsAdded = statement.executeUpdate();
             int saleId = -1;
 
             if(rowsAdded > 0){
                 saleId = getLastSaleID();
-                new Sale(saleId, batchId, saleDate, quantitySold, salePrice);
+                new Sale(saleId, productId, productName, saleDate, quantitySold, salePrice);
             }
 
             addMessage("Sale", saleId, rowsAdded);
@@ -823,20 +825,21 @@ public class DataBaseManager {
         }
     }
 
-    public static void updateSale(Sale sale, int batchId, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
+    public static void updateSale(Sale sale, int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE Sales SET batch_id = ?, sale_date = ?, quantity_sold = ?, sale_price = ? WHERE sale_id = ?";
+        String query = "UPDATE Sales SET product_name = ?, sale_date = ?, quantity_sold = ?, sale_price = ? WHERE sale_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, batchId);
-            statement.setDate(2, Date.valueOf(saleDate));
-            statement.setInt(3, quantitySold);
-            statement.setBigDecimal(4, salePrice);
-            statement.setInt(5, sale.ID);
+            statement.setInt(1, productId);
+            statement.setString(2, productName);
+            statement.setDate(3, Date.valueOf(saleDate));
+            statement.setInt(4, quantitySold);
+            statement.setBigDecimal(5, salePrice);
+            statement.setInt(6, sale.ID);
             int rowsUpdated = statement.executeUpdate();
 
             if(rowsUpdated > 0){
-                Sale.update(sale, batchId, saleDate, quantitySold, salePrice);
+                Sale.update(sale, productId, productName, saleDate, quantitySold, salePrice);
             }
 
             updateMessage("Sale", sale.ID, rowsUpdated);

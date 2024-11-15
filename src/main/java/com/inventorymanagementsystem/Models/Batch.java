@@ -114,6 +114,16 @@ public class Batch {
         }
     }
 
+    public static int getLastAddedBatchID() {
+        if (!batchList.isEmpty()) {
+            return batchList.getLast().ID;
+        }
+        else {
+            System.out.println("Batch list is empty.");
+            return -1;
+        }
+    }
+
     public static boolean valid(Batch batch){
         return batch != null && contains(batch.ID);
     }

@@ -52,7 +52,7 @@
             <Font name="System Bold Italic" size="13.0" />
          </font>
       </Label>
-      <DatePicker fx:id="datePickerExpirationDate" layoutX="565.0" layoutY="651.0" prefHeight="29.0" prefWidth="161.0" promptText="Expiration Date" />
+      <DatePicker fx:id="dateExpirationDate" layoutX="565.0" layoutY="651.0" prefHeight="29.0" prefWidth="161.0" promptText="Expiration Date" />
       <Label layoutX="565.0" layoutY="621.0" prefHeight="17.0" prefWidth="90.0" text="Expiration Date: ">
          <font>
             <Font name="System Bold Italic" size="13.0" />

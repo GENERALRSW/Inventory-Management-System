@@ -1,9 +1,6 @@
 package com.inventorymanagementsystem.Models;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,16 +11,18 @@ import java.util.Map;
 
 public class Sale {
     public final int ID;
-    private final IntegerProperty batchId = new SimpleIntegerProperty();
+    private final IntegerProperty productId = new SimpleIntegerProperty();
+    private final StringProperty productName = new SimpleStringProperty();
     private final ObjectProperty<LocalDate> saleDate = new SimpleObjectProperty<>();
     private final IntegerProperty quantitySold = new SimpleIntegerProperty();
     private final ObjectProperty<BigDecimal> salePrice = new SimpleObjectProperty<>();
     private static final Map<Integer, Sale> sales = new HashMap<>();
     private static final ObservableList<Sale> saleList = FXCollections.observableArrayList();
 
-    public Sale(int saleId, int batchId, LocalDate saleDate, int quantitySold, BigDecimal salePrice) {
+    public Sale(int saleId, int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice) {
         ID = saleId;
-        this.batchId.set(batchId);
+        this.productId.set(productId);
+        this.productName.set(productName);
         this.saleDate.set(saleDate);
         this.quantitySold.set(quantitySold);
         this.salePrice.set(salePrice);
@@ -31,16 +30,28 @@ public class Sale {
     }
 
     // Getters and setters
-    public int getBatchId() {
-        return batchId.get();
+    public int getProductId() {
+        return productId.get();
     }
 
-    public void setBatchId(int batchId) {
-        this.batchId.set(batchId);
+    public void setProductId(int productId) {
+        this.productId.set(productId);
     }
 
-    public IntegerProperty batchIdProperty() {
-        return batchId;
+    public IntegerProperty productIdProperty() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName.get();
+    }
+
+    public void setProductName(String productName) {
+        this.productName.set(productName);
+    }
+
+    public StringProperty productNameProperty() {
+        return productName;
     }
 
     public LocalDate getSaleDate() {
@@ -92,9 +103,10 @@ public class Sale {
         }
     }
 
-    public static void update(Sale sale, int batchId, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
+    public static void update(Sale sale, int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
         if(sale != null){
-            sale.setBatchId(batchId);
+            sale.setProductId(productId);
+            sale.setProductName(productName);
             sale.setSaleDate(saleDate);
             sale.setQuantitySold(quantitySold);
             sale.setSalePrice(salePrice);
