@@ -3,6 +3,7 @@ package com.inventorymanagementsystem.Views;
 import com.inventorymanagementsystem.Controllers.Admin.AdminController;
 import com.inventorymanagementsystem.Controllers.DBConnectionController;
 import com.inventorymanagementsystem.Controllers.LoginController;
+import com.inventorymanagementsystem.Controllers.Staff.StaffController;
 import com.inventorymanagementsystem.Models.Model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -164,8 +165,8 @@ public class ViewFactory {
 
     public void showStaffWindow(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Staff/staff.fxml"));
-        AdminController adminController = new AdminController();
-        loader.setController(adminController);
+        StaffController staffController = new StaffController();
+        loader.setController(staffController);
         createStage(loader);
     }
 
@@ -201,7 +202,6 @@ public class ViewFactory {
                 onExit();
             });
 
-            // Get the controller from the loader
             dbController = loader.getController();
             dbController.shouldShow();
 
@@ -227,7 +227,6 @@ public class ViewFactory {
                 onExit();
             });
 
-            // Get the controller from the loader
             loginController = loader.getController();
             loginController.shouldShow();
 

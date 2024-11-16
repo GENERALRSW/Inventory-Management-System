@@ -22,11 +22,11 @@ public class StaffMenuController implements Initializable {
     }
 
     private void setIcons() {
-        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 20));
-        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 20));
-        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 20));
-        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 20));
-        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 16));
+        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 16));
+        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 16));
+        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 16));
+        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 16));
+        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 14));
     }
 
     private FontIcon createFontIcon(FontAwesomeSolid iconType, int size) {

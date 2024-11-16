@@ -1,9 +1,7 @@
-/* Style for the container */
 .login_container {
     -fx-background-color: white;
 }
 
-/* Logo and Text styles */
 .login_logo_container {
     -fx-background-color: #3a77ff;
     -fx-padding: 11px;
@@ -11,10 +9,9 @@
 }
 
 FontIcon {
-    -fx-fill: #ECF39E; /* Set the color of the icon */
+    -fx-fill: #ECF39E;
 }
 
-/* Text for the header */
 .login_logo_container Text {
     -fx-font-size: 20px;
     -fx-fill: white;
@@ -24,7 +21,6 @@ FontIcon {
     -fx-fill: #ECF39E;
 }
 
-/* Button Styles */
 #btnLogin {
     -fx-background-color: #3a77ff;
     -fx-text-fill: white;
@@ -34,10 +30,10 @@ FontIcon {
 }
 
 #btnLogin:pressed {
-    -fx-background-color: #2756b3; /* Darker background on click */
+    -fx-background-color: #2756b3;
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 4, 0.0, 0, 1); /* Inner shadow */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 4, 0.0, 0, 1);
 }
 
 #btnDBConnection {
@@ -58,7 +54,6 @@ FontIcon {
     -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Input field styles */
 TextField, PasswordField {
     -fx-border-color: lightgray;
     -fx-border-radius: 5;
@@ -66,39 +61,33 @@ TextField, PasswordField {
     -fx-padding: 5px;
 }
 
-/* Label styles */
 Label {
     -fx-font-family: "Arial";
     -fx-text-fill: #333;
 }
 
-/* Error Label */
 #lblError {
     -fx-text-fill: #e42222;
 }
 
-/* Checkbox style */
 CheckBox {
     -fx-text-fill: #333;
 }
 
-/* Hover effects for buttons */
 Button:hover {
     -fx-background-color: #2756b3;
 }
 
-/* Focused styles for TextField and PasswordField */
 TextField:focused, PasswordField:focused {
     -fx-border-color: #3a77ff;
 }
 
 #pwdPassword, #txtVisiblePassword {
-    -fx-font-size: 13px; /* Adjust the font size */
-    -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
+    -fx-font-size: 13px;
+    -fx-font-family: "Monospaced";
     -fx-padding: 5 30 5 5;
 }
 
-/* Icon styling */
 .icon {
     -fx-fill: black;
     -fx-opacity: 0.7;

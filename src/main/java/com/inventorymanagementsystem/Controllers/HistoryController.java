@@ -10,17 +10,18 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class HistoryController implements Initializable {
     public TableView<InventoryAdjustment> tableViewInventoryAdjustments;
-    public TableColumn<InventoryAdjustment, Integer> columnAdjustmentId;
+    public TableColumn<InventoryAdjustment, Integer> columnUserId;
+    public TableColumn<InventoryAdjustment, String> columnUserRole;
     public TableColumn<InventoryAdjustment, Integer> columnProductId;
     public TableColumn<InventoryAdjustment, String> columnProductName;
     public TableColumn<InventoryAdjustment, String> columnBatchId;
-    public TableColumn<InventoryAdjustment, LocalDate> columnAdjustmentDate;
+    public TableColumn<InventoryAdjustment, String> columnAdjustmentDatetime;
     public TableColumn<InventoryAdjustment, String> columnAdjustmentType;
     public TableColumn<InventoryAdjustment, String> columnPreviousStock;
     public TableColumn<InventoryAdjustment, String> columnAdjustedStock;
@@ -32,22 +33,19 @@ public class HistoryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        columnAdjustmentId.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+        columnUserId.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
+        columnUserRole.setCellValueFactory(cellData -> cellData.getValue().userRoleProperty());
         columnProductId.setCellValueFactory(cellData -> cellData.getValue().productIdProperty().asObject());
         columnProductName.setCellValueFactory(cellData -> cellData.getValue().productNameProperty());
         columnBatchId.setCellValueFactory(cellData -> cellData.getValue().batchIdStringProperty());
-        columnAdjustmentDate.setCellValueFactory(cellData -> cellData.getValue().adjustmentDateProperty());
+        columnAdjustmentDatetime.setCellValueFactory(cellData -> cellData.getValue().adjustmentDatetimeFormattedProperty());
         columnAdjustmentType.setCellValueFactory(cellData -> cellData.getValue().adjustmentTypeProperty());
         columnPreviousStock.setCellValueFactory(cellData -> cellData.getValue().previous_stockStringProperty());
         columnAdjustedStock.setCellValueFactory(cellData -> cellData.getValue().adjusted_stockStringProperty());
         setupDeleteColumn();
 
         filteredAdjustmentsList = new FilteredList<>(adjustmentsList, p -> true);
-
-        // Set the filtered list as the data source for the table
         tableViewInventoryAdjustments.setItems(filteredAdjustmentsList);
-
-        // Add listeners for filtering
         txtAdjustmentSearch.textProperty().addListener((observable, oldValue, newValue) -> filterAdjustmentList());
     }
 
@@ -59,11 +57,12 @@ public class HistoryController implements Initializable {
                 return true;
             }
 
-            return String.valueOf(inventoryAdjustment.ID).contains(searchText)
+            return String.valueOf(inventoryAdjustment.getUserId()).contains(searchText)
+                    || inventoryAdjustment.getUserRole().toLowerCase().contains(searchText)
                     || String.valueOf(inventoryAdjustment.getProductId()).contains(searchText)
                     || inventoryAdjustment.getProductName().toLowerCase().contains(searchText)
                     || String.valueOf(inventoryAdjustment.getBatchId()).contains(searchText)
-                    || String.valueOf(inventoryAdjustment.getAdjustmentDate()).contains(searchText)
+                    || String.valueOf(inventoryAdjustment.getAdjustmentDatetimeFormatted()).contains(searchText)
                     || inventoryAdjustment.getAdjustmentType().toLowerCase().contains(searchText)
                     || String.valueOf(inventoryAdjustment.getPrevious_stock()).contains(searchText)
                     || String.valueOf(inventoryAdjustment.getAdjusted_stock()).contains(searchText);
@@ -78,12 +77,10 @@ public class HistoryController implements Initializable {
                     private final Button deleteButton = new Button();
 
                     {
-                        // Set the Ikonli trash icon for the delete button
                         FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
                         deleteIcon.setIconSize(16);
                         deleteButton.setGraphic(deleteIcon);
 
-                        // Add delete action
                         deleteButton.setOnAction(event -> {
                             InventoryAdjustment inventoryAdjustment = getTableView().getItems().get(getIndex());
                             deleteInventoryAdjustment(inventoryAdjustment);
@@ -105,7 +102,7 @@ public class HistoryController implements Initializable {
     }
 
     private void deleteInventoryAdjustment(InventoryAdjustment inventoryAdjustment) {
-        User user = Model.getInstance().getUser();
+        User user = Model.getInstance().getCurrentUser();
 
         if(user.isAdmin()){
             Alert alert = Model.getInstance().getConfirmationDialogAlert("Delete Inventory Adjustment?",

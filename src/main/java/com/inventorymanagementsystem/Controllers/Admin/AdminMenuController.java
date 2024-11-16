@@ -23,16 +23,16 @@ public class AdminMenuController implements Initializable {
     }
 
     private void setIcons() {
-        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 20));
-        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 20));
-        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 20));
-        btnManageStaff.setGraphic(createFontIcon(FontAwesomeSolid.USER_COG, 20));
-        btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 20));
-        btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 20));
-        btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 20));
-        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 20));
-        btnAccount.setGraphic(createFontIcon(FontAwesomeSolid.USER_CIRCLE, 20));
-        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 16));
+        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 18));
+        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 18));
+        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 18));
+        btnManageStaff.setGraphic(createFontIcon(FontAwesomeSolid.USER_COG, 18));
+        btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 18));
+        btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 18));
+        btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 18));
+        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 18));
+        btnAccount.setGraphic(createFontIcon(FontAwesomeSolid.USER_CIRCLE, 18));
+        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 14));
     }
 
     private FontIcon createFontIcon(FontAwesomeSolid iconType, int size) {

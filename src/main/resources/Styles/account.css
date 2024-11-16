@@ -1,6 +1,6 @@
 .password-field, #txtOldPassword, #txtConfirmPassword, #txtNewPassword, #txtEmailPassword{
-    -fx-font-size: 14px; /* Adjust the font size */
-    -fx-font-family: "Monospaced"; /* You can choose a different font if needed */
+    -fx-font-size: 14px;
+    -fx-font-family: "Monospaced";
 }
 
 .text-field, .password-field {
@@ -15,16 +15,16 @@
 #btnVisibleOldPwd, #btnVisibleConfirmPwd, #btnVisibleNewPwd {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-text-fill: black; /* Adjust text color as needed */
-    -fx-cursor: hand; /* Change cursor to hand on hover */
+    -fx-text-fill: black;
+    -fx-cursor: hand;
 }
 
 #btnVisibleOldPwd:hover, #btnVisibleConfirmPwd:hover, #btnVisibleNewPwd:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.1); /* Slightly darken on hover */
+    -fx-background-color: rgba(0, 0, 0, 0.1);
 }
 
 #btnVisibleOldPwd:pressed, #btnVisibleConfirmPwd:pressed, #btnVisibleNewPwd:pressed {
-    -fx-background-color: rgba(0, 0, 0, 0.2); /* Darken more on press */
+    -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
 .button {
@@ -37,12 +37,12 @@
 }
 
 .button:hover {
-    -fx-background-color: #2756b3; /* Slightly darker tan */
+    -fx-background-color: #2756b3;
 }
 
 .button:pressed {
-    -fx-background-color: #2756b3; /* Darker background on click */
+    -fx-background-color: #2756b3;
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 4, 0.0, 0, 1); /* Inner shadow */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 4, 0.0, 0, 1);
 }

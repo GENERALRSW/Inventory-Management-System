@@ -6,12 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -35,12 +38,21 @@ public class ReportsController implements Initializable {
     public TableColumn<Sale, BigDecimal> columnSalePrice;
     public DatePicker datePickerStart, datePickerEnd;
     public Button btnGeneratePDF;
+    public Label lblStartDateError, lblEndDateError;
 
     private final ObservableList<Sale> saleList = Sale.getList();
     private FilteredList<Sale> filteredSaleList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnGeneratePDF.setDisable(true);
+
+        datePickerStart.getEditor().setOnKeyReleased(this::handleStartDateKeyReleased);
+        datePickerEnd.getEditor().setOnKeyReleased(this::handleEndDateKeyReleased);
+
+        datePickerStart.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
+        datePickerEnd.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
+
         columnSaleId.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnProductId.setCellValueFactory(cellData -> cellData.getValue().productIdProperty().asObject());
         columnProductName.setCellValueFactory(cellData -> cellData.getValue().productNameProperty());
@@ -53,40 +65,78 @@ public class ReportsController implements Initializable {
 
         datePickerStart.valueProperty().addListener((observable, oldValue, newValue) -> filterSalesByDate());
         datePickerEnd.valueProperty().addListener((observable, oldValue, newValue) -> filterSalesByDate());
-        datePickerStart.getEditor().textProperty().addListener((observable, oldValue, newValue) -> filterSalesByDate());
-        datePickerEnd.getEditor().textProperty().addListener((observable, oldValue, newValue) -> filterSalesByDate());
     }
 
-
     private void filterSalesByDate() {
-        LocalDate startDate = LocalDate.parse(datePickerStart.getEditor().getText());
-        LocalDate endDate = LocalDate.parse(datePickerEnd.getEditor().getText());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate startDate = datePickerStart.getValue();
+        LocalDate endDate = datePickerEnd.getValue();
 
         filteredSaleList.setPredicate(sale -> {
-            // If no startDate and no endDate, show all sales
             if (startDate == null && endDate == null) {
                 return true;
             }
 
-            // If only startDate is specified, show sales after or on the startDate
             if (startDate != null && endDate == null) {
                 return !sale.getSaleDate().isBefore(startDate);
             }
 
-            // If only endDate is specified, show sales before or on the endDate
-            if (startDate == null && endDate != null) {
+            if (startDate == null) {
                 return !sale.getSaleDate().isAfter(endDate);
             }
 
-            // If both startDate and endDate are specified, show sales between the dates
             return !sale.getSaleDate().isBefore(startDate) && !sale.getSaleDate().isAfter(endDate);
         });
+    }
+
+    private void handleStartDateKeyReleased(KeyEvent keyEvent) {
+        handleDateError(datePickerStart, lblStartDateError);
+    }
+
+    private void handleEndDateKeyReleased(KeyEvent keyEvent) {
+        handleDateError(datePickerEnd, lblEndDateError);
+    }
+
+    private void handleDateError(DatePicker datePicker, Label lblDateError) {
+        String dateStr = datePicker.getEditor().getText();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        try {
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            datePicker.setValue(date);
+            lblDateError.setText("");
+        } catch (DateTimeException e) {
+            System.err.println("Error: " + e.getMessage());
+            lblDateError.setText("Not a valid date.");
+        }
+
+        validateFields();
+    }
+
+    private void validateFields() {
+        btnGeneratePDF.setDisable(!(datePickerStart.getValue() != null & datePickerEnd.getValue() != null)
+                || !lblStartDateError.getText().isEmpty() || !lblEndDateError.getText().isEmpty());
     }
 
     public void generatePDF() {
         if(tableViewSales.getItems().isEmpty()){
             Model.getInstance().showAlert(AlertType.ERROR, "TableView is Empty.",
                     "The TableView is Empty. Therefore there is no sales report to generate.");
+            return;
+        }
+
+        LocalDate startDate = datePickerStart.getValue();
+        LocalDate endDate = datePickerEnd.getValue();
+
+        if(startDate.isAfter(endDate) && !startDate.isEqual(endDate)){
+            Model.getInstance().showAlert(AlertType.ERROR, "Start Date is After End Date.",
+                    "The Start Date cannot be after the End Date.");
+            return;
+        }
+
+        if(endDate.isBefore(startDate) && !startDate.isEqual(endDate)){
+            Model.getInstance().showAlert(AlertType.ERROR, "End ate is Before Start Date.",
+                    "The Start Date cannot be after the End Date.");
             return;
         }
 
@@ -105,25 +155,19 @@ public class ReportsController implements Initializable {
                      PdfDocument pdfDoc = new PdfDocument(writer);
                      Document document = new Document(pdfDoc)) {
 
-                    // Add Title and Date
                     document.add(new Paragraph("Sales Report")
                             .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER));
                     document.add(new Paragraph("Date: " + LocalDate.now()).setFontSize(12));
 
-                    // First Table: Sale Details
                     Table salesTable = getSalesTable();
                     document.add(salesTable);
 
                     document.add(new Paragraph("\n"));
 
-                    // Second Table: Product Summaries
                     Table summaryTable = getProductSummaryTable();
                     document.add(summaryTable);
 
-                    // Close the document
                     document.close();
-
-                    // Confirmation
                     Model.getInstance().showAlert(AlertType.INFORMATION, "Successfully Generated PDF",
                             "The PDF report has been saved successfully.");
 
@@ -162,20 +206,15 @@ public class ReportsController implements Initializable {
         summaryTable.addHeaderCell("Total Quantity Sold");
         summaryTable.addHeaderCell("Total Sales");
 
-        // Use a Set to track processed product IDs
         Set<Integer> processedProductIds = new HashSet<>();
 
         for (Sale sale : tableViewSales.getItems()) {
             int productId = sale.getProductId();
 
-            // Skip if this product ID has already been processed
             if (processedProductIds.add(productId)) {
-
-                // Use your provided methods to calculate totals
                 int totalQuantitySold = getTotalQuantitySold(productId);
                 BigDecimal totalSales = getTotalSales(productId);
 
-                // Add data to the summary table
                 summaryTable.addCell(String.valueOf(productId));
                 summaryTable.addCell(sale.getProductName());
                 summaryTable.addCell(String.valueOf(totalQuantitySold));

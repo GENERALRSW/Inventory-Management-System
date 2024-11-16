@@ -25,6 +25,7 @@
 }
 
 .table-view .table-row-cell. {
+    -fx-cell-size: 40px;
     -fx-background-color: #ffe6e6;
     -fx-text-fill: #b30000;
     -fx-font-weight: bold;

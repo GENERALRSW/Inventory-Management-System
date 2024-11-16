@@ -48,7 +48,6 @@ public class SuppliersController implements Initializable {
         txtContactEmail.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtPhoneNumber.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
 
-        // Initialize columns
         columnSupplierID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         columnEmail.setCellValueFactory(cellData -> cellData.getValue().contactEmailProperty());
@@ -56,14 +55,9 @@ public class SuppliersController implements Initializable {
         columnAddress.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
 
         filteredSuppliersList = new FilteredList<>(suppliersList, p -> true);
-
-        // Set the filtered list as the data source for the table
         tableViewSuppliers.setItems(filteredSuppliersList);
-
-        // Add listeners for filtering
         txtSupplierSearch.textProperty().addListener((observable, oldValue, newValue) -> filterSupplierList());
 
-        // Add listener to table selection
         tableViewSuppliers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> populateFields(newValue));
 
         comboBoxSupplierCommand.valueProperty().addListener((observable, oldValue, newValue) -> updateSupplierCommand(newValue));
@@ -106,7 +100,7 @@ public class SuppliersController implements Initializable {
                     lblPhoneNumError.setText("Phone Number is Taken");
                 }
                 else {
-                    lblPhoneNumError.setText(""); // Clear error message
+                    lblPhoneNumError.setText("");
                 }
 
                 if (DataBaseManager.isSupplierEmailTaken(email)) {
@@ -116,7 +110,7 @@ public class SuppliersController implements Initializable {
                     lblEmailError.setText("Email is too long (over 100 characters)");
                 }
                 else {
-                    lblEmailError.setText(""); // Clear error message
+                    lblEmailError.setText("");
                 }
 
                 validateFields();
@@ -134,7 +128,7 @@ public class SuppliersController implements Initializable {
                             lblPhoneNumError.setText("Phone Number is Taken");
                         }
                         else {
-                            lblPhoneNumError.setText(""); // Clear error message
+                            lblPhoneNumError.setText("");
                         }
                     }
                     else{
@@ -142,7 +136,7 @@ public class SuppliersController implements Initializable {
                             lblPhoneNumError.setText("Phone Number is Taken");
                         }
                         else {
-                            lblPhoneNumError.setText(""); // Clear error message
+                            lblPhoneNumError.setText("");
                         }
                     }
                 }
@@ -156,7 +150,7 @@ public class SuppliersController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                     else{
@@ -167,7 +161,7 @@ public class SuppliersController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                 }
@@ -187,7 +181,7 @@ public class SuppliersController implements Initializable {
                             lblPhoneNumError.setText("Phone Number is Taken");
                         }
                         else {
-                            lblPhoneNumError.setText(""); // Clear error message
+                            lblPhoneNumError.setText("");
                         }
                     }
                     else{
@@ -195,7 +189,7 @@ public class SuppliersController implements Initializable {
                             lblPhoneNumError.setText("Phone Number is Taken");
                         }
                         else {
-                            lblPhoneNumError.setText(""); // Clear error message
+                            lblPhoneNumError.setText("");
                         }
                     }
                 }
@@ -209,7 +203,7 @@ public class SuppliersController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                     else{
@@ -220,7 +214,7 @@ public class SuppliersController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                 }
@@ -275,7 +269,7 @@ public class SuppliersController implements Initializable {
                 lblEmailError.setText("Email is too long (over 100 characters)");
             }
             else {
-                lblEmailError.setText(""); // Clear error message
+                lblEmailError.setText("");
             }
         }
         else if (email.isEmpty()) {
@@ -301,7 +295,7 @@ public class SuppliersController implements Initializable {
                 lblPhoneNumError.setText("Phone Number is Taken");
             }
             else {
-                lblPhoneNumError.setText(""); // Clear error message
+                lblPhoneNumError.setText("");
             }
         } else if (phoneNumber.isEmpty()) {
             lblPhoneNumError.setText("Text Field cannot be empty");
@@ -323,7 +317,7 @@ public class SuppliersController implements Initializable {
                 lblEmailError.setText("Email is too long (over 100 characters)");
             }
             else {
-                lblEmailError.setText(""); // Clear error message
+                lblEmailError.setText("");
             }
         }
         else if (email.isEmpty()) {
@@ -344,7 +338,7 @@ public class SuppliersController implements Initializable {
                 lblPhoneNumError.setText("Phone Number is Taken");
             }
             else {
-                lblPhoneNumError.setText(""); // Clear error message
+                lblPhoneNumError.setText("");
             }
         } else if (phoneNumber.isEmpty()) {
             lblPhoneNumError.setText("Text Field cannot be empty");
@@ -507,7 +501,6 @@ public class SuppliersController implements Initializable {
         Alert alert = Model.getInstance().getConfirmationDialogAlert("Delete Supplier?",
                 "Are you sure you want to delete this Supplier?\nSupplier ID: " + selectedSupplier.ID);
 
-        // Show the dialog and capture the user's response
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
             DataBaseManager.deleteSupplier(selectedSupplier);

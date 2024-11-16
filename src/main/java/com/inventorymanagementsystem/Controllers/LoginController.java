@@ -35,19 +35,15 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnVisible.setGraphic(visibleIcon);
-
-        txtVisiblePassword.setManaged(false);  // Makes it invisible to layout
+        txtVisiblePassword.setManaged(false);
         txtVisiblePassword.setVisible(false);
-
-        // Bind the text property of the password field and the visible text field
         txtVisiblePassword.textProperty().bindBidirectional(pwdPassword.textProperty());
-
         btnVisible.setOnAction(event -> togglePasswordVisibility());
     }
 
     private FontIcon createFontIcon(FontAwesomeSolid iconType) {
         FontIcon icon = new FontIcon(iconType);
-        icon.getStyleClass().add("icon");  // Add the CSS class to the icon
+        icon.getStyleClass().add("icon");
         return icon;
     }
 
@@ -60,8 +56,8 @@ public class LoginController implements Initializable {
         }
         else if(DataBaseManager.userIdentityExist(identity)){
             if(DataBaseManager.validUserIdentity(identity, password)){
-                Model.getInstance().setUser(DataBaseManager.getUserFromIdentity(identity));
-                String role = Model.getInstance().getUser().getRole();
+                Model.getInstance().setCurrentUser(DataBaseManager.getUserFromIdentity(identity));
+                String role = Model.getInstance().getCurrentUser().getRole();
                 lblError.setText("");
                 System.out.println("User was found in the database: " + role);
                 Stage stage = (Stage) lblError.getScene().getWindow();
@@ -113,8 +109,8 @@ public class LoginController implements Initializable {
         Stage stage = (Stage) lblError.getScene().getWindow();
 
         if(DataBaseManager.userIdentityExist(identity) && DataBaseManager.validUserIdentity(identity, password)){
-            Model.getInstance().setUser(DataBaseManager.getUserFromIdentity(identity));
-            String role = Model.getInstance().getUser().getRole();
+            Model.getInstance().setCurrentUser(DataBaseManager.getUserFromIdentity(identity));
+            String role = Model.getInstance().getCurrentUser().getRole();
             System.out.println("User was found in the database: " + role);
             lblError.setText("");
             showCorrectWindow(identity, password, stage, role);

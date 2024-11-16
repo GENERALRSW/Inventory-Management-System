@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -51,6 +52,7 @@ public class ViewInventoryController implements Initializable {
         txtProductName.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         comboBoxCategory.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtUnitPrice.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
+        txtLowStockAmount.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
 
         columnProductID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -147,6 +149,8 @@ public class ViewInventoryController implements Initializable {
         }catch(NumberFormatException _){
             lblLowStockError.setText("Not a valid number");
         }
+
+        validateFields();
     }
 
     private boolean isInventorySelected() {
@@ -167,7 +171,7 @@ public class ViewInventoryController implements Initializable {
                 lblProductID.setVisible(false);
                 txtProductName.setOnKeyReleased(this::handleProductNameKeyReleased);
 
-                if(Product.containsName(product.getName())){
+                if(Product.containsName(txtProductName.getText())){
                     lblNameError.setText("Product Name is already taken");
                 }
                 else{
@@ -223,8 +227,10 @@ public class ViewInventoryController implements Initializable {
 
     private boolean allFieldsValidForAdd() {
         return !Product.containsName(txtProductName.getText())
+                && !txtProductName.getText().isEmpty()
                 && !comboBoxCategory.getEditor().getText().isEmpty()
                 && !txtUnitPrice.getText().isEmpty()
+                && !txtLowStockAmount.getText().isEmpty()
                 && lblNameError.getText().isEmpty()
                 && lblUnitPriceError.getText().isEmpty()
                 && lblLowStockError.getText().isEmpty();
@@ -249,7 +255,12 @@ public class ViewInventoryController implements Initializable {
         }
 
         return !(Product.containsName(txtProductName.getText()) && !productName.equals(txtProductName.getText()))
-                && lblNameError.getText().isEmpty() && lblUnitPriceError.getText().isEmpty()
+                && !txtProductName.getText().isEmpty()
+                && !comboBoxCategory.getEditor().getText().isEmpty()
+                && !txtUnitPrice.getText().isEmpty()
+                && !txtLowStockAmount.getText().isEmpty()
+                && lblNameError.getText().isEmpty()
+                && lblUnitPriceError.getText().isEmpty()
                 && lblLowStockError.getText().isEmpty();
     }
 
@@ -262,9 +273,10 @@ public class ViewInventoryController implements Initializable {
         String name = product.getName();
         String category = product.getCategory();
         String unitPrice = String.valueOf(product.getUnitPrice());
+        String lowStockAmount = String.valueOf(product.getLowStockAmount());
 
         return txtProductName.getText().equals(name) && comboBoxCategory.getEditor().getText().equals(category)
-                && txtUnitPrice.getText().equals(unitPrice);
+                && txtUnitPrice.getText().equals(unitPrice) && txtLowStockAmount.getText().equals(lowStockAmount);
     }
 
 
@@ -276,10 +288,12 @@ public class ViewInventoryController implements Initializable {
         DataBaseManager.addProduct(name, category, unitPrice, lowStockAmount);
         int id = Product.getLastAddedProductID();
         DataBaseManager.addInventoryAdjustment(
+                Model.getInstance().getCurrentUser().ID,
+                Model.getInstance().getCurrentUser().getRole(),
                 id,
                 name,
                 -1,
-                LocalDate.now(),
+                LocalDateTime.now(),
                 "ADDITION",
                 -1,
                 -1
@@ -307,10 +321,12 @@ public class ViewInventoryController implements Initializable {
 
         DataBaseManager.updateProduct(product, name, category, unitPrice, lowStockAmount);
         DataBaseManager.addInventoryAdjustment(
+                Model.getInstance().getCurrentUser().ID,
+                Model.getInstance().getCurrentUser().getRole(),
                 product.ID,
                 name,
                 -1,
-                LocalDate.now(),
+                LocalDateTime.now(),
                 "UPDATE",
                 -1,
                 -1
@@ -337,10 +353,12 @@ public class ViewInventoryController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.YES) {
             DataBaseManager.deleteProduct(product);
             DataBaseManager.addInventoryAdjustment(
+                    Model.getInstance().getCurrentUser().ID,
+                    Model.getInstance().getCurrentUser().getRole(),
                     product.ID,
                     product.getName(),
                     -1,
-                    LocalDate.now(),
+                    LocalDateTime.now(),
                     "DELETION",
                     -1,
                     -1
@@ -380,6 +398,10 @@ public class ViewInventoryController implements Initializable {
             txtUnitPrice.setText(String.valueOf(product.getUnitPrice()));
             txtLowStockAmount.setText(String.valueOf(product.getLowStockAmount()));
             lblProductID.setText("Product ID: " + product.ID);
+
+            if(btnInventoryCommand.getText().equals("Add Product")){
+                lblNameError.setText("Product Name is already taken");
+            }
         }
         else{
             txtProductName.setText("");

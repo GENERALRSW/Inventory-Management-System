@@ -19,7 +19,7 @@ public class AccountController implements Initializable {
     public Label lblNameError, lblEmailError, lblOldPasswordError, lblConfirmPasswordError, lblNewPasswordError, lblPasswordError;
     public Label lblCreatedAt, lblUserId;
 
-    private final User user = Model.getInstance().getUser();
+    private final User user = Model.getInstance().getCurrentUser();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -137,7 +137,7 @@ public class AccountController implements Initializable {
                 lblEmailError.setText("Email is too long (over 100 characters)");
             }
             else {
-                lblEmailError.setText(""); // Clear error message
+                lblEmailError.setText("");
             }
         }
         else if (email.isEmpty()) {

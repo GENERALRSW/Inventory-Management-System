@@ -363,6 +363,8 @@ public class DataBaseManager {
 
             while (resultSet.next()) {
                 int adjustmentId = resultSet.getInt("adjustment_id");
+                int user_id = resultSet.getInt("user_id");
+                String user_role = resultSet.getString("user_role");
                 int productId = resultSet.getInt("product_id");
                 String productName = resultSet.getString("product_name");
 
@@ -371,7 +373,7 @@ public class DataBaseManager {
                     batchId = -1;
                 }
 
-                LocalDate adjustmentDate = resultSet.getDate("adjustment_date").toLocalDate();
+                LocalDateTime adjustmentDate = resultSet.getTimestamp("adjustment_datetime").toLocalDateTime();
                 String adjustmentType = resultSet.getString("adjustment_type");
 
                 int previousStock = resultSet.getInt("previous_stock");
@@ -384,8 +386,8 @@ public class DataBaseManager {
                     adjustedStock = -1;
                 }
 
-                new InventoryAdjustment(adjustmentId, productId, productName, batchId, adjustmentDate,
-                        adjustmentType, previousStock, adjustedStock);
+                new InventoryAdjustment(adjustmentId, user_id, user_role, productId, productName,
+                        batchId, adjustmentDate, adjustmentType, previousStock, adjustedStock);
             }
 
         } catch (SQLException e) {
@@ -537,37 +539,40 @@ public class DataBaseManager {
         }
     }
 
-    public static void addInventoryAdjustment(int productId, String productName, int batchId, LocalDate adjustmentDate, String adjustmentType,
-                                              int previous_stock, int adjusted_stock){
+    public static void addInventoryAdjustment(int userId, String userRole, int productId, String productName, int batchId,
+                                              LocalDateTime adjustmentDatetime, String adjustmentType, int previous_stock, int adjusted_stock){
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "INSERT INTO InventoryAdjustments (product_id, product_name, batch_id, adjustment_date, adjustment_type, previous_stock, adjusted_stock) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO InventoryAdjustments (user_id, user_role, product_id, product_name, batch_id, adjustment_datetime, adjustment_type, previous_stock, adjusted_stock)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, productId);
-            statement.setString(2, productName);
+            statement.setInt(1, userId);
+            statement.setString(2, userRole);
+            statement.setInt(3, productId);
+            statement.setString(4, productName);
 
             if(batchId == -1){
-                statement.setNull(3, Types.INTEGER);
+                statement.setNull(5, Types.INTEGER);
             }
             else{
-                statement.setInt(3, batchId);
+                statement.setInt(5, batchId);
             }
 
-            statement.setDate(4, Date.valueOf(adjustmentDate));
-            statement.setString(5, adjustmentType);
+            statement.setTimestamp(6, Timestamp.valueOf(adjustmentDatetime));
+            statement.setString(7, adjustmentType);
 
             if(previous_stock == -1){
-                statement.setNull(6, Types.INTEGER);
+                statement.setNull(8, Types.INTEGER);
             }
             else{
-                statement.setInt(6, previous_stock);
+                statement.setInt(8, previous_stock);
             }
 
             if(adjusted_stock == -1){
-                statement.setNull(7, Types.INTEGER);
+                statement.setNull(9, Types.INTEGER);
             }
             else{
-                statement.setInt(7, adjusted_stock);
+                statement.setInt(9, adjusted_stock);
             }
 
             int rowsAdded = statement.executeUpdate();
@@ -575,8 +580,8 @@ public class DataBaseManager {
 
             if(rowsAdded > 0){
                 adjustment_id = getLastInventoryAdjustmentID();
-                new InventoryAdjustment(adjustment_id, productId, productName, batchId, adjustmentDate,
-                        adjustmentType, previous_stock, adjusted_stock);
+                new InventoryAdjustment(adjustment_id, userId, userRole, productId, productName, batchId,
+                        adjustmentDatetime, adjustmentType, previous_stock, adjusted_stock);
             }
 
             addMessage("Inventory Adjustment", adjustment_id, rowsAdded);

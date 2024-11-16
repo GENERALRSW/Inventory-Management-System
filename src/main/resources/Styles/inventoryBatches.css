@@ -10,7 +10,11 @@
     -fx-background-color: #3a77ff;
 }
 
-.table-view .column-header, .column-header-background .label {
+.column-header-background .label{
+    -fx-text-fill: white;
+}
+
+.table-view .column-header, .column-header-background{
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-border-color: #2756b3;
@@ -36,11 +40,11 @@
     -fx-text-fill: black;
 }
 
-/* Style for table cells */
 .table-view .table-cell {
     -fx-padding: 10px;
     -fx-border-width: 0;
     -fx-font-size: 14px;
+    -fx-alignment: CENTER;
 }
 
 #txtProductSearch, #txtBatchesSearch {
@@ -54,7 +58,7 @@
     -fx-prompt-text-fill: gray;
 }
 
-#txtStockAmount, #txtLowStockAmount, #datePickerExpirationDate{
+#txtStockAmount, #txtLowStockAmount, #dateExpirationDate{
     -fx-background-color: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
@@ -72,7 +76,7 @@
     -fx-prompt-text-fill: gray;
 }
 
-.combo-box .arrow-button, #datePickerExpirationDate .arrow-button {
+.combo-box .arrow-button, #dateExpirationDate .arrow-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }

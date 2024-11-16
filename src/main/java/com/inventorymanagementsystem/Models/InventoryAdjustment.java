@@ -9,31 +9,39 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryAdjustment {
     public final int ID;
     private final IntegerProperty id = new SimpleIntegerProperty();
+    private final IntegerProperty user_id = new SimpleIntegerProperty();
+    private final StringProperty user_role = new SimpleStringProperty();
     private final IntegerProperty productId = new SimpleIntegerProperty();
-    private final ObjectProperty<LocalDate> adjustmentDate = new SimpleObjectProperty<>();
+    private final StringProperty productName = new SimpleStringProperty();
+    private final ObjectProperty<LocalDateTime> adjustmentDatetime = new SimpleObjectProperty<>();
+    private final StringProperty adjustmentDatetimeFormatted = new SimpleStringProperty();
     private final IntegerProperty batchId = new SimpleIntegerProperty();
     private final StringProperty adjustmentType = new SimpleStringProperty();
     private final IntegerProperty previous_stock = new SimpleIntegerProperty();
     private final IntegerProperty adjusted_stock = new SimpleIntegerProperty();
-    private final StringProperty productName = new SimpleStringProperty();
     private static final Map<Integer, InventoryAdjustment> inventoryAdjustments = new HashMap<>();
     private static final ObservableList<InventoryAdjustment> inventoryAdjustmentList = FXCollections.observableArrayList();
 
-    public InventoryAdjustment(int adjustmentId, int product_id, String productName, int batchId, LocalDate adjustmentDate,
-                               String adjustmentType, int previous_stock, int adjusted_stock) {
+    public InventoryAdjustment(int adjustmentId, int user_id, String user_role, int product_id, String productName, int batchId,
+                               LocalDateTime adjustmentDatetime, String adjustmentType, int previous_stock, int adjusted_stock) {
         ID = adjustmentId;
         this.id.set(adjustmentId);
+        this.user_id.set(user_id);
+        this.user_role.set(user_role);
         this.productId.set(product_id);
         this.productName.set(productName);
         this.batchId.set(batchId);
-        this.adjustmentDate.set(adjustmentDate);
+        this.adjustmentDatetime.set(adjustmentDatetime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        this.adjustmentDatetimeFormatted.set(adjustmentDatetime.format(formatter));
         this.adjustmentType.set(adjustmentType);
         this.previous_stock.set(previous_stock);
         this.adjusted_stock.set(adjusted_stock);
@@ -62,6 +70,22 @@ public class InventoryAdjustment {
         return batch_id;
     }
 
+    public IntegerProperty userIdProperty(){
+        return user_id;
+    }
+
+    public int getUserId(){
+        return user_id.get();
+    }
+
+    public StringProperty userRoleProperty(){
+        return user_role;
+    }
+
+    public String getUserRole(){
+        return user_role.get();
+    }
+
     public IntegerProperty batchIdProperty() {
         return batchId;
     }
@@ -82,12 +106,20 @@ public class InventoryAdjustment {
         return productName;
     }
 
-    public LocalDate getAdjustmentDate() {
-        return adjustmentDate.get();
+    public LocalDateTime getAdjustmentDatetime() {
+        return adjustmentDatetime.get();
     }
 
-    public ObjectProperty<LocalDate> adjustmentDateProperty() {
-        return adjustmentDate;
+    public ObjectProperty<LocalDateTime> adjustmentDatetimeProperty() {
+        return adjustmentDatetime;
+    }
+
+    public String getAdjustmentDatetimeFormatted() {
+        return adjustmentDatetimeFormatted.get();
+    }
+
+    public StringProperty adjustmentDatetimeFormattedProperty(){
+        return adjustmentDatetimeFormatted;
     }
 
     public String getAdjustmentType() {

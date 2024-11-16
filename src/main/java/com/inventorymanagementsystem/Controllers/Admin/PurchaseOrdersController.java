@@ -82,8 +82,8 @@ public class PurchaseOrdersController implements Initializable{
 
     private void onlyDigits(TextField textField){
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) { // Regex to allow only digits
-                textField.setText(newValue.replaceAll("[^\\d]", "")); // Remove non-digit characters
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
     }
@@ -110,12 +110,10 @@ public class PurchaseOrdersController implements Initializable{
                     private final Button deleteButton = new Button();
 
                     {
-                        // Set the Ikonli trash icon for the delete button
                         FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
                         deleteIcon.setIconSize(16);
                         deleteButton.setGraphic(deleteIcon);
 
-                        // Add delete action
                         deleteButton.setOnAction(event -> {
                             PurchaseOrder selectedPurchaseOrder = getTableView().getItems().get(getIndex());
                             deletePurchaseOrder(selectedPurchaseOrder);
@@ -254,7 +252,7 @@ public class PurchaseOrdersController implements Initializable{
                      "Purchase Order has been added\n\nID: " + id);
         }
 
-        User admin = Model.getInstance().getUser();
+        User admin = Model.getInstance().getCurrentUser();
         String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
         String purchaseOrderMessage = String.format(
                 """

@@ -49,21 +49,14 @@ public class ManageStaffController implements Initializable {
         txtPassword.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         pwdPassword.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
 
-        // Initialize columns
         columnStaffID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         columnName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         columnEmail.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
         columnCreatedAt.setCellValueFactory(cellData -> cellData.getValue().createdAtFormattedProperty());
 
         filteredStaffList = new FilteredList<>(staffList, p -> true);
-
-        // Set the filtered list as the data source for the table
         tableViewStaff.setItems(filteredStaffList);
-
-        // Add listeners for filtering
         txtStaffSearch.textProperty().addListener((observable, oldValue, newValue) -> filterStaffList());
-
-        // Add listener to table selection
         tableViewStaff.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> populateFields(newValue));
 
         comboBoxStaffCommand.valueProperty().addListener((observable, oldValue, newValue) -> updateStaffCommand(newValue));
@@ -109,7 +102,7 @@ public class ManageStaffController implements Initializable {
                     lblEmailError.setText("Email is too long (over 100 characters)");
                 }
                 else {
-                    lblEmailError.setText(""); // Clear error message
+                    lblEmailError.setText("");
                 }
 
                 validateFields();
@@ -132,7 +125,7 @@ public class ManageStaffController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                     else{
@@ -143,7 +136,7 @@ public class ManageStaffController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                 }
@@ -168,7 +161,7 @@ public class ManageStaffController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                     else{
@@ -179,7 +172,7 @@ public class ManageStaffController implements Initializable {
                             lblEmailError.setText("Email is too long (over 100 characters)");
                         }
                         else {
-                            lblEmailError.setText(""); // Clear error message
+                            lblEmailError.setText("");
                         }
                     }
                 }
@@ -221,7 +214,7 @@ public class ManageStaffController implements Initializable {
                 lblEmailError.setText("Email is too long (over 100 characters)");
             }
             else {
-                lblEmailError.setText(""); // Clear error message
+                lblEmailError.setText("");
             }
         }
         else if (email.isEmpty()) {
@@ -250,7 +243,7 @@ public class ManageStaffController implements Initializable {
                 lblEmailError.setText("Email is too long (over 100 characters)");
             }
             else {
-                lblEmailError.setText(""); // Clear error message
+                lblEmailError.setText("");
             }
         }
         else if (email.isEmpty()) {
@@ -401,7 +394,7 @@ public class ManageStaffController implements Initializable {
                     User.getStaff(id).getName() + " with ID: " + id + " has been added.");
         }
 
-        User admin = Model.getInstance().getUser();
+        User admin = Model.getInstance().getCurrentUser();
         String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
         MyEmail.sendEmail(
                 admin.getEmail(),
@@ -421,7 +414,6 @@ public class ManageStaffController implements Initializable {
                 Alert alert = Model.getInstance().getConfirmationDialogAlert("Update Staff?",
                         "Are you sure you want to change the password for this staff?\nStaff ID: " + selectedStaff.ID);
 
-                // Show the dialog and capture the user's response
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.YES) {
                     DataBaseManager.updateUser(
@@ -430,7 +422,7 @@ public class ManageStaffController implements Initializable {
                             password,
                             txtEmail.getText().trim());
 
-                    User admin = Model.getInstance().getUser();
+                    User admin = Model.getInstance().getCurrentUser();
                     String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
                     MyEmail.sendEmail(
                             admin.getEmail(),
@@ -467,7 +459,6 @@ public class ManageStaffController implements Initializable {
         Alert alert = Model.getInstance().getConfirmationDialogAlert("Delete Staff?",
                 "Are you sure you want to delete this Staff?\nStaff ID: " + selectedStaff.ID);
 
-        // Show the dialog and capture the user's response
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
             DataBaseManager.deleteStaff(selectedStaff);
@@ -478,7 +469,7 @@ public class ManageStaffController implements Initializable {
                 Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Deleted Staff",
                         "Staff with ID: " + selectedStaff.ID + " has been deleted.");
 
-                User admin = Model.getInstance().getUser();
+                User admin = Model.getInstance().getCurrentUser();
                 String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
                 MyEmail.sendEmail(
                         admin.getEmail(),
