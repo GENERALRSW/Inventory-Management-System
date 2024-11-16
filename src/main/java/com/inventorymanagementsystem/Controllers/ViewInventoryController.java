@@ -136,8 +136,14 @@ public class ViewInventoryController implements Initializable {
         String lowStockAmount = txtLowStockAmount.getText();
 
         try{
-            int i = Integer.parseInt(lowStockAmount);
-            lblLowStockError.setText("");
+            int num = Integer.parseInt(lowStockAmount);
+
+            if(num > 0){
+                lblLowStockError.setText("");
+            }
+            else{
+                lblLowStockError.setText("Low Stock Amount cannot be less than 1");
+            }
         }catch(NumberFormatException _){
             lblLowStockError.setText("Not a valid number");
         }
@@ -286,6 +292,7 @@ public class ViewInventoryController implements Initializable {
             clearSelection();
         }
 
+        AlertsController.refreshTableView();
         Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Added Product",
                 "Product with ID: " + id + " has been added.");
     }
@@ -341,6 +348,7 @@ public class ViewInventoryController implements Initializable {
 
             if(!Product.contains(product.ID)){
                 clearSelection();
+                AlertsController.refreshTableView();
                 Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Deleted Product",
                         "Product with ID: " + product.ID + " has been deleted.");
             }

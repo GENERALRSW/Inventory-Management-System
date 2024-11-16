@@ -220,6 +220,18 @@ public class Product {
         return productNameList;
     }
 
+    public static ObservableList<Product> getLowStockProducts(){
+        ObservableList<Product> lowStockProducts = FXCollections.observableArrayList();
+
+        for(Product product: productList){
+            if(product.getStockCount() <= product.getLowStockAmount()){
+                lowStockProducts.add(product);
+            }
+        }
+
+        return lowStockProducts;
+    }
+
     public static ObservableList<String> getCategoryList(){
         return categoryList;
     }

@@ -38,7 +38,7 @@ public class InventoryBatchesController implements Initializable {
     private final ObservableList<Product> productList = Product.getList();
     private FilteredList<Product> filteredProductList;
 
-    private ObservableList<Batch> batchList;
+    private final ObservableList<Batch> batchList = FXCollections.observableArrayList();
     private FilteredList<Batch> filteredBatchList;
 
 
@@ -119,7 +119,7 @@ public class InventoryBatchesController implements Initializable {
                 lblStockAmountError.setText("");
             }
             else{
-                lblStockAmountError.setText("Stock Amount cannot be negative");
+                lblStockAmountError.setText("Stock Amount cannot be less than 1");
             }
         }catch(NumberFormatException _){
             lblStockAmountError.setText("Not a valid number");
@@ -276,6 +276,8 @@ public class InventoryBatchesController implements Initializable {
             clearSelection();
         }
 
+        batchList.add(Batch.getList().getLast());
+        AlertsController.refreshTableView();
         Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Added Batch",
                 "Batch with ID: " + id + " has been added.");
     }
@@ -299,14 +301,15 @@ public class InventoryBatchesController implements Initializable {
 
         tableViewBatches.refresh();
         validateFields();
+        AlertsController.refreshTableView();
         Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Updated Batch",
                 "Batch with ID: " + batch.ID + " has been updated.");
     }
 
     public void sellBatch(){
         Product product = tableViewProducts.getSelectionModel().getSelectedItem();
-        Batch batch = tableViewBatches.getItems().getLast();
         int currentStock = Integer.parseInt(txtStockAmount.getText());
+        LocalDate currentDate = LocalDate.now();
 
         if(product.getStockCount() < currentStock){
             Model.getInstance().showAlert(Alert.AlertType.ERROR, "Entered Amount is greater than Product Stock Count",
@@ -315,41 +318,57 @@ public class InventoryBatchesController implements Initializable {
             return;
         }
 
-        while(batch != null && currentStock >= batch.getCurrentStock()){
+        int count = 0;
+        int stockAmount = 0;
+
+        while(!batchList.isEmpty() && currentStock >= batchList.getFirst().getCurrentStock()){
+            if(batchList.getFirst().getExpirationDate().isBefore(currentDate)){
+                Model.getInstance().showAlert(Alert.AlertType.ERROR, "Cannot Sell Batch",
+                        "Batch with ID: " + batchList.getFirst().ID + " cannot be sold since the expiration date has passed.\n" +
+                                "Update the batch if you entered the wrong information or delete it!!");
+                break;
+            }
+
+            Batch batch = batchList.removeFirst();
             currentStock =- batch.getCurrentStock();
+            stockAmount += batch.getCurrentStock();
             DataBaseManager.deleteBatch(batch);
-            batch = tableViewBatches.getItems().getLast();
+            count++;
         }
 
-        batch = tableViewBatches.getItems().getLast();
-
-        if(batch != null && currentStock < batch.getCurrentStock()){
+        if(!batchList.isEmpty() && currentStock < batchList.getFirst().getCurrentStock() &&
+                batchList.getFirst().getExpirationDate().isAfter(currentDate)){
+            Batch batch = batchList.getFirst();
             DataBaseManager.updateBatch(batch, product.ID, batch.getCurrentStock() - currentStock, batch.getExpirationDate());
+            stockAmount += (batch.getCurrentStock() - currentStock);
         }
 
-        DataBaseManager.addSale(
-                product.ID,
-                product.getName(),
-                LocalDate.now(),
-                Integer.parseInt(txtStockAmount.getText()),
-                product.getUnitPrice());
+        if(count > 0){
+            DataBaseManager.addSale(
+                    product.ID,
+                    product.getName(),
+                    currentDate,
+                    stockAmount,
+                    product.getUnitPrice());
 
-        DataBaseManager.addInventoryAdjustment(
-                product.ID,
-                product.getName(),
-                -1,
-                LocalDate.now(),
-                "SALE",
-                product.getStockCount(),
-                product.calculateStockCount()
-        );
+            DataBaseManager.addInventoryAdjustment(
+                    product.ID,
+                    product.getName(),
+                    -1,
+                    currentDate,
+                    "SALE",
+                    product.getStockCount(),
+                    product.calculateStockCount()
+            );
 
-        tableViewBatches.setItems(product.getBatchList());
-        tableViewBatches.refresh();
-        validateFields();
-        Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Sold Batch/es",
-                 txtStockAmount.getText() + " Batch/es has been sold.");
-        clearSelection();
+            tableViewBatches.setItems(product.getBatchList());
+            tableViewBatches.refresh();
+            validateFields();
+            clearSelection();
+            AlertsController.refreshTableView();
+            Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Sold Batch/es",
+                    stockAmount + " Batch/es has been sold.");
+        }
     }
 
     public void deleteBatch(){
@@ -373,6 +392,8 @@ public class InventoryBatchesController implements Initializable {
 
             if(!Batch.contains(batch.ID)){
                 clearSelection();
+                batchList.remove(batch);
+                AlertsController.refreshTableView();
                 Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Deleted Batch",
                         "Batch with ID: " + batch.ID + " has been deleted.");
             }
@@ -395,7 +416,7 @@ public class InventoryBatchesController implements Initializable {
 
     private void populateProductFields(Product product) {
         if (product != null) {
-            batchList = product.getBatchList();
+            batchList.setAll(product.getBatchList());
             txtProductName.setText(product.getName());
             txtUnitPrice.setText(String.valueOf(product.getUnitPrice()));
             lblProductId.setText("Product ID: " + product.ID);
@@ -404,6 +425,7 @@ public class InventoryBatchesController implements Initializable {
             txtProductName.setText("");
             txtUnitPrice.setText("");
             lblProductId.setText("Product ID: ");
+            batchList.clear();
         }
     }
 

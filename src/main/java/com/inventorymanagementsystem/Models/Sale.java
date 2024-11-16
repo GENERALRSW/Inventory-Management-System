@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class Sale {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final IntegerProperty productId = new SimpleIntegerProperty();
     private final StringProperty productName = new SimpleStringProperty();
     private final ObjectProperty<LocalDate> saleDate = new SimpleObjectProperty<>();
@@ -21,6 +22,7 @@ public class Sale {
 
     public Sale(int saleId, int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice) {
         ID = saleId;
+        this.id.set(saleId);
         this.productId.set(productId);
         this.productName.set(productName);
         this.saleDate.set(saleDate);
@@ -30,6 +32,10 @@ public class Sale {
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public int getProductId() {
         return productId.get();
     }
