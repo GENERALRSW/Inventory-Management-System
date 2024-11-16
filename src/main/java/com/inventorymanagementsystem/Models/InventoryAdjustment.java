@@ -9,89 +9,167 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryAdjustment {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final IntegerProperty user_id = new SimpleIntegerProperty();
+    private final StringProperty user_role = new SimpleStringProperty();
+    private final IntegerProperty productId = new SimpleIntegerProperty();
+    private final StringProperty productName = new SimpleStringProperty();
+    private final ObjectProperty<LocalDateTime> adjustmentDatetime = new SimpleObjectProperty<>();
+    private final StringProperty adjustmentDatetimeFormatted = new SimpleStringProperty();
     private final IntegerProperty batchId = new SimpleIntegerProperty();
-    private final ObjectProperty<LocalDate> adjustmentDate = new SimpleObjectProperty<>();
     private final StringProperty adjustmentType = new SimpleStringProperty();
-    private final IntegerProperty quantity = new SimpleIntegerProperty();
-    private final StringProperty reason = new SimpleStringProperty();
+    private final IntegerProperty previous_stock = new SimpleIntegerProperty();
+    private final IntegerProperty adjusted_stock = new SimpleIntegerProperty();
     private static final Map<Integer, InventoryAdjustment> inventoryAdjustments = new HashMap<>();
     private static final ObservableList<InventoryAdjustment> inventoryAdjustmentList = FXCollections.observableArrayList();
 
-    public InventoryAdjustment(int adjustmentId, int batchId, LocalDate adjustmentDate, String adjustmentType, int quantity, String reason) {
+    public InventoryAdjustment(int adjustmentId, int user_id, String user_role, int product_id, String productName, int batchId,
+                               LocalDateTime adjustmentDatetime, String adjustmentType, int previous_stock, int adjusted_stock) {
         ID = adjustmentId;
+        this.id.set(adjustmentId);
+        this.user_id.set(user_id);
+        this.user_role.set(user_role);
+        this.productId.set(product_id);
+        this.productName.set(productName);
         this.batchId.set(batchId);
-        this.adjustmentDate.set(adjustmentDate);
+        this.adjustmentDatetime.set(adjustmentDatetime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        this.adjustmentDatetimeFormatted.set(adjustmentDatetime.format(formatter));
         this.adjustmentType.set(adjustmentType);
-        this.quantity.set(quantity);
-        this.reason.set(reason);
+        this.previous_stock.set(previous_stock);
+        this.adjusted_stock.set(adjusted_stock);
         add(this);
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public int getBatchId() {
         return batchId.get();
     }
 
-    public void setBatchId(int batchId) {
-        this.batchId.set(batchId);
+    public StringProperty batchIdStringProperty(){
+        StringProperty batch_id = new SimpleStringProperty();
+
+        if(getBatchId() == -1){
+            batch_id.set("NULL");
+        }
+        else{
+            batch_id.set(String.valueOf(getBatchId()));
+        }
+
+        return batch_id;
+    }
+
+    public IntegerProperty userIdProperty(){
+        return user_id;
+    }
+
+    public int getUserId(){
+        return user_id.get();
+    }
+
+    public StringProperty userRoleProperty(){
+        return user_role;
+    }
+
+    public String getUserRole(){
+        return user_role.get();
     }
 
     public IntegerProperty batchIdProperty() {
         return batchId;
     }
 
-    public LocalDate getAdjustmentDate() {
-        return adjustmentDate.get();
+    public int getProductId(){
+        return productId.get();
     }
 
-    public void setAdjustmentDate(LocalDate adjustmentDate) {
-        this.adjustmentDate.set(adjustmentDate);
+    public IntegerProperty productIdProperty(){
+        return productId;
     }
 
-    public ObjectProperty<LocalDate> adjustmentDateProperty() {
-        return adjustmentDate;
+    public String getProductName(){
+        return productName.get();
+    }
+
+    public StringProperty productNameProperty(){
+        return productName;
+    }
+
+    public LocalDateTime getAdjustmentDatetime() {
+        return adjustmentDatetime.get();
+    }
+
+    public ObjectProperty<LocalDateTime> adjustmentDatetimeProperty() {
+        return adjustmentDatetime;
+    }
+
+    public String getAdjustmentDatetimeFormatted() {
+        return adjustmentDatetimeFormatted.get();
+    }
+
+    public StringProperty adjustmentDatetimeFormattedProperty(){
+        return adjustmentDatetimeFormatted;
     }
 
     public String getAdjustmentType() {
         return adjustmentType.get();
     }
 
-    public void setAdjustmentType(String adjustmentType) {
-        this.adjustmentType.set(adjustmentType);
-    }
-
     public StringProperty adjustmentTypeProperty() {
         return adjustmentType;
     }
 
-    public int getQuantity() {
-        return quantity.get();
+    public int getPrevious_stock() {
+        return previous_stock.get();
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity.set(quantity);
+    public IntegerProperty previous_stockProperty() {
+        return previous_stock;
     }
 
-    public IntegerProperty quantityProperty() {
-        return quantity;
+    public StringProperty previous_stockStringProperty(){
+        StringProperty previousStock = new SimpleStringProperty();
+
+        if(getPrevious_stock() == -1){
+            previousStock.set("NULL");
+        }
+        else{
+            previousStock.set(String.valueOf(getPrevious_stock()));
+        }
+
+        return previousStock;
     }
 
-    public String getReason() {
-        return reason.get();
+    public int getAdjusted_stock() {
+        return adjusted_stock.get();
     }
 
-    public void setReason(String reason) {
-        this.reason.set(reason);
+    public IntegerProperty adjusted_stockProperty() {
+        return adjusted_stock;
     }
 
-    public StringProperty reasonProperty() {
-        return reason;
+    public StringProperty adjusted_stockStringProperty(){
+        StringProperty adjustedStock = new SimpleStringProperty();
+
+        if(getAdjusted_stock() == -1){
+            adjustedStock.set("NULL");
+        }
+        else{
+            adjustedStock.set(String.valueOf(getAdjusted_stock()));
+        }
+
+        return adjustedStock;
     }
 
     public static void add(InventoryAdjustment inventoryAdjustment) {
@@ -104,19 +182,6 @@ public class InventoryAdjustment {
         }
         else{
             System.out.println("Inventory Adjustment is already present!");
-        }
-    }
-
-    public static void update(InventoryAdjustment inventoryAdjustment, int batchId, LocalDate adjustmentDate, String adjustmentType, int quantity, String reason){
-        if(inventoryAdjustment != null){
-            inventoryAdjustment.setBatchId(batchId);
-            inventoryAdjustment.setAdjustmentDate(adjustmentDate);
-            inventoryAdjustment.setAdjustmentType(adjustmentType);
-            inventoryAdjustment.setQuantity(quantity);
-            inventoryAdjustment.setReason(reason);
-        }
-        else{
-            System.out.println("Inventory Adjustment value is null");
         }
     }
 

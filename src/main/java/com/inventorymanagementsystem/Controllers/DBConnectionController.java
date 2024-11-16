@@ -38,10 +38,8 @@ public class DBConnectionController implements Initializable {
         loadCredentials();
         loadDatabaseNames();
 
-        // Add listener to choiceBoxAuth to adjust UI when "No Authentication" is selected
         choiceBoxAuth.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if ("No Authentication".equals(newValue)) {
-                // Move comboBoxDB down (adjust the Y axis)
                 comboBoxDB.setLayoutY(175);
 
                 txtUser.setVisible(false);
@@ -51,8 +49,8 @@ public class DBConnectionController implements Initializable {
                 lblPassword.setVisible(false);
                 lblSave.setVisible(false);
                 lblDataBase.setVisible(false);
-            } else {
-                // Move comboBoxDB back to its original position
+            }
+            else {
                 comboBoxDB.setLayoutY(275);
 
                 txtUser.setVisible(true);
@@ -263,13 +261,13 @@ public class DBConnectionController implements Initializable {
 
 
     private void ensureTablesExist(Connection connection) {
-        // Array of table creation SQL statements
         String[] createTableStatements = {
                 "CREATE TABLE IF NOT EXISTS Products (" +
                         "product_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "name VARCHAR(100) NOT NULL, " +
                         "category VARCHAR(50) NULL, " +
-                        "unit_price DECIMAL(10, 2) NOT NULL)",
+                        "unit_price DECIMAL(10, 2) NOT NULL, " +
+                        "low_stock_amount INT NOT NULL)",
 
                 "CREATE TABLE IF NOT EXISTS Suppliers (" +
                         "supplier_id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -283,17 +281,19 @@ public class DBConnectionController implements Initializable {
                         "product_id INT NOT NULL, " +
                         "current_stock INT NOT NULL, " +
                         "expiration_date DATE NOT NULL, " +
-                        "supplier_id INT NULL, " +
                         "FOREIGN KEY (product_id) REFERENCES Products(product_id))",
 
                 "CREATE TABLE IF NOT EXISTS InventoryAdjustments (" +
                         "adjustment_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                        "batch_id INT NOT NULL, " +
-                        "adjustment_date DATE NOT NULL, " +
-                        "adjustment_type ENUM('ADD', 'REMOVE') NOT NULL, " +
-                        "quantity INT NOT NULL, " +
-                        "reason TEXT NULL, " +
-                        "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
+                        "user_id INT NOT NULL, " +
+                        "user_role ENUM('ADMIN', 'STAFF') DEFAULT 'ADMIN', " +
+                        "product_id INT NOT NULL, " +
+                        "product_name VARCHAR(100), " +
+                        "batch_id INT NULL, " +
+                        "adjustment_datetime DATETIME NOT NULL, " +
+                        "adjustment_type ENUM('ADDITION', 'DELETION', 'RESTOCK', 'SALE', 'ADJUSTMENT', 'UPDATE') NOT NULL, " +
+                        "previous_stock INT NULL, " +
+                        "adjusted_stock INT NULL)",
 
                 "CREATE TABLE IF NOT EXISTS PurchaseOrders (" +
                         "order_id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -306,11 +306,11 @@ public class DBConnectionController implements Initializable {
 
                 "CREATE TABLE IF NOT EXISTS Sales (" +
                         "sale_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                        "batch_id INT NOT NULL, " +
+                        "product_id INT NOT NULL, " +
+                        "product_name VARCHAR(100), " +
                         "sale_date DATE NOT NULL, " +
                         "quantity_sold INT NOT NULL, " +
-                        "sale_price DECIMAL(10, 2) NULL, " +
-                        "FOREIGN KEY (batch_id) REFERENCES Batches(batch_id))",
+                        "sale_price DECIMAL(10, 2) NULL)",
 
                 "CREATE TABLE IF NOT EXISTS Users (" +
                         "user_id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -329,25 +329,20 @@ public class DBConnectionController implements Initializable {
         };
 
         String[] createIndexStatements = {
-                "CREATE INDEX product_id_idx ON Batches (product_id)",
-                "CREATE INDEX batch_id_idx ON InventoryAdjustments (batch_id)",
-                "CREATE INDEX sales_batch_id_idx ON Sales (batch_id)"
+                "CREATE INDEX product_id_idx ON Batches (product_id)"
         };
 
         try (Statement statement = connection.createStatement()) {
-            // Create tables
             for (String sql : createTableStatements) {
                 statement.execute(sql);
             }
 
-            // Create indexes if they do not exist
             for (String indexSql : createIndexStatements) {
                 try {
                     statement.execute(indexSql);
                 } catch (SQLException e) {
-                    // Ignore error if index already exists
                     if (!e.getMessage().contains("Duplicate key name")) {
-                        e.printStackTrace(); // Log other errors
+                        e.printStackTrace();
                     }
                 }
             }
@@ -396,14 +391,11 @@ public class DBConnectionController implements Initializable {
     }
 
     public static String generateSecretKey(int keyLength) {
-        // Create a byte array for the secret key (keyLength bytes)
         byte[] secretKey = new byte[keyLength];
 
-        // Use SecureRandom for cryptographic strength random numbers
         SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(secretKey); // Fill the byte array with random bytes
+        secureRandom.nextBytes(secretKey);
 
-        // Encode the key as a Base64 string for easy storage
         return Base64.getEncoder().encodeToString(secretKey);
     }
 }

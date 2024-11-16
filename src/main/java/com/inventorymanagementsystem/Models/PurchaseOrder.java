@@ -112,6 +112,15 @@ public class PurchaseOrder {
         return totalAmount;
     }
 
+    public static boolean isValidUnitPrice(String number){
+        try{
+            float num = Float.parseFloat(number);
+            return num >= 0;
+        } catch(NumberFormatException _){
+            return false;
+        }
+    }
+
     public static void add(PurchaseOrder purchaseOrder) {
         if(purchaseOrder != null && !contains(purchaseOrder.ID)){
             purchaseOrders.put(purchaseOrder.ID, purchaseOrder);

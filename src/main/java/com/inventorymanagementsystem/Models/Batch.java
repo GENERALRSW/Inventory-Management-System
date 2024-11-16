@@ -13,23 +13,27 @@ import java.util.Map;
 
 public class Batch {
     public final int ID;
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final IntegerProperty productId = new SimpleIntegerProperty();
     private final IntegerProperty currentStock = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> expirationDate = new SimpleObjectProperty<>();
-    private final IntegerProperty supplierId = new SimpleIntegerProperty();
     private static final Map<Integer, Batch> batches = new HashMap<>();
     private static final ObservableList<Batch> batchList = FXCollections.observableArrayList();
 
-    public Batch(int batchId, int productId, int currentStock, LocalDate expirationDate, int supplierId) {
+    public Batch(int batchId, int productId, int currentStock, LocalDate expirationDate) {
         ID = batchId;
+        this.id.set(batchId);
         this.productId.set(productId);
         this.currentStock.set(currentStock);
         this.expirationDate.set(expirationDate);
-        this.supplierId.set(supplierId);
         add(this);
     }
 
     // Getters and setters
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
     public int getProductId() {
         return productId.get();
     }
@@ -66,18 +70,6 @@ public class Batch {
         return expirationDate;
     }
 
-    public int getSupplierId() {
-        return supplierId.get();
-    }
-
-    public void setSupplierId(int supplierId) {
-        this.supplierId.set(supplierId);
-    }
-
-    public IntegerProperty supplierIdProperty() {
-        return supplierId;
-    }
-
     public static void add(Batch batch) {
         if(batch != null && !contains(batch.ID)){
             batches.put(batch.ID, batch);
@@ -91,12 +83,11 @@ public class Batch {
         }
     }
 
-    public static void update(Batch batch, int productId, int currentStock, LocalDate expirationDate, int supplierId){
+    public static void update(Batch batch, int productId, int currentStock, LocalDate expirationDate){
         if(batch != null){
             batch.setProductId(productId);
             batch.setCurrentStock(currentStock);
             batch.setExpirationDate(expirationDate);
-            batch.setSupplierId(supplierId);
         }
         else{
             System.out.println("Batch value is null");
@@ -120,6 +111,16 @@ public class Batch {
         else{
             System.out.println("Batch ID not found. Null was returned");
             return null;
+        }
+    }
+
+    public static int getLastAddedBatchID() {
+        if (!batchList.isEmpty()) {
+            return batchList.getLast().ID;
+        }
+        else {
+            System.out.println("Batch list is empty.");
+            return -1;
         }
     }
 

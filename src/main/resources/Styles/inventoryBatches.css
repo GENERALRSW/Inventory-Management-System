@@ -47,17 +47,7 @@
     -fx-alignment: CENTER;
 }
 
-
-.combo-box{
-    -fx-background-color: white;
-    -fx-background-radius: 2;
-    -fx-border-color: #3a77ff;
-    -fx-border-radius: 2;
-    -fx-font-size: 14px;
-    -fx-prompt-text-fill: gray;
-}
-
-#txtSupplierSearch {
+#txtProductSearch, #txtBatchesSearch {
     -fx-background-color: white;
     -fx-background-radius: 15;
     -fx-padding: 10 10 10 30;
@@ -68,7 +58,7 @@
     -fx-prompt-text-fill: gray;
 }
 
-#txtFirstName, #txtLastName, #txtContactEmail, #txtPhoneNumber, #txtAreaAddress {
+#txtStockAmount, #txtLowStockAmount, #dateExpirationDate{
     -fx-background-color: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
@@ -77,10 +67,18 @@
     -fx-prompt-text-fill: gray;
 }
 
-#txtAreaAddress{
+#comboBoxBatchCommands {
+    -fx-background-color: white;
+    -fx-background-radius: 2;
+    -fx-border-color: #3a77ff;
+    -fx-border-radius: 2;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: gray;
+}
+
+.combo-box .arrow-button, #dateExpirationDate .arrow-button {
     -fx-background-color: transparent;
-    -fx-border-width: 1;
-    -fx-control-inner-background: transparent;
+    -fx-border-color: transparent;
 }
 
 .button {

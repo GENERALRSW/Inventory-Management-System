@@ -12,14 +12,12 @@ public class MyEmail {
     public static void sendEmail(String fromEmail, String password, String toEmail, String subject, String body) {
         String host = getSmtpHost(fromEmail);
 
-        // Setup properties for the mail session
         Properties properties = new Properties();
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); // TLS support
+        properties.put("mail.smtp.starttls.enable", "true");
 
-        // Create a session with an authenticator
         Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(fromEmail, password);
@@ -27,14 +25,12 @@ public class MyEmail {
         });
 
         try {
-            // Create a new email message
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject(subject);
             message.setText(body);
 
-            // Send the email
             Transport.send(message);
 
             System.out.println("Email sent successfully!");
@@ -49,7 +45,6 @@ public class MyEmail {
         }
     }
 
-    // Method to get the SMTP host based on the email service
     private static String getSmtpHost(String fromEmail) {
         String domain = fromEmail.substring(fromEmail.indexOf("@") + 1).toLowerCase();
         System.out.println("Email is being sent from " + domain);
@@ -66,14 +61,12 @@ public class MyEmail {
     public static boolean isEmailPassword(String fromEmail, String password) {
         String host = getSmtpHost(fromEmail);
 
-        // Setup properties for the mail session
         Properties properties = new Properties();
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); // TLS support
+        properties.put("mail.smtp.starttls.enable", "true");
 
-        // Create a session with an authenticator
         Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(fromEmail, password);
@@ -81,7 +74,6 @@ public class MyEmail {
         });
 
         try {
-            // Attempt to connect to the SMTP server
             Transport transport = session.getTransport("smtp");
             transport.connect(host, fromEmail, password);
             transport.close();

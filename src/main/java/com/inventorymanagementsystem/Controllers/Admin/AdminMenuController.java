@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AdminMenuController implements Initializable {
-    public Button btnViewInventory, btnAlerts, btnManageStaff, btnSuppliers,
+    public Button btnViewInventory, btnInventoryBatch, btnAlerts, btnManageStaff, btnSuppliers,
             btnPurchaseOrders, btnReports, btnHistory, btnAccount, btnSignOut;
 
     @Override
@@ -23,27 +23,28 @@ public class AdminMenuController implements Initializable {
     }
 
     private void setIcons() {
-        // Directly set Ikonli icons on buttons using FontAwesomeSolid icons
-        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 24));
-        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 24));
-        btnManageStaff.setGraphic(createFontIcon(FontAwesomeSolid.USER_COG, 24));  // Icon for Manage Staff
-        btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 24));
-        btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 24));
-        btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 24));
-        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 24));
-        btnAccount.setGraphic(createFontIcon(FontAwesomeSolid.USER_CIRCLE, 24));  // Icon for Account
-        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 20));
+        btnViewInventory.setGraphic(createFontIcon(FontAwesomeSolid.BOXES, 18));
+        btnInventoryBatch.setGraphic(createFontIcon(FontAwesomeSolid.CUBES, 18));
+        btnAlerts.setGraphic(createFontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE, 18));
+        btnManageStaff.setGraphic(createFontIcon(FontAwesomeSolid.USER_COG, 18));
+        btnSuppliers.setGraphic(createFontIcon(FontAwesomeSolid.TRUCK, 18));
+        btnPurchaseOrders.setGraphic(createFontIcon(FontAwesomeSolid.CLIPBOARD_LIST, 18));
+        btnReports.setGraphic(createFontIcon(FontAwesomeSolid.CHART_BAR, 18));
+        btnHistory.setGraphic(createFontIcon(FontAwesomeSolid.HISTORY, 18));
+        btnAccount.setGraphic(createFontIcon(FontAwesomeSolid.USER_CIRCLE, 18));
+        btnSignOut.setGraphic(createFontIcon(FontAwesomeSolid.SIGN_OUT_ALT, 14));
     }
 
     private FontIcon createFontIcon(FontAwesomeSolid iconType, int size) {
         FontIcon icon = new FontIcon(iconType);
-        icon.setIconSize(size);  // Set size of the icon
-        icon.getStyleClass().add("icon");  // Add the CSS class to the icon
+        icon.setIconSize(size);
+        icon.getStyleClass().add("icon");
         return icon;
     }
 
     private void addListeners(){
         btnViewInventory.setOnAction(event -> onViewInventory());
+        btnInventoryBatch.setOnAction(event -> onInventoryBatch());
         btnAlerts.setOnAction(event -> onAlerts());
         btnManageStaff.setOnAction(event -> onManageStaff());
         btnSuppliers.setOnAction(event -> onSuppliers());
@@ -56,6 +57,10 @@ public class AdminMenuController implements Initializable {
 
     private void onViewInventory(){
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.VIEW_INVENTORY);
+    }
+
+    private void onInventoryBatch(){
+        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.INVENTORY_BATCHES);
     }
 
     private void onAlerts(){

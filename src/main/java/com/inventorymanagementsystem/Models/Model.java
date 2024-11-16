@@ -25,15 +25,15 @@ public class Model {
         return model;
     }
 
-    public User getUser() {
+    public User getCurrentUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setCurrentUser(User user) {
         this.user = user;
     }
 
-    public void setUser(int userId, String name, String role, String email, LocalDateTime createdAt){
+    public void setCurrentUser(int userId, String name, String role, String email, LocalDateTime createdAt){
         this.user = new User(userId, name, role, email, createdAt);
     }
 

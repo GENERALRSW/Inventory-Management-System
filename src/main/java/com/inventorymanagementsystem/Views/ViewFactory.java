@@ -3,19 +3,17 @@ package com.inventorymanagementsystem.Views;
 import com.inventorymanagementsystem.Controllers.Admin.AdminController;
 import com.inventorymanagementsystem.Controllers.DBConnectionController;
 import com.inventorymanagementsystem.Controllers.LoginController;
+import com.inventorymanagementsystem.Controllers.Staff.StaffController;
 import com.inventorymanagementsystem.Models.Model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 public class ViewFactory {
     //Admin Views
@@ -31,6 +29,7 @@ public class ViewFactory {
 
     //shared Views
     private AnchorPane viewInventoryView;
+    private AnchorPane inventoryBatchesView;
     private AnchorPane alertsView;
     private AnchorPane historyView;
 
@@ -59,6 +58,18 @@ public class ViewFactory {
         }
 
         return viewInventoryView;
+    }
+
+    public AnchorPane getInventoryBatchesView(){
+        if(inventoryBatchesView == null){
+            try{
+                inventoryBatchesView = new FXMLLoader(getClass().getResource("/Fxml/inventoryBatches.fxml")).load();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return inventoryBatchesView;
     }
 
     public AnchorPane getAlertsView(){
@@ -154,8 +165,8 @@ public class ViewFactory {
 
     public void showStaffWindow(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Staff/staff.fxml"));
-        AdminController adminController = new AdminController();
-        loader.setController(adminController);
+        StaffController staffController = new StaffController();
+        loader.setController(staffController);
         createStage(loader);
     }
 
@@ -191,7 +202,6 @@ public class ViewFactory {
                 onExit();
             });
 
-            // Get the controller from the loader
             dbController = loader.getController();
             dbController.shouldShow();
 
@@ -217,7 +227,6 @@ public class ViewFactory {
                 onExit();
             });
 
-            // Get the controller from the loader
             loginController = loader.getController();
             loginController.shouldShow();
 
@@ -271,11 +280,11 @@ public class ViewFactory {
     private void onExit() {
         System.out.println("Application is closing...");
 
-        if (!Model.getInstance().getDataBaseDriver().connectionIsNull() && !Model.getInstance().getDataBaseDriver().connectionIsClosed()) {
+        if (Model.getInstance().getDataBaseDriver().connectionIsNotNull() && !Model.getInstance().getDataBaseDriver().connectionIsClosed()) {
             Model.getInstance().getDataBaseDriver().closeConnection();
             System.out.println("Connection was not null and successfully closed!!");
         }
-        else if(!Model.getInstance().getDataBaseDriver().connectionIsNull() && Model.getInstance().getDataBaseDriver().connectionIsClosed()){
+        else if(Model.getInstance().getDataBaseDriver().connectionIsNotNull() && Model.getInstance().getDataBaseDriver().connectionIsClosed()){
             System.out.println("Connection was not null and was already closed!!");
         }
         else{

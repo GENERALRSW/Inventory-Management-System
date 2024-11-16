@@ -4,14 +4,15 @@ module com.inventorymanagementsystem {
     requires mysql.connector.j;
     requires java.sql;
     requires jbcrypt;
-    requires com.google.gson;
+    requires kernel;
+    requires layout;
     requires java.prefs;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
     requires jakarta.mail;
     requires jakarta.activation;
 
-    opens com.inventorymanagementsystem to javafx.fxml, com.google.gson;
+    opens com.inventorymanagementsystem to javafx.fxml;
     exports com.inventorymanagementsystem;
     exports com.inventorymanagementsystem.Controllers;
     exports com.inventorymanagementsystem.Controllers.Admin;

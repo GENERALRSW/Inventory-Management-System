@@ -2,6 +2,7 @@ package com.inventorymanagementsystem.Views;
 
 public enum AdminMenuOptions {
     VIEW_INVENTORY("View Inventory"),
+    INVENTORY_BATCHES("Inventory_Batches"),
     ALERTS("Alerts"),
     MANAGE_STAFF("Manage Staff"),
     SUPPLIERS("Suppliers"),
