@@ -27,29 +27,12 @@ public class DataBaseDriver {
         return connection;
     }
 
-    public void setConnection(Connection connection){
-        this.connection = connection;
-    }
-
-    public void setConnection(String url, String user, String password){
-        try{
-            this.connection = DriverManager.getConnection(url, user, password);
-        }catch(SQLException e){
-            e.printStackTrace();
-            System.out.println("Connection to database failed!!!");
-        }
-    }
-
     public void closeConnection(){
         try{
             connection.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
-    }
-
-    public boolean connectionIsNull(){
-        return connection == null;
     }
 
     public boolean connectionIsNotNull(){
