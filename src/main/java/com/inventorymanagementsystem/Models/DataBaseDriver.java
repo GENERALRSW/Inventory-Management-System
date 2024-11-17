@@ -8,13 +8,13 @@ import java.sql.SQLException;
 
 public class DataBaseDriver {
     private Connection connection;
+    private static final String MYSQL_URL = System.getenv("MYSQL_URL");
+    private static final String MYSQL_USERNAME = System.getenv("MYSQL_USERNAME");
+    private static final String MYSQL_PASSWORD = System.getenv("MYSQL_PASSWORD");
 
     public DataBaseDriver(){
         try{
-            String url = "jdbc:mysql://localhost:3306/Inventory_Management_System";
-            String user = "root";
-            String password = "Itsincorrectidiotjeez1%%";
-            this.connection = DriverManager.getConnection(url, user, password);
+            this.connection = DriverManager.getConnection(MYSQL_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
         }catch(SQLException e){
             e.printStackTrace();
             Model.getInstance().showAlert(AlertType.ERROR, "No Database Connection",
