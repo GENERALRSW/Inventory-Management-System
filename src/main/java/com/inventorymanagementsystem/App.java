@@ -11,6 +11,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Model.getInstance().getViewFactory().dataBaseConnectionWindow();
+        Model.getInstance();
+        Model.getInstance().getViewFactory().decideWhatToShow();
     }
 }

@@ -1,5 +1,7 @@
 package com.inventorymanagementsystem.Models;
 
+import javafx.scene.control.Alert.AlertType;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,17 +9,17 @@ import java.sql.SQLException;
 public class DataBaseDriver {
     private Connection connection;
 
-    public DataBaseDriver(){}
-
-    public DataBaseDriver(Connection connection){
-        this.connection = connection;
-    }
-
-    public DataBaseDriver(String url, String user, String password){
+    public DataBaseDriver(){
         try{
+            String url = "jdbc:mysql://localhost:3306/Inventory_Management_System";
+            String user = "root";
+            String password = "Itsincorrectidiotjeez1%%";
             this.connection = DriverManager.getConnection(url, user, password);
         }catch(SQLException e){
             e.printStackTrace();
+            Model.getInstance().showAlert(AlertType.ERROR, "No Database Connection",
+                    "No Database Connection Available");
+            System.exit(1);
         }
     }
 
