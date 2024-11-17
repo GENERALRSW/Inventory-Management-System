@@ -157,30 +157,6 @@ public class DataBaseManager {
         return false;
     }
 
-    public static Admin getAdmin(User user){
-        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "SELECT * FROM Admins WHERE user_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, user.ID);
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next()){
-                int admin_id = resultSet.getInt("admin_id");
-                int userId = resultSet.getInt("user_id");
-                String name = Arrays.toString(resultSet.getBytes("email_password_encrypted"));
-                resultSet.close();
-                return new Admin(admin_id, userId);
-            }
-
-            resultSet.close();
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public static User getUserFromIdentity(String identity){
         if(isInteger(identity)){
             return getUser(Integer.parseInt(identity));
@@ -799,57 +775,6 @@ public class DataBaseManager {
             updateMessage("Product", product.ID, rowsUpdated);
         }catch(SQLException e){
             Model.getInstance().showAlert(AlertType.ERROR, "Error updating Product",
-                    e.getMessage());
-        }
-    }
-
-    public static void updatePurchaseOrder(PurchaseOrder purchaseOrder, LocalDate orderDate, int supplierId,
-                                           String supplierName, String productName, int quantity, BigDecimal totalAmount){
-        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE PurchaseOrders SET order_date = ?, supplier_id = ?, supplier_name = ?," +
-                " product_name = ?, quantity = ?, total_amount = ? WHERE order_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setDate(1, Date.valueOf(orderDate));
-            statement.setInt(2, supplierId);
-            statement.setString(3, supplierName);
-            statement.setString(4, productName);
-            statement.setInt(5, quantity);
-            statement.setBigDecimal(6, totalAmount);
-            statement.setInt(7, purchaseOrder.ID);
-            int rowsUpdated = statement.executeUpdate();
-
-            if(rowsUpdated > 0){
-                PurchaseOrder.update(purchaseOrder, orderDate, supplierId, supplierName, productName, quantity, totalAmount);
-            }
-
-            updateMessage("Purchase Order", purchaseOrder.ID, rowsUpdated);
-        }catch(SQLException e){
-            Model.getInstance().showAlert(AlertType.ERROR, "Error updating Purchase Order",
-                    e.getMessage());
-        }
-    }
-
-    public static void updateSale(Sale sale, int productId, String productName, LocalDate saleDate, int quantitySold, BigDecimal salePrice){
-        Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "UPDATE Sales SET product_name = ?, sale_date = ?, quantity_sold = ?, sale_price = ? WHERE sale_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, productId);
-            statement.setString(2, productName);
-            statement.setDate(3, Date.valueOf(saleDate));
-            statement.setInt(4, quantitySold);
-            statement.setBigDecimal(5, salePrice);
-            statement.setInt(6, sale.ID);
-            int rowsUpdated = statement.executeUpdate();
-
-            if(rowsUpdated > 0){
-                Sale.update(sale, productId, productName, saleDate, quantitySold, salePrice);
-            }
-
-            updateMessage("Sale", sale.ID, rowsUpdated);
-        }catch(SQLException e){
-            Model.getInstance().showAlert(AlertType.ERROR, "Error updating Sale",
                     e.getMessage());
         }
     }
