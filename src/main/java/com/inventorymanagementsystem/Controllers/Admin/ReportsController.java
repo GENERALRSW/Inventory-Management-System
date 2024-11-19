@@ -1,5 +1,6 @@
 package com.inventorymanagementsystem.Controllers.Admin;
 
+import com.inventorymanagementsystem.Models.DataBaseManager;
 import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Models.Sale;
 import com.lowagie.text.pdf.PdfPCell;
@@ -16,15 +17,17 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import javafx.util.Callback;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class ReportsController implements Initializable {
     public TableView<Sale> tableViewSales;
@@ -34,6 +37,7 @@ public class ReportsController implements Initializable {
     public TableColumn<Sale, LocalDate> columnSaleDate;
     public TableColumn<Sale, Integer> columnQuantitySold;
     public TableColumn<Sale, BigDecimal> columnSalePrice;
+    public TableColumn<Sale, Void> columnDelete;
     public DatePicker datePickerStart, datePickerEnd;
     public Button btnGeneratePDF;
     public Label lblStartDateError, lblEndDateError;
@@ -55,7 +59,7 @@ public class ReportsController implements Initializable {
         columnSaleDate.setCellValueFactory(cellData -> cellData.getValue().saleDateProperty());
         columnQuantitySold.setCellValueFactory(cellData -> cellData.getValue().quantitySoldProperty().asObject());
         columnSalePrice.setCellValueFactory(cellData -> cellData.getValue().salePriceProperty());
-
+        setupDeleteColumn();
         filteredSaleList = new FilteredList<>(saleList, p -> true);
         tableViewSales.setItems(filteredSaleList);
 
@@ -83,6 +87,50 @@ public class ReportsController implements Initializable {
 
             return !sale.getSaleDate().isBefore(startDate) && !sale.getSaleDate().isAfter(endDate);
         });
+    }
+
+    private void setupDeleteColumn() {
+        columnDelete.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Sale, Void> call(final TableColumn<Sale, Void> param) {
+                return new TableCell<>() {
+                    private final Button deleteButton = new Button();
+
+                    {
+                        FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
+                        deleteIcon.setIconSize(16);
+                        deleteButton.setGraphic(deleteIcon);
+
+                        deleteButton.setOnAction(event -> {
+                            Sale selectedSale = getTableView().getItems().get(getIndex());
+                            deleteSale(selectedSale);
+                        });
+                    }
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(deleteButton);
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    private void deleteSale(Sale sale) {
+        Alert alert = Model.getInstance().getConfirmationDialogAlert("Delete Sale?",
+                "Are you sure you want to delete this Sale?\nSale ID: " + sale.ID);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            DataBaseManager.deleteSale(sale);
+            Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Deleted Sale",
+                    "Sale with ID: " +sale.ID + " has been deleted!");
+        }
     }
 
     private void handleStartDateKeyReleased(KeyEvent keyEvent) {
@@ -157,35 +205,44 @@ public class ReportsController implements Initializable {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save PDF");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            fileChooser.setInitialFileName("Sales_Report_" + LocalDate.now() + ".pdf");
             File file = fileChooser.showSaveDialog(btnGeneratePDF.getScene().getWindow());
 
             if (file != null) {
-                try (FileOutputStream fos = new FileOutputStream(file)) {
-                    // Create a new PDF document
+                try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                     Document document = new Document();
-                    PdfWriter.getInstance(document, fos);
+                    PdfWriter.getInstance(document, fileOutputStream);
                     document.open();
 
-                    // Add Title
                     Paragraph title = new Paragraph("Sales Report",
                             FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
                     title.setAlignment(Element.ALIGN_CENTER);
                     document.add(title);
 
-                    // Add Date
-                    Paragraph date = new Paragraph("Date: " + LocalDate.now(),
+                    String dateTime = LocalDateTime.now().format(formatter);
+                    Paragraph date = new Paragraph("Date and Time: " + dateTime,
                             FontFactory.getFont(FontFactory.HELVETICA, 12));
                     date.setSpacingAfter(10);
                     document.add(date);
 
-                    // Add Sales Table
+                    Paragraph sales = new Paragraph("\tSales:");
+                    sales.setSpacingAfter(10);
+                    document.add(sales);
                     PdfPTable salesTable = getSalesTable();
                     document.add(salesTable);
 
-                    // Add Summary Table
-                    document.add(new Paragraph("\n")); // Add spacing
+                    Paragraph products = new Paragraph("\n\tProducts:");
+                    products.setSpacingAfter(10);
+                    document.add(products);
                     PdfPTable summaryTable = getProductSummaryTable();
                     document.add(summaryTable);
+
+                    Paragraph topSellingProducts = new Paragraph("\n\tTop Selling Product/s:");
+                    topSellingProducts.setSpacingAfter(10);
+                    document.add(topSellingProducts);
+                    PdfPTable topSellingProductTable = getTopSellingProductTable();
+                    document.add(topSellingProductTable);
 
                     document.close();
                     Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Successfully Generated PDF",
@@ -200,12 +257,9 @@ public class ReportsController implements Initializable {
     }
 
     private PdfPTable getSalesTable() {
-        // Define column widths for the table
-        float[] columnWidths = {1, 2, 2, 2, 1, 2};
+        float[] columnWidths = {2, 2, 2, 2, 2, 2};
         PdfPTable salesTable = new PdfPTable(columnWidths);
-        salesTable.setWidthPercentage(100); // Optional: Set table width to fill the page
 
-        // Add header cells
         salesTable.addCell(new PdfPCell(new Phrase("Sale ID", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         salesTable.addCell(new PdfPCell(new Phrase("Product ID", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         salesTable.addCell(new PdfPCell(new Phrase("Product Name", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
@@ -213,7 +267,6 @@ public class ReportsController implements Initializable {
         salesTable.addCell(new PdfPCell(new Phrase("Quantity Sold", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         salesTable.addCell(new PdfPCell(new Phrase("Sale Price", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
 
-        // Add rows for each sale
         for (Sale sale : tableViewSales.getItems()) {
             salesTable.addCell(String.valueOf(sale.ID));
             salesTable.addCell(String.valueOf(sale.getProductId()));
@@ -226,14 +279,10 @@ public class ReportsController implements Initializable {
         return salesTable;
     }
 
-
     private PdfPTable getProductSummaryTable() {
-        // Define column widths for the table
         float[] columnWidths = {2, 4, 2, 2};
         PdfPTable summaryTable = new PdfPTable(columnWidths);
-        summaryTable.setWidthPercentage(100); // Optional: Set table width to fill the page
 
-        // Add header cells
         summaryTable.addCell(new PdfPCell(new Phrase("Product ID", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         summaryTable.addCell(new PdfPCell(new Phrase("Product Name", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         summaryTable.addCell(new PdfPCell(new Phrase("Total Quantity Sold", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
@@ -241,7 +290,6 @@ public class ReportsController implements Initializable {
 
         Set<Integer> processedProductIds = new HashSet<>();
 
-        // Populate the table with data
         for (Sale sale : tableViewSales.getItems()) {
             int productId = sale.getProductId();
 
@@ -258,8 +306,6 @@ public class ReportsController implements Initializable {
 
         return summaryTable;
     }
-
-
 
     public BigDecimal getTotalSales(int productId) {
         BigDecimal totalSales = BigDecimal.ZERO;
@@ -284,21 +330,52 @@ public class ReportsController implements Initializable {
         return totalQuantitySold;
     }
 
-    public Sale getTopSellingProduct(){
+    public PdfPTable getTopSellingProductTable(){
+        List<Sale> sales = new ArrayList<>();
         Sale saleResult = null;
 
         for(Sale currentSale: tableViewSales.getItems()){
-            if(saleResult == null){
+            if(sales.isEmpty()){
+                sales.add(currentSale);
                 saleResult = currentSale;
             }
             else{
                 if(currentSale.getQuantitySold() > saleResult.getQuantitySold()){
+                    sales.clear();
+                    sales.add(currentSale);
                     saleResult = currentSale;
+                }
+                else if(currentSale.getQuantitySold() == saleResult.getQuantitySold()){
+                    sales.add(currentSale);
                 }
             }
         }
 
-        return saleResult;
+        float[] columnWidths = {2, 4, 2, 2};
+        PdfPTable topSellingProducts = new PdfPTable(columnWidths);
+
+        topSellingProducts.addCell(new PdfPCell(new Phrase("Product ID", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
+        topSellingProducts.addCell(new PdfPCell(new Phrase("Product Name", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
+        topSellingProducts.addCell(new PdfPCell(new Phrase("Total Quantity Sold", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
+        topSellingProducts.addCell(new PdfPCell(new Phrase("Total Sales", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
+
+        Set<Integer> processedProductIds = new HashSet<>();
+
+        for (Sale sale : sales) {
+            int productId = sale.getProductId();
+
+            if (processedProductIds.add(productId)) {
+                int totalQuantitySold = getTotalQuantitySold(productId);
+                BigDecimal totalSales = getTotalSales(productId);
+
+                topSellingProducts.addCell(String.valueOf(productId));
+                topSellingProducts.addCell(sale.getProductName());
+                topSellingProducts.addCell(String.valueOf(totalQuantitySold));
+                topSellingProducts.addCell("$" + totalSales.toString());
+            }
+        }
+
+        return topSellingProducts;
     }
 
 }
