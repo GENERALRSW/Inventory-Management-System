@@ -4,7 +4,6 @@ import com.inventorymanagementsystem.Models.DataBaseManager;
 import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Models.Sale;
 import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfTable;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.Initializable;
@@ -268,7 +267,6 @@ public class ReportsController implements Initializable {
         salesTable.addCell(new PdfPCell(new Phrase("Quantity Sold", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
         salesTable.addCell(new PdfPCell(new Phrase("Sale Price", FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
 
-        // Add rows for each sale
         for (Sale sale : tableViewSales.getItems()) {
             salesTable.addCell(String.valueOf(sale.ID));
             salesTable.addCell(String.valueOf(sale.getProductId()));
