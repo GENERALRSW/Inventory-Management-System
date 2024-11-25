@@ -2,7 +2,6 @@ package com.inventorymanagementsystem.Controllers.Staff;
 
 import com.inventorymanagementsystem.Controllers.LoginController;
 import com.inventorymanagementsystem.Models.Model;
-import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import com.inventorymanagementsystem.Views.StaffMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -58,22 +57,6 @@ public class StaffMenuController implements Initializable {
         btnInventoryBatch.getStyleClass().remove("button-selected");
         btnAlerts.getStyleClass().remove("button-selected");
         btnHistory.getStyleClass().remove("button-selected");
-    }
-
-    private void onViewInventory(){
-        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.VIEW_INVENTORY);
-    }
-
-    private void onInventoryBatch(){
-        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.INVENTORY_BATCHES);
-    }
-
-    private void onAlerts(){
-        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.ALERTS);
-    }
-
-    private void onHistory(){
-        Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(StaffMenuOptions.HISTORY);
     }
 
     private void onSignOut(){

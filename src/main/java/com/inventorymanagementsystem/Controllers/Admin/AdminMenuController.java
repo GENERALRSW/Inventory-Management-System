@@ -75,42 +75,6 @@ public class AdminMenuController implements Initializable {
         btnAccount.getStyleClass().remove("button-selected");
     }
 
-    private void onViewInventory(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.VIEW_INVENTORY);
-    }
-
-    private void onInventoryBatch(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.INVENTORY_BATCHES);
-    }
-
-    private void onAlerts(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ALERTS);
-    }
-
-    private void onManageStaff(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.MANAGE_STAFF);
-    }
-
-    private void onSuppliers(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.SUPPLIERS);
-    }
-
-    private void onPurchaseOrders(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.PURCHASE_ORDERS);
-    }
-
-    private void onReports(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.REPORTS);
-    }
-
-    private void onHistory(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.HISTORY);
-    }
-
-    private void onAccount(){
-        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.ACCOUNT);
-    }
-
     private void onSignOut(){
         Stage stage = (Stage) btnViewInventory.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
