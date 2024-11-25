@@ -42,17 +42,37 @@ public class AdminMenuController implements Initializable {
         return icon;
     }
 
-    private void addListeners(){
-        btnViewInventory.setOnAction(event -> onViewInventory());
-        btnInventoryBatch.setOnAction(event -> onInventoryBatch());
-        btnAlerts.setOnAction(event -> onAlerts());
-        btnManageStaff.setOnAction(event -> onManageStaff());
-        btnSuppliers.setOnAction(event -> onSuppliers());
-        btnPurchaseOrders.setOnAction(event -> onPurchaseOrders());
-        btnReports.setOnAction(event -> onReports());
-        btnHistory.setOnAction(event -> onHistory());
-        btnAccount.setOnAction(event -> onAccount());
+    private void addListeners() {
+        addButtonListener(btnViewInventory, AdminMenuOptions.VIEW_INVENTORY);
+        addButtonListener(btnInventoryBatch, AdminMenuOptions.INVENTORY_BATCHES);
+        addButtonListener(btnAlerts, AdminMenuOptions.ALERTS);
+        addButtonListener(btnManageStaff, AdminMenuOptions.MANAGE_STAFF);
+        addButtonListener(btnSuppliers, AdminMenuOptions.SUPPLIERS);
+        addButtonListener(btnPurchaseOrders, AdminMenuOptions.PURCHASE_ORDERS);
+        addButtonListener(btnReports, AdminMenuOptions.REPORTS);
+        addButtonListener(btnHistory, AdminMenuOptions.HISTORY);
+        addButtonListener(btnAccount, AdminMenuOptions.ACCOUNT);
         btnSignOut.setOnAction(event -> onSignOut());
+    }
+
+    private void addButtonListener(Button button, AdminMenuOptions menuOption) {
+        button.setOnAction(event -> {
+            clearButtonStyles();
+            button.getStyleClass().add("button-selected");
+            Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(menuOption);
+        });
+    }
+
+    private void clearButtonStyles() {
+        btnViewInventory.getStyleClass().remove("button-selected");
+        btnInventoryBatch.getStyleClass().remove("button-selected");
+        btnAlerts.getStyleClass().remove("button-selected");
+        btnManageStaff.getStyleClass().remove("button-selected");
+        btnSuppliers.getStyleClass().remove("button-selected");
+        btnPurchaseOrders.getStyleClass().remove("button-selected");
+        btnReports.getStyleClass().remove("button-selected");
+        btnHistory.getStyleClass().remove("button-selected");
+        btnAccount.getStyleClass().remove("button-selected");
     }
 
     private void onViewInventory(){

@@ -2,6 +2,7 @@ package com.inventorymanagementsystem.Controllers.Staff;
 
 import com.inventorymanagementsystem.Controllers.LoginController;
 import com.inventorymanagementsystem.Models.Model;
+import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import com.inventorymanagementsystem.Views.StaffMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -36,12 +37,27 @@ public class StaffMenuController implements Initializable {
         return icon;
     }
 
-    private void addListeners(){
-        btnViewInventory.setOnAction(event -> onViewInventory());
-        btnInventoryBatch.setOnAction(event -> onInventoryBatch());
-        btnAlerts.setOnAction(event -> onAlerts());
-        btnHistory.setOnAction(event -> onHistory());
+    private void addListeners() {
+        addButtonListener(btnViewInventory, StaffMenuOptions.VIEW_INVENTORY);
+        addButtonListener(btnInventoryBatch, StaffMenuOptions.INVENTORY_BATCHES);
+        addButtonListener(btnAlerts, StaffMenuOptions.ALERTS);
+        addButtonListener(btnHistory, StaffMenuOptions.HISTORY);
         btnSignOut.setOnAction(event -> onSignOut());
+    }
+
+    private void addButtonListener(Button button, StaffMenuOptions menuOption) {
+        button.setOnAction(event -> {
+            clearButtonStyles();
+            button.getStyleClass().add("button-selected");
+            Model.getInstance().getViewFactory().getStaffSelectedMenuItem().set(menuOption);
+        });
+    }
+
+    private void clearButtonStyles() {
+        btnViewInventory.getStyleClass().remove("button-selected");
+        btnInventoryBatch.getStyleClass().remove("button-selected");
+        btnAlerts.getStyleClass().remove("button-selected");
+        btnHistory.getStyleClass().remove("button-selected");
     }
 
     private void onViewInventory(){
