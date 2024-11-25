@@ -20,6 +20,7 @@ public class AdminMenuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setIcons();
         addListeners();
+        btnViewInventory.getStyleClass().add("button-selected");
     }
 
     private void setIcons() {

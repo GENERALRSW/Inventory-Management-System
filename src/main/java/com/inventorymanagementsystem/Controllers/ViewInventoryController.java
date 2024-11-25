@@ -331,6 +331,7 @@ public class ViewInventoryController implements Initializable {
                 -1
         );
 
+        AlertsController.refreshTableView();
         tableViewInventory.refresh();
         validateFields();
         Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Updated Product",

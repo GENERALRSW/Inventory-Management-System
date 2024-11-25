@@ -146,6 +146,7 @@ public class ReportsController implements Initializable {
 
         if(dateStr.isEmpty()){
             lblDateError.setText("");
+            datePicker.setValue(null);
             validateFields();
             return;
         }
@@ -173,6 +174,8 @@ public class ReportsController implements Initializable {
                 btnGeneratePDF.setDisable(false);
             }
         }
+
+        filterSalesByDate();
     }
 
     public void generatePDF() {
@@ -332,21 +335,32 @@ public class ReportsController implements Initializable {
 
     public PdfPTable getTopSellingProductTable(){
         List<Sale> sales = new ArrayList<>();
+        Set<Integer> productIds = new HashSet<>();
         Sale saleResult = null;
+        int saleResult_totalQuantitySold = -1;
 
         for(Sale currentSale: tableViewSales.getItems()){
             if(sales.isEmpty()){
                 sales.add(currentSale);
+                productIds.add(currentSale.getProductId());
                 saleResult = currentSale;
+                saleResult_totalQuantitySold = getTotalQuantitySold(currentSale.getProductId());
             }
             else{
-                if(currentSale.getQuantitySold() > saleResult.getQuantitySold()){
-                    sales.clear();
-                    sales.add(currentSale);
-                    saleResult = currentSale;
-                }
-                else if(currentSale.getQuantitySold() == saleResult.getQuantitySold()){
-                    sales.add(currentSale);
+                if(productIds.add(currentSale.getProductId())){
+                   int currentSale_totalQuantitySold = getTotalQuantitySold(currentSale.getProductId());
+
+                    if(currentSale_totalQuantitySold > saleResult_totalQuantitySold){
+                        sales.clear();
+                        sales.add(currentSale);
+                        saleResult = currentSale;
+                        saleResult_totalQuantitySold = getTotalQuantitySold(currentSale.getProductId());
+                    }
+                    else{
+                        if(currentSale.getQuantitySold() == saleResult.getQuantitySold()){
+                            sales.add(currentSale);
+                        }
+                    }
                 }
             }
         }
