@@ -240,6 +240,8 @@ public class ReportsController implements Initializable {
                     document.add(products);
                     PdfPTable summaryTable = getProductSummaryTable();
                     document.add(summaryTable);
+                    Paragraph totalRevenue = new Paragraph("Total Revenue: $" + getTotalRevenue());
+                    document.add(totalRevenue);
 
                     Paragraph topSellingProducts = new Paragraph("\n\tTop Selling Product/s:");
                     topSellingProducts.setSpacingAfter(10);
@@ -331,6 +333,17 @@ public class ReportsController implements Initializable {
             }
         }
         return totalQuantitySold;
+    }
+
+    public BigDecimal getTotalRevenue(){
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+
+        for (Sale sale : tableViewSales.getItems()) {
+            BigDecimal saleAmount = sale.getSalePrice().multiply(BigDecimal.valueOf(sale.getQuantitySold()));
+            totalRevenue = totalRevenue.add(saleAmount);
+        }
+
+        return totalRevenue;
     }
 
     public PdfPTable getTopSellingProductTable(){
