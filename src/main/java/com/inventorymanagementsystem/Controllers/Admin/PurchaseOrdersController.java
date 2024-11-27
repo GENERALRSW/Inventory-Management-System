@@ -236,21 +236,6 @@ public class PurchaseOrdersController implements Initializable{
         int quantity = Integer.parseInt(txtQuantity.getText());
         BigDecimal totalAmount = BigDecimal.valueOf(Float.parseFloat(txtTotalAmount.getText()));
 
-        DataBaseManager.addPurchaseOrder(
-                LocalDate.now(),
-                supplier.ID,
-                supplier.getName(),
-                productName,
-                quantity,
-                totalAmount);
-
-        int id = DataBaseManager.getLastPurchaseOrderID();
-
-        if(PurchaseOrder.contains(id)){
-            Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Purchase Order Added",
-                     "Purchase Order has been added\n\nID: " + id);
-        }
-
         User admin = Model.getInstance().getCurrentUser();
         String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
         String purchaseOrderMessage = String.format(
@@ -278,15 +263,26 @@ public class PurchaseOrdersController implements Initializable{
                 admin.getName()
         );
 
-        MyEmail.sendEmail(
-                admin.getEmail(),
-                adminEmailPassword,
-                supplier.getContactEmail(),
-                "New Purchase Order",
-                purchaseOrderMessage);
+        if(MyEmail.sendEmail(admin.getEmail(), adminEmailPassword, supplier.getContactEmail(),
+                "New Purchase Order", purchaseOrderMessage)){
+            DataBaseManager.addPurchaseOrder(
+                    LocalDate.now(),
+                    supplier.ID,
+                    supplier.getName(),
+                    productName,
+                    quantity,
+                    totalAmount);
 
-        tableViewSuppliers.getSelectionModel().clearSelection();
-        clearFields();
-        btnSendPurchaseOrder.setDisable(true);
+            int id = DataBaseManager.getLastPurchaseOrderID();
+
+            if(PurchaseOrder.contains(id)){
+                Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Purchase Order Added",
+                        "Purchase Order has been added\n\nID: " + id);
+            }
+
+            tableViewSuppliers.getSelectionModel().clearSelection();
+            clearFields();
+            btnSendPurchaseOrder.setDisable(true);
+        }
     }
 }
