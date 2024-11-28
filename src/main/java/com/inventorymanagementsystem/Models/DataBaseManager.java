@@ -1147,9 +1147,9 @@ public class DataBaseManager {
         return null;
     }
 
-    public static boolean doesUserExists() {
+    public static boolean doesAdminExists() {
         Connection connection = Model.getInstance().getDataBaseDriver().getConnection();
-        String query = "SELECT COUNT(*) FROM Users";
+        String query = "SELECT COUNT(*) FROM Users WHERE role = 'ADMIN'";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery()){

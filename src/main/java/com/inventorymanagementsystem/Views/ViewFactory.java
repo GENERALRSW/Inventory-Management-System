@@ -188,7 +188,8 @@ public class ViewFactory {
     }
 
     public void decideWhatToShow(){
-        if(DataBaseManager.doesUserExists()){
+        if(DataBaseManager.doesAdminExists()){
+            DataBaseManager.ensureTablesExist();
             DataBaseManager.loadInfo();
             Model.getInstance().getViewFactory().loginWindow();
         }
