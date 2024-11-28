@@ -380,7 +380,7 @@ public class InventoryBatchesController implements Initializable {
                 }
 
                 Batch batch = batchList.removeFirst();
-                currentStock =- batch.getCurrentStock();
+                currentStock -= batch.getCurrentStock();
                 stockAmountSold += batch.getCurrentStock();
                 DataBaseManager.deleteBatch(batch);
                 count++;
@@ -414,8 +414,7 @@ public class InventoryBatchesController implements Initializable {
                         product.calculateStockCount()
                 );
 
-                tableViewBatches.setItems(product.getBatchList());
-                tableViewBatches.refresh();
+                batchList.setAll(product.getBatchList());
                 validateFields();
                 clearSelection();
                 AlertsController.refreshTableView();

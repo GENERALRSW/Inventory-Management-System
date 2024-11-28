@@ -70,6 +70,15 @@ public class InventoryAdjustment {
         return batch_id;
     }
 
+    public String getBatchIdString(){
+        if(getBatchId() == -1){
+            return "NULL";
+        }
+        else{
+            return String.valueOf(getBatchId());
+        }
+    }
+
     public IntegerProperty userIdProperty(){
         return user_id;
     }
@@ -151,6 +160,15 @@ public class InventoryAdjustment {
         return previousStock;
     }
 
+    public String getPrevious_stockString(){
+        if(getPrevious_stock() == -1){
+            return "NULL";
+        }
+        else{
+            return String.valueOf(getPrevious_stock());
+        }
+    }
+
     public int getAdjusted_stock() {
         return adjusted_stock.get();
     }
@@ -170,6 +188,15 @@ public class InventoryAdjustment {
         }
 
         return adjustedStock;
+    }
+
+    public String getAdjusted_stockString(){
+        if(getAdjusted_stock() == -1){
+            return "NULL";
+        }
+        else{
+            return String.valueOf(getAdjusted_stock());
+        }
     }
 
     public static void add(InventoryAdjustment inventoryAdjustment) {
