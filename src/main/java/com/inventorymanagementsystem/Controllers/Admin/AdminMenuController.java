@@ -5,6 +5,7 @@ import com.inventorymanagementsystem.Models.Model;
 import com.inventorymanagementsystem.Views.AdminMenuOptions;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -15,9 +16,11 @@ import java.util.ResourceBundle;
 public class AdminMenuController implements Initializable {
     public Button btnViewInventory, btnInventoryBatch, btnAlerts, btnManageStaff, btnSuppliers,
             btnPurchaseOrders, btnReports, btnHistory, btnAccount, btnSignOut;
+    public Label lblRole;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        lblRole.setText("ID Number: " + Model.getInstance().getCurrentUser().ID);
         setIcons();
         addListeners();
         btnViewInventory.getStyleClass().add("button-selected");

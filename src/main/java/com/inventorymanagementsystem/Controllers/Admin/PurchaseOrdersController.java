@@ -74,6 +74,7 @@ public class PurchaseOrdersController implements Initializable{
 
         txtQuantity.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtUnitPrice.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
+        comboBoxProductName.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         comboBoxProductName.valueProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtSupplierName.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
         txtSupplierEmail.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
@@ -82,7 +83,7 @@ public class PurchaseOrdersController implements Initializable{
     private void onlyDigits(TextField textField){
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                textField.setText(newValue.replaceAll("[^\\d]", ""));
+                textField.setText(newValue.replaceAll("\\D", ""));
             }
         });
     }
