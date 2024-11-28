@@ -179,7 +179,7 @@ public class ViewFactory {
                         Since there is no user registered in the system you will create an Account.
                         Make sure to remember the details, specifically the EMAIL and obviously the PASSWORD.
                         You will need them to login. THERE IS NO RECOVERY SYSTEM (As of now)
-                        You can change the password later if you like (Not yet implemented)""");
+                        You can change the password later if you like""");
     }
 
     public void showLoginWindow(){
