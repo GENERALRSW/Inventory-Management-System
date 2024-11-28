@@ -362,9 +362,9 @@ public class InventoryBatchesController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
             if(product.getStockCount() < currentStock){
-                Model.getInstance().showAlert(Alert.AlertType.ERROR, "Entered Amount is greater than Product Stock Count",
-                        "Enter stock amount to sell is greater than product stock Count\n" +
-                                "Product Stock Count: " + product.getStockCount());
+                Model.getInstance().showAlert(Alert.AlertType.ERROR, "Entered Amount is greater than the product Total Stock Count",
+                        "Enter stock amount to sell is greater than product total stock Count\n" +
+                                "Product Total Stock Count: " + product.getStockCount());
                 return;
             }
 
@@ -414,12 +414,12 @@ public class InventoryBatchesController implements Initializable {
                         product.calculateStockCount()
                 );
 
-                batchList.setAll(product.getBatchList());
+
                 validateFields();
                 clearSelection();
                 AlertsController.refreshTableView();
                 Model.getInstance().showAlert(Alert.AlertType.INFORMATION, "Sold Batch/es",
-                        stockAmountSold + " Batch/es has been sold.");
+                        stockAmountSold + " " + product.getName() + " has been sold.");
             }
         }
     }
