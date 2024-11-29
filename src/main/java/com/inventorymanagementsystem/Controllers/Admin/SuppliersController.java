@@ -525,6 +525,7 @@ public class SuppliersController implements Initializable {
             txtLastName.setText(supplier.getLastName());
             txtContactEmail.setText(supplier.getContactEmail());
             txtPhoneNumber.setText(supplier.getPhoneNumber());
+            txtAreaAddress.setText(supplier.getAddress());
             lblFirstNameError.setText("");
             lblLastNameError.setText("");
 
