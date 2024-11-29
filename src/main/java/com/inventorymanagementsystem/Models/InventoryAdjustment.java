@@ -72,7 +72,7 @@ public class InventoryAdjustment {
 
     public String getBatchIdString(){
         if(getBatchId() == -1){
-            return "NULL";
+            return "Not Used";
         }
         else{
             return String.valueOf(getBatchId());
