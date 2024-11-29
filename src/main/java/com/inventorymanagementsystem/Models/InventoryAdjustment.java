@@ -61,7 +61,7 @@ public class InventoryAdjustment {
         StringProperty batch_id = new SimpleStringProperty();
 
         if(getBatchId() == -1){
-            batch_id.set("NULL");
+            batch_id.set("Not Used");
         }
         else{
             batch_id.set(String.valueOf(getBatchId()));
@@ -151,7 +151,7 @@ public class InventoryAdjustment {
         StringProperty previousStock = new SimpleStringProperty();
 
         if(getPrevious_stock() == -1){
-            previousStock.set("NULL");
+            previousStock.set("0");
         }
         else{
             previousStock.set(String.valueOf(getPrevious_stock()));
@@ -162,7 +162,7 @@ public class InventoryAdjustment {
 
     public String getPrevious_stockString(){
         if(getPrevious_stock() == -1){
-            return "NULL";
+            return "0";
         }
         else{
             return String.valueOf(getPrevious_stock());
@@ -181,7 +181,7 @@ public class InventoryAdjustment {
         StringProperty adjustedStock = new SimpleStringProperty();
 
         if(getAdjusted_stock() == -1){
-            adjustedStock.set("NULL");
+            adjustedStock.set("0");
         }
         else{
             adjustedStock.set(String.valueOf(getAdjusted_stock()));
@@ -192,7 +192,7 @@ public class InventoryAdjustment {
 
     public String getAdjusted_stockString(){
         if(getAdjusted_stock() == -1){
-            return "NULL";
+            return "0";
         }
         else{
             return String.valueOf(getAdjusted_stock());

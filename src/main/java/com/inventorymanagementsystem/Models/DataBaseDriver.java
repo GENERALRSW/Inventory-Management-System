@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class DataBaseDriver {
     private Connection connection;
-    private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/Inventory_Management_System";
+    private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/Inventory_Management_System_2";
     private static final String MYSQL_USERNAME = "root";
     private static final String MYSQL_PASSWORD = "Itsincorrectidiotjeez1%%";
 

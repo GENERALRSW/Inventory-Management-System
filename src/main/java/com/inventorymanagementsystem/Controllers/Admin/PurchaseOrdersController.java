@@ -11,6 +11,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -235,8 +236,7 @@ public class PurchaseOrdersController implements Initializable{
         Supplier supplier = tableViewSuppliers.getSelectionModel().getSelectedItem();
         String productName = comboBoxProductName.getValue();
         int quantity = Integer.parseInt(txtQuantity.getText());
-        BigDecimal totalAmount = BigDecimal.valueOf(Float.parseFloat(txtTotalAmount.getText()));
-
+        BigDecimal totalAmount = BigDecimal.valueOf(Float.parseFloat(txtTotalAmount.getText())).setScale(2, RoundingMode.HALF_UP);
         User admin = Model.getInstance().getCurrentUser();
         String adminEmailPassword = DataBaseManager.getAdminEmailPassword(admin);
         String purchaseOrderMessage = String.format(
@@ -273,7 +273,6 @@ public class PurchaseOrdersController implements Initializable{
                     productName,
                     quantity,
                     totalAmount);
-
             int id = DataBaseManager.getLastPurchaseOrderID();
 
             if(PurchaseOrder.contains(id)){

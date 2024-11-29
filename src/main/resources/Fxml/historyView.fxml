@@ -22,8 +22,8 @@
             <TableColumn fx:id="columnUserRole" prefWidth="75.0" text="User Role" />
             <TableColumn fx:id="columnProductId" prefWidth="74.0" text="Product ID" />
           <TableColumn fx:id="columnProductName" minWidth="2.0" prefWidth="168.0" text="Product Name" />
-            <TableColumn fx:id="columnBatchId" prefWidth="72.0" text="Batch ID" />
-            <TableColumn fx:id="columnAdjustmentDatetime" prefWidth="193.0" text="Adjustment Datetime" />
+            <TableColumn fx:id="columnBatchId" prefWidth="100.0" text="Batch ID" />
+            <TableColumn fx:id="columnAdjustmentDatetime" prefWidth="165.0" text="Adjustment Datetime" />
             <TableColumn fx:id="columnAdjustmentType" prefWidth="133.0" text="Adjustment Type" />
             <TableColumn fx:id="columnPreviousStock" prefWidth="120.0" text="Previous Stock" />
             <TableColumn fx:id="columnAdjustedStock" prefWidth="121.0" text="Adjusted Stock" />
